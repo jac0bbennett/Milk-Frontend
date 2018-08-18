@@ -1,24 +1,60 @@
 import React, { Component } from "react";
+import axios from "axios";
+import TextInput from "./txtInput";
+import FormMsg from "./formMsg";
+import SubmitButton from "./submitButton";
 
 class SignIn extends Component {
-  state = {};
+  state = { pseudo: "", key: "", msg: "" };
+
+  handleSubmit = event => {
+    event.preventDefault();
+
+    const pseudo = this.state.pseudo;
+    const key = this.state.key;
+
+    axios
+      .post(`http://localhost:5100/panel/signin`, { pseudo, key })
+      .then(res => {
+        if (res.data.errors) {
+          const msg = res.data.errors;
+          this.setState({ msg });
+        } else {
+          this.props.onSignIn();
+          this.props.history.push("/");
+        }
+      });
+  };
+
+  handleChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
+
   render() {
     return (
-      <div id="signin">
+      <form id="signin" onSubmit={this.handleSubmit}>
         <h1>Sign In</h1>
-        <div className="geninpdiv">
-          <input className="gentxtinp" type="text" required />
-          <span className="floating-label">Pseudonym</span>
-        </div>
-        <div className="geninpdiv">
-          <input className="gentxtinp" type="password" required />
-          <span className="floating-label">Key</span>
-        </div>
-        <span id="msg" />
-        <button className="raisedbut submitbut">Sign In</button>
+        <TextInput
+          name="pseudo"
+          onChange={e => this.handleChange(e)}
+          type="text"
+          label="Pseudonym"
+        />
+        <TextInput
+          name="key"
+          onChange={e => this.handleChange(e)}
+          type="password"
+          label="Key"
+        />
         <br />
         <br />
-      </div>
+        <FormMsg msg={this.state.msg} />
+        <SubmitButton text="Sign In" />
+        <br />
+        <br />
+      </form>
     );
   }
 }

@@ -202,6 +202,10 @@ hr {
   display: none;
 }
 
+.msg {
+  margin-top: 20px;
+}
+
 #midmsg {
   text-align: center;
   width: 100%;
@@ -304,7 +308,6 @@ hr {
 
 .submitbut {
   display: block;
-  margin-top: 20px;
 }
 
 .raisedbut:hover {

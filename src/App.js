@@ -12,6 +12,10 @@ class App extends Component {
     document.title = "Milk " + this.state.pageTitle;
   };
 
+  handleSignIn = () => {
+    console.log("sign in");
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -19,7 +23,13 @@ class App extends Component {
         <TopBar pageTitle={this.state.pageTitle} />
         <div id="wrapper">
           <Switch>
-            <Route exact path="/signin" component={SignIn} />
+            <Route
+              exact
+              path="/signin"
+              render={props => (
+                <SignIn {...props} onSignIn={this.handleSignIn} />
+              )}
+            />
           </Switch>
         </div>
       </React.Fragment>
