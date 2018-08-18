@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import TopBar from "./components/topBar";
 import { Switch, Route } from "react-router-dom";
+import LoadingBar from "./components/loadingBar";
 import SignIn from "./components/signIn";
 
 class App extends Component {
   state = {
-    pageTitle: "Home"
+    pageTitle: "Home",
+    loadBarWidth: "0%"
   };
 
   componentWillMount = () => {
@@ -16,10 +18,14 @@ class App extends Component {
     console.log("sign in");
   };
 
+  handleLoadBarChange = width => {
+    this.setState({ loadBarWidth: width });
+  };
+
   render() {
     return (
       <React.Fragment>
-        <div id="loadingbar" />
+        <LoadingBar width={this.state.loadBarWidth} />
         <TopBar pageTitle={this.state.pageTitle} />
         <div id="wrapper">
           <Switch>
@@ -27,7 +33,11 @@ class App extends Component {
               exact
               path="/signin"
               render={props => (
-                <SignIn {...props} onSignIn={this.handleSignIn} />
+                <SignIn
+                  {...props}
+                  onSignIn={this.handleSignIn}
+                  setLoadBar={this.handleLoadBarChange}
+                />
               )}
             />
           </Switch>

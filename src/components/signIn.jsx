@@ -10,6 +10,8 @@ class SignIn extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
+    this.props.setLoadBar("15%");
+
     const pseudo = this.state.pseudo;
     const key = this.state.key;
 
@@ -20,6 +22,7 @@ class SignIn extends Component {
           const msg = res.data.errors;
           this.setState({ msg });
         } else {
+          this.props.setLoadBar("101%");
           this.props.onSignIn();
           this.props.history.push("/");
         }
