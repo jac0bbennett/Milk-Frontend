@@ -80,6 +80,7 @@ body {
   transition: 100ms ease;
   text-align: center;
   padding-top: 18px;
+  text-transform: uppercase;
 }
 
 #nav li:hover {
@@ -93,7 +94,8 @@ body {
   border-bottom: 2px solid #3c81c8;
 }
 
-#loadingbar {
+.LoadingBar {
+  transition: all 0.3s ease;
   position: fixed;
   width: 0;
   height: 3px;
@@ -102,8 +104,30 @@ body {
   z-index: 2000;
   outline: none;
   border-color: #3c81c8;
+}
+
+.LoadingBar-glow {
+  top: 0;
+  position: absolute;
+  height: 100%;
+  width: 100%;
   box-shadow: 0 0 10px #3c81c8;
-  transition: 200ms ease;
+  right: 0;
+}
+
+.LoadingBar--full {
+  transition: all 0.5s ease;
+  height: 0;
+  opacity: 0;
+}
+
+.LoadingBar--error {
+  transition: all 0.5s ease;
+  background: #f44336;
+}
+
+.LoadingBar--error.LoadingBar-glow {
+  box-shadow: -3px 0 15px 1px rgba(244, 67, 54, 0.4);
 }
 
 h1,
