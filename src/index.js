@@ -4,7 +4,7 @@ import "./main.css";
 import App from "./App";
 import { Router } from "react-router-dom";
 import history from "./history";
-import registerServiceWorker from "./registerServiceWorker";
+//import registerServiceWorker from "./registerServiceWorker";
 
 ReactDOM.render(
   <Router history={history}>
@@ -12,4 +12,4 @@ ReactDOM.render(
   </Router>,
   document.getElementById("root")
 );
-registerServiceWorker();
+//registerServiceWorker();

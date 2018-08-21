@@ -47,6 +47,7 @@ class App extends Component {
                   {...props}
                   setLoadBar={this.progressTo}
                   setPage={this.handlePageChange}
+                  onError={this.setToError}
                 />
               )}
             />

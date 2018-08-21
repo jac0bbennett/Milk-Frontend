@@ -1,12 +1,12 @@
 import React from "react";
 import Nav from "./nav";
 
-const TopBar = ({ page }) => {
+const TopBar = props => {
   return (
     <div id="top">
       <div id="top-branding">MILK</div>
-      <div id="pagetitle">{page.title}</div>
-      <Nav pageId={page.pageId} />
+      <div id="pagetitle">{props.page.title}</div>
+      <Nav pageId={props.page.pageId} appId={props.appId} />
     </div>
   );
 };

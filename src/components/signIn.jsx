@@ -5,12 +5,12 @@ import FormMsg from "./formMsg";
 import SubmitButton from "./submitButton";
 
 class SignIn extends Component {
-  state = { pseudo: "", key: "", msg: "" };
-
-  componentWillMount = () => {
-    this.props.setLoadBar(15);
-    this.props.setPage("Sign In", "signIn");
-  };
+  constructor(props) {
+    super(props);
+    this.state = { pseudo: "", key: "", msg: "" };
+    props.setLoadBar(15);
+    props.setPage("Sign In", "signIn");
+  }
 
   componentDidMount = () => {
     this.props.setLoadBar(100);

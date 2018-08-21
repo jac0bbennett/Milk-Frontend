@@ -4,12 +4,14 @@ import history from "../history";
 import AppItem from "./appItem";
 
 class AppList extends Component {
-  state = { apps: [] };
+  constructor(props) {
+    super(props);
+    props.setLoadBar(15);
+    props.setPage("Your Apps", "apps");
+    this.state = { apps: [] };
+  }
 
-  componentWillMount = () => {
-    this.props.setLoadBar(15);
-
-    this.props.setPage("Your Apps", "apps");
+  componentDidMount = () => {
     axios
       .get(`/api/panel/apps`)
       .then(res => {
@@ -29,7 +31,7 @@ class AppList extends Component {
       })
       .catch(err => {
         console.log(err);
-        this.setToError(true);
+        this.props.onError(true);
       });
   };
 
