@@ -8,7 +8,7 @@ class AppList extends Component {
     super(props);
     props.setLoadBar(15);
     props.setPage("Your Apps", "apps");
-    this.state = { apps: [] };
+    this.state = { apps: [], selApp: "0" };
   }
 
   componentDidMount = () => {
@@ -25,7 +25,8 @@ class AppList extends Component {
             history.push("/panel/signout");
           } else {
             const apps = res.data.apps;
-            this.setState({ apps });
+            const selApp = res.data.selApp;
+            this.handleSession(userId, selApp, apps);
           }
         }
       })
@@ -35,11 +36,23 @@ class AppList extends Component {
       });
   };
 
+  handleSession = (userId, selApp, apps = this.state.apps) => {
+    console.log(userId);
+    console.log(selApp);
+    this.setState({ apps, selApp });
+    this.props.onSession(userId, selApp);
+  };
+
   render() {
     return (
       <React.Fragment>
         {this.state.apps.map(app => (
-          <AppItem key={app.uuid} app={app} />
+          <AppItem
+            key={app.uuid}
+            app={app}
+            selApp={this.state.selApp}
+            onSelectApp={this.handleSession}
+          />
         ))}
       </React.Fragment>
     );

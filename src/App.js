@@ -13,17 +13,17 @@ class App extends Component {
     page: { title: "Home", pageId: "" },
     loadBar: { progress: 0, error: false },
     userId: 0,
-    appId: 0
-  };
-
-  componentWillMount = () => {
-    document.title = "Milk | " + this.state.pageTitle;
+    selApp: "0"
   };
 
   handlePageChange = (title, pageId) => {
     document.title = "Milk | " + title;
     const page = { title: title, pageId: pageId };
     this.setState({ page });
+  };
+
+  handleSession = (userId = this.state.userId, selApp = this.state.selApp) => {
+    this.setState({ userId, selApp });
   };
 
   render() {
@@ -36,7 +36,11 @@ class App extends Component {
           onProgressDone={this.progressDone}
           error={this.state.loadBar.error}
         />
-        <TopBar page={this.state.page} appId={this.state.appId} />
+        <TopBar
+          page={this.state.page}
+          userId={this.state.userId}
+          selApp={this.state.selApp}
+        />
         <div id="wrapper">
           <Switch>
             <Route
@@ -48,6 +52,7 @@ class App extends Component {
                   setLoadBar={this.progressTo}
                   setPage={this.handlePageChange}
                   onError={this.setToError}
+                  onSession={this.handleSession}
                 />
               )}
             />
@@ -103,21 +108,16 @@ class App extends Component {
           const msg = res.data.errors;
           console.log(msg);
         } else {
+          console.log("signout");
           this.progressTo(100);
-          const userId = res.data.signedIn;
-          if (userId === 0) {
-            history.push("/panel/signout");
-          } else {
-            history.push("/panel/signin");
-          }
+          history.push("/panel/signin");
         }
       })
       .catch(err => {
         console.log(err);
         this.setToError(true);
       });
-    this.setState({ userId: 0 });
-    history.push("/panel/signin");
+    this.handleSession(0, "0");
   };
 
   progressTo = number => {

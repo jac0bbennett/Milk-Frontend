@@ -11,8 +11,8 @@ const NavLink = props => {
     alert("Please select an app first!");
   };
 
-  const appId = props.appId;
-  if (appId !== 0 || props.nav.appDep === false) {
+  const selApp = props.selApp;
+  if (selApp !== "0" || props.nav.appDep === false) {
     return (
       <Link to={props.nav.to}>
         <li className={getClassNames(props.nav.navId)}>{props.nav.label}</li>

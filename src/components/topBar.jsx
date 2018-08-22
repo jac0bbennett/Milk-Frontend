@@ -6,7 +6,11 @@ const TopBar = props => {
     <div id="top">
       <div id="top-branding">MILK</div>
       <div id="pagetitle">{props.page.title}</div>
-      <Nav pageId={props.page.pageId} appId={props.appId} />
+      <Nav
+        pageId={props.page.pageId}
+        userId={props.userId}
+        selApp={props.selApp}
+      />
     </div>
   );
 };
