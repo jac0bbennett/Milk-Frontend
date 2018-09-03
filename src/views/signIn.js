@@ -27,13 +27,14 @@ class SignIn extends Component {
     axios
       .post(`/api/panel/signin`, { pseudo, key })
       .then(res => {
-        if (res.data.errors) {
-          const msg = res.data.errors;
+        const resp = res.data;
+        if (resp.error) {
+          const msg = resp.error;
           this.setState({ msg });
           this.props.onError(true);
         } else {
           this.props.setLoadBar(100);
-          this.props.onSignIn(res.data.signedIn);
+          this.props.onSignIn(resp.userId);
         }
       })
       .catch(err => {

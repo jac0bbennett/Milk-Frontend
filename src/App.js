@@ -4,9 +4,9 @@ import history from "./history";
 import TopBar from "./components/topBar";
 import { Switch, Route } from "react-router-dom";
 import LoadingBar from "./components/loadingBar";
-import SignIn from "./components/signIn";
-import SignOut from "./components/signOut";
-import AppList from "./components/appList";
+import SignIn from "./views/signIn";
+import SignOut from "./views/signOut";
+import AppList from "./views/appList";
 
 class App extends Component {
   state = {
@@ -42,6 +42,7 @@ class App extends Component {
           selApp={this.state.selApp}
         />
         <div id="wrapper">
+          {this.state.loadBar.error ? "An error occured!" : null}
           <Switch>
             <Route
               exact
@@ -51,6 +52,7 @@ class App extends Component {
                   {...props}
                   setLoadBar={this.progressTo}
                   setPage={this.handlePageChange}
+                  selApp={this.state.selApp}
                   onError={this.setToError}
                   onSession={this.handleSession}
                 />
@@ -122,6 +124,7 @@ class App extends Component {
 
   progressTo = number => {
     const loadBar = { ...this.state.loadBar };
+    loadBar.error = false;
     loadBar.progress = number;
     this.setState({ loadBar });
   };
@@ -134,9 +137,10 @@ class App extends Component {
 
   errorDone = () => {
     // Callback
-    const loadBar = { ...this.state.loadBar };
-    loadBar.error = false;
-    this.setState({ loadBar });
+    console.log("Error Finished!");
+    // const loadBar = { ...this.state.loadBar };
+    // loadBar.error = false;
+    // this.setState({ loadBar });
   };
 
   progressDone = () => {
