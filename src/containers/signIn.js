@@ -1,47 +1,40 @@
 import React, { Component } from "react";
 import axios from "axios";
-import TextInput from "./txtInput";
-import FormMsg from "./formMsg";
-import SubmitButton from "./submitButton";
+import { postRequest } from "../utils/requests";
+import TextInput from "../components/txtInput";
+import FormMsg from "../components/formMsg";
+import SubmitButton from "../components/submitButton";
 
 class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = { pseudo: "", key: "", msg: "" };
-    props.setLoadBar(15);
-    props.setPage("Sign In", "signIn");
+    props.loadbar.progressTo(15);
+    props.page.handlePageChange("Sign In", "signIn");
   }
 
   componentDidMount = () => {
-    this.props.setLoadBar(100);
+    this.props.loadbar.progressTo(100);
   };
 
-  handleSubmit = event => {
+  handleSubmit = async event => {
     event.preventDefault();
 
-    this.props.setLoadBar(15);
+    this.props.loadbar.progressTo(15);
 
     const pseudo = this.state.pseudo;
     const key = this.state.key;
 
-    axios
-      .post(`/api/panel/signin`, { pseudo, key })
-      .then(res => {
-        const resp = res.data;
-        if (resp.error) {
-          const msg = resp.error;
-          this.setState({ msg });
-          this.props.onError(true);
-        } else {
-          this.props.setLoadBar(100);
-          this.props.onSignIn(resp.userId);
-        }
-      })
-      .catch(err => {
-        const msg = "An error occurred!";
-        this.setState({ msg });
-        this.props.onError(true);
-      });
+    const req = await postRequest("/api/panel/signin", { pseudo, key });
+
+    if (req.error) {
+      const msg = req.error;
+      this.setState({ msg });
+      this.props.loadbar.setToError(true);
+    } else {
+      this.props.loadbar.progressTo(100);
+      this.props.session.handleSignIn(req.userId);
+    }
   };
 
   handleChange = event => {

@@ -2,7 +2,8 @@ import React from "react";
 import NavLink from "./navLink";
 
 const Nav = props => {
-  const selApp = props.selApp;
+  const selApp = props.session.state.selApp;
+  const userId = props.session.state.userId;
   const navs = [
     { to: "/panel/apps", label: "apps", navId: "apps", appDep: false },
     {
@@ -29,7 +30,7 @@ const Nav = props => {
     { to: "/panel/signin", label: "Sign In", navId: "signIn", appDep: false }
   ];
 
-  if (props.userId !== 0) {
+  if (userId !== 0) {
     return (
       <ul id="nav">
         {navs.map(nav => (

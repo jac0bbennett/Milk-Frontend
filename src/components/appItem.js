@@ -3,12 +3,12 @@ import SelectButton from "./selectButton";
 
 const AppItem = props => {
   return (
-    <div className={getClassNames(props.app.uuid, props.selApp)}>
+    <div className={getClassNames(props.app.uuid, props.session.state.selApp)}>
       <SelectButton
         selectItem={() => {
-          props.onSelectApp(props.app.uuid);
+          props.session.handleSelectApp(props.app.uuid);
         }}
-        sel={props.selApp === props.app.uuid}
+        sel={props.session.state.selApp === props.app.uuid}
       />
       <h2 className="cmsappname">{props.app.name}</h2>
       <button
