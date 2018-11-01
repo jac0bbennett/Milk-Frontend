@@ -1,5 +1,5 @@
 import React from "react";
-import SelectButton from "./selectButton";
+import SelectButton from "../../UI/Buttons/selectButton";
 
 const AppItem = props => {
   return (
@@ -17,6 +17,9 @@ const AppItem = props => {
           float: "right",
           padding: "5px",
           marginBottom: "5px"
+        }}
+        onClick={() => {
+          props.page.handleShowModal("editappform", props.app);
         }}
       >
         <i className="material-icons">more_horiz</i>

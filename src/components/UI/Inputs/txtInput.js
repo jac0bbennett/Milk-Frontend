@@ -8,6 +8,7 @@ const TextInput = props => {
         className="gentxtinp"
         onChange={props.onChange}
         type={props.type}
+        value={props.value}
         required
       />
       <span className="floating-label">{props.label}</span>

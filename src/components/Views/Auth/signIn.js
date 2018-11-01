@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import axios from "axios";
-import { postRequest } from "../utils/requests";
-import TextInput from "../components/txtInput";
-import FormMsg from "../components/formMsg";
-import SubmitButton from "../components/submitButton";
+import { postRequest } from "../../../utils/requests";
+import SignInForm from "../../Forms/signIn.js";
 
 class SignIn extends Component {
   constructor(props) {
@@ -45,27 +42,11 @@ class SignIn extends Component {
 
   render() {
     return (
-      <form id="signin" onSubmit={this.handleSubmit}>
-        <h1>Sign In</h1>
-        <TextInput
-          name="pseudo"
-          onChange={e => this.handleChange(e)}
-          type="text"
-          label="Pseudonym"
-        />
-        <TextInput
-          name="key"
-          onChange={e => this.handleChange(e)}
-          type="password"
-          label="Key"
-        />
-        <br />
-        <br />
-        <FormMsg msg={this.state.msg} />
-        <SubmitButton text="Sign In" />
-        <br />
-        <br />
-      </form>
+      <SignInForm
+        handleChange={this.handleChange}
+        handleSubmit={this.handleSubmit}
+        msg={this.state.msg}
+      />
     );
   }
 }

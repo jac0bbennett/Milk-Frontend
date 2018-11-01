@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import AppItem from "../components/appItem";
-import { getRequest } from "../utils/requests";
+import AppItem from "./appItem";
+import { getRequest } from "../../../utils/requests";
 
 class AppList extends Component {
   constructor(props) {
     super(props);
     props.loadbar.progressTo(15);
     props.page.handlePageChange("Your Apps", "apps");
-    this.state = { apps: [], selApp: props.selApp };
+    this.state = { apps: [] };
   }
 
   getApps = async () => {
@@ -36,7 +36,7 @@ class AppList extends Component {
             key={app.uuid}
             app={app}
             session={this.props.session}
-            onSelectApp={this.handleSelectApp}
+            page={this.props.page}
           />
         ))}
       </React.Fragment>

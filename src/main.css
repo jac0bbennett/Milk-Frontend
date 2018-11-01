@@ -202,7 +202,7 @@ hr {
   color: #9c9c9c;
 }
 
-#hiddenform {
+#modal {
   height: auto;
   transition: all 500ms ease;
   opacity: 0;
@@ -221,12 +221,7 @@ hr {
   border-radius: 5px;
 }
 
-#hiddenform.is-show {
-  opacity: 100;
-  top: 50px;
-}
-
-#hiddenform.is-show::-webkit-scrollbar {
+#modal::-webkit-scrollbar {
   display: none;
 }
 

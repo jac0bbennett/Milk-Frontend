@@ -1,14 +1,15 @@
 import React from "react";
-import TopBar from "./topBar";
+import TopBar from "./components/UI/TopBar/topBar";
 import { Switch, Route } from "react-router-dom";
-import LoadingBar from "./loadingBar";
-import SignIn from "../containers/signIn";
-import SignOut from "../containers/signOut";
-import AppList from "../containers/appList";
+import LoadingBar from "./components/UI/LoadingBar/loadingBar";
+import SignIn from "./components/Views/Auth/signIn";
+import SignOut from "./components/Views/Auth/signOut";
+import AppList from "./components/Views/AppList/appList";
+import { Modal } from "./components/UI/Modal/modal";
 import { Provider, Subscribe } from "unstated";
-import SessionContainer from "../containers/SessionContainer";
-import LoadbarContainer from "../containers/LoadbarContainer";
-import PageContainer from "../containers/PageContainer";
+import SessionContainer from "./containers/SessionContainer";
+import LoadbarContainer from "./containers/LoadbarContainer";
+import PageContainer from "./containers/PageContainer";
 import UNSTATED from "unstated-debug";
 
 UNSTATED.logStateChanges = true;
@@ -19,12 +20,20 @@ const pageCont = new PageContainer();
 
 sessionCont.bindLoadbar(loadbarCont);
 
-const App = props => {
+const App = () => {
   return (
     <Provider inject={[sessionCont, loadbarCont, pageCont]}>
       <Subscribe to={[SessionContainer, LoadbarContainer, PageContainer]}>
         {(session, loadbar, page) => (
           <React.Fragment>
+            <Modal
+              isShow={page.state.showModal}
+              inner={page.state.modalComp}
+              loadbar={loadbar}
+              page={page}
+              session={session}
+            />
+
             <LoadingBar
               id="loadingbar"
               progress={loadbar.state.progress}
