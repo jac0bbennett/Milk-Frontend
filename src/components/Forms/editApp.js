@@ -6,12 +6,8 @@ import SubmitButton from "../UI/Buttons/submitButton";
 
 class EditAppForm extends Component {
   state = {
-    form: { name: "test" },
+    form: { name: this.props.page.state.modalData.name },
     msg: ""
-  };
-
-  componentWillMount = () => {
-    console.log(this.props);
   };
 
   handleSubmit = async event => {
@@ -22,7 +18,7 @@ class EditAppForm extends Component {
     const appname = this.state.form.name;
 
     const req = await patchRequest(
-      "/api/panel/apps/" + this.props.session.selApp,
+      "/api/panel/apps/" + this.props.page.state.modalData.uuid,
       { appname }
     );
 
@@ -35,13 +31,14 @@ class EditAppForm extends Component {
     } else {
       this.props.loadbar.progressTo(100);
       this.props.page.handleCloseModal();
+      this.props.page.handleSetRefresh(true);
     }
   };
 
   handleChange = event => {
     let form = { ...this.state.form };
-    form.name = event.target.name;
-    this.setState({ form: event.target.value });
+    form.name = event.target.value;
+    this.setState({ form });
   };
 
   render() {
@@ -49,11 +46,11 @@ class EditAppForm extends Component {
       <form onSubmit={this.handleSubmit}>
         <h2>Edit App</h2>
         <TextInput
-          name="appname"
+          name="name"
           type="text"
           label="App Name"
-          onChange={e => this.handleChange(e)}
-          value={this.props.page.state.modalData.name}
+          value={this.state.form.name}
+          onChange={this.handleChange}
         />
         <br />
         <br />

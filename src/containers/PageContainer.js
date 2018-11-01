@@ -2,10 +2,10 @@ import { Container } from "unstated";
 
 class PageContainer extends Container {
   // NOTE: Cache data in state for reopen
-  // Make modal own container with render function
   state = {
     title: "Home",
     pageId: "",
+    refreshView: false,
     showModal: false,
     modalComp: "none",
     modalData: {}
@@ -16,12 +16,19 @@ class PageContainer extends Container {
     this.setState({ title: title, pageId: pageId });
   };
 
-  handleShowModal = (comp, data) => {
+  handleShowModal = (
+    comp = this.state.modalComp,
+    data = this.state.modalData
+  ) => {
     this.setState({ showModal: true, modalComp: comp, modalData: data });
   };
 
   handleCloseModal = () => {
     this.setState({ showModal: false });
+  };
+
+  handleSetRefresh = bool => {
+    this.setState({ refreshView: bool });
   };
 }
 

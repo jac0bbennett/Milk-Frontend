@@ -2,7 +2,6 @@ import React from "react";
 import EditAppForm from "../../Forms/editApp";
 
 const Content = props => {
-  console.log(props.page.state.modalComp);
   switch (props.page.state.modalComp) {
     case "editappform":
       return <EditAppForm {...props} />;
@@ -22,11 +21,7 @@ const Modal = props => {
 
   return (
     <div id="modal" style={style()}>
-      <Content
-        session={props.session}
-        loadbar={props.loadbar}
-        page={props.page}
-      />
+      <Content loadbar={props.loadbar} page={props.page} />
     </div>
   );
 };

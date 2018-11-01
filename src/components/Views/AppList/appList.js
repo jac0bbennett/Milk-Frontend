@@ -10,6 +10,13 @@ class AppList extends Component {
     this.state = { apps: [] };
   }
 
+  componentWillUpdate = () => {
+    if (this.props.page.state.refreshView === true) {
+      this.getApps();
+      this.props.page.handleSetRefresh(false);
+    }
+  };
+
   getApps = async () => {
     const resp = await getRequest("/api/panel/apps");
     if (resp.error) {
