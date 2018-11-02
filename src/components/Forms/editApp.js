@@ -50,6 +50,13 @@ class EditAppForm extends Component {
       this.props.loadbar.setToError(true);
     } else {
       this.setState({ msg: "" });
+
+      if (
+        this.props.session.state.selApp == this.props.page.state.modalData.uuid
+      ) {
+        this.props.session.handleSession(undefined, "0");
+      }
+
       this.props.loadbar.progressTo(100);
       this.props.page.handleCloseModal();
       this.props.page.handleSetRefresh(true);

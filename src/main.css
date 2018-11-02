@@ -304,7 +304,6 @@ hr {
 }
 
 .raisedbut {
-  float: right;
   height: 36px;
   padding-left: 16px;
   padding-right: 16px;
@@ -321,6 +320,10 @@ hr {
   font-weight: 500;
   text-transform: uppercase;
   -webkit-font-smoothing: antialiased;
+}
+
+.floatright {
+  float: right;
 }
 
 .submitbut {
