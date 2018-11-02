@@ -1,7 +1,11 @@
 import React from "react";
 
-const SubmitButton = ({ text }) => {
-  return <button className="raisedbut submitbut">{text}</button>;
+const SubmitButton = props => {
+  return (
+    <button className="raisedbut submitbut" type="submit">
+      {props.children}
+    </button>
+  );
 };
 
 export default SubmitButton;

@@ -22,7 +22,7 @@ const SignInForm = props => {
       <br />
       <br />
       <FormMsg msg={props.msg} />
-      <SubmitButton text="Sign In" />
+      <SubmitButton>Sign In</SubmitButton>
       <br />
       <br />
     </form>

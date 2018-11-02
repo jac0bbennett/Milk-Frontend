@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import AppItem from "./appItem";
+import FAB from "../../UI/Buttons/fab";
 import { getRequest } from "../../../utils/requests";
 
 class AppList extends Component {
@@ -38,6 +39,9 @@ class AppList extends Component {
   render() {
     return (
       <React.Fragment>
+        <FAB page={this.props.page} modalComp="newappform">
+          <i className="material-icons">add</i>
+        </FAB>
         {this.state.apps.map(app => (
           <AppItem
             key={app.uuid}

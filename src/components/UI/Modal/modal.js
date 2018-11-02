@@ -1,8 +1,11 @@
 import React from "react";
 import EditAppForm from "../../Forms/editApp";
+import NewAppForm from "../../Forms/newApp";
 
 const Content = props => {
   switch (props.page.state.modalComp) {
+    case "newappform":
+      return <NewAppForm {...props} />;
     case "editappform":
       return <EditAppForm {...props} />;
     default:
@@ -15,12 +18,18 @@ const Modal = props => {
     opacity: 100,
     top: "50px"
   };
-  const style = () => {
-    return props.isShow ? showStyle : {};
-  };
+  const style = props.isShow ? showStyle : {};
 
   return (
-    <div id="modal" style={style()}>
+    <div id="modal" style={style}>
+      <i
+        onClick={props.page.handleCloseModal}
+        id="hidformexit"
+        className="material-icons"
+      >
+        clear
+      </i>
+      <br />
       <Content loadbar={props.loadbar} page={props.page} />
     </div>
   );

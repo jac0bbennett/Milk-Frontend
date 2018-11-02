@@ -6,6 +6,7 @@ import SignIn from "./components/Views/Auth/signIn";
 import SignOut from "./components/Views/Auth/signOut";
 import AppList from "./components/Views/AppList/appList";
 import { Modal } from "./components/UI/Modal/modal";
+import Cloak from "./components/UI/Modal/cloak";
 import { Provider, Subscribe } from "unstated";
 import SessionContainer from "./containers/SessionContainer";
 import LoadbarContainer from "./containers/LoadbarContainer";
@@ -26,6 +27,7 @@ const App = () => {
       <Subscribe to={[SessionContainer, LoadbarContainer, PageContainer]}>
         {(session, loadbar, page) => (
           <React.Fragment>
+            <Cloak isShow={page.state.showModal} page={page} />
             <Modal
               isShow={page.state.showModal}
               inner={page.state.modalComp}
@@ -33,7 +35,6 @@ const App = () => {
               page={page}
               session={session}
             />
-
             <LoadingBar
               id="loadingbar"
               progress={loadbar.state.progress}
