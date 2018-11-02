@@ -508,11 +508,11 @@ hr {
     margin-top: 70px;
   }
 
-  #hiddenform {
+  #modal {
     margin-bottom: 20px;
   }
 
-  #hiddenform.is-show {
+  #modal.is-show {
     top: 20px;
   }
 
@@ -558,10 +558,10 @@ hr {
     height: 23px;
   }
 
-  #hiddenform {
+  #modal {
     width: 90%;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
   }
   #fieldoptions {
     width: 98%;

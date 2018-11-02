@@ -52,7 +52,7 @@ class EditAppForm extends Component {
       this.setState({ msg: "" });
 
       if (
-        this.props.session.state.selApp == this.props.page.state.modalData.uuid
+        this.props.session.state.selApp === this.props.page.state.modalData.uuid
       ) {
         this.props.session.handleSession(undefined, "0");
       }

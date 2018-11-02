@@ -8,7 +8,7 @@ class AppList extends Component {
     super(props);
     props.loadbar.progressTo(15);
     props.page.handlePageChange("Your Apps", "apps");
-    this.state = { apps: [] };
+    this.state = { apps: [], isLoaded: false };
   }
 
   componentWillUpdate = () => {
@@ -26,7 +26,7 @@ class AppList extends Component {
       const userId = resp.meta.userId;
       const apps = resp.data.apps;
       const selApp = resp.meta.appUUID;
-      this.setState({ apps, selApp });
+      this.setState({ apps, selApp, isLoaded: true });
       this.props.session.handleSession(userId, selApp);
       this.props.loadbar.progressTo(100);
     }
@@ -34,6 +34,38 @@ class AppList extends Component {
 
   componentDidMount = () => {
     this.getApps();
+  };
+
+  NoAppMsg = () => {
+    return (
+      <center>
+        <br />
+        <br />
+        <br />
+
+        <span style={{ fontSize: "14pt" }} className="softtext">
+          <i style={{ fontSize: "42pt" }} className="material-icons">
+            sentiment_very_dissatisfied
+          </i>
+          <br />
+          <br />
+          You don't have any apps.
+        </span>
+        <br />
+        <br />
+        <br />
+        <button
+          style={{ fontSize: "9pt" }}
+          onClick={() => this.props.page.handleShowModal("newappform")}
+          className="raisedbut"
+        >
+          <span className="icolab">Create One</span>
+          <i style={{ fontSize: "11pt" }} className="material-icons">
+            add
+          </i>
+        </button>
+      </center>
+    );
   };
 
   render() {
@@ -51,34 +83,10 @@ class AppList extends Component {
               page={this.props.page}
             />
           ))
+        ) : this.state.isLoaded ? (
+          <this.NoAppMsg />
         ) : (
-          <center>
-            <br />
-            <br />
-            <br />
-
-            <span style={{ fontSize: "14pt" }} className="softtext">
-              <i style={{ fontSize: "42pt" }} className="material-icons">
-                sentiment_very_dissatisfied
-              </i>
-              <br />
-              <br />
-              You don't have any apps.
-            </span>
-            <br />
-            <br />
-            <br />
-            <button
-              style={{ fontSize: "9pt" }}
-              onClick={() => this.props.page.handleShowModal("newappform")}
-              className="raisedbut"
-            >
-              <span className="icolab">Create One</span>
-              <i style={{ fontSize: "11pt" }} className="material-icons">
-                add
-              </i>
-            </button>
-          </center>
+          <br />
         )}
       </React.Fragment>
     );

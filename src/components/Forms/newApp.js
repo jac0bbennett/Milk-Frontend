@@ -25,7 +25,7 @@ class NewAppForm extends Component {
       this.setState({ msg });
       this.props.loadbar.setToError(true);
     } else {
-      this.setState({ msg: "" });
+      this.setState({ msg: "", form: { name: "" } });
       this.props.loadbar.progressTo(100);
       this.props.page.handleCloseModal();
       this.props.page.handleSetRefresh(true);
