@@ -27,14 +27,16 @@ const App = () => {
       <Subscribe to={[SessionContainer, LoadbarContainer, PageContainer]}>
         {(session, loadbar, page) => (
           <React.Fragment>
-            <Cloak isShow={page.state.showModal} page={page} />
-            <Modal
-              isShow={page.state.showModal}
-              inner={page.state.modalComp}
-              loadbar={loadbar}
-              page={page}
-              session={session}
-            />
+            <div id="overlay" className={page.state.showModal ? "is-show" : ""}>
+              <Cloak isShow={page.state.showModal} page={page} />
+              <Modal
+                isShow={page.state.showModal}
+                inner={page.state.modalComp}
+                loadbar={loadbar}
+                page={page}
+                session={session}
+              />
+            </div>
             <LoadingBar
               id="loadingbar"
               progress={loadbar.state.progress}

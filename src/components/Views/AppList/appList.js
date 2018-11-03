@@ -70,7 +70,7 @@ class AppList extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <div>
         <FAB page={this.props.page} modalComp="newappform">
           <i className="material-icons">add</i>
         </FAB>
@@ -88,7 +88,7 @@ class AppList extends Component {
         ) : (
           <br />
         )}
-      </React.Fragment>
+      </div>
     );
   }
 }

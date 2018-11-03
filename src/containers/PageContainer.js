@@ -21,10 +21,12 @@ class PageContainer extends Container {
     data = this.state.modalData
   ) => {
     this.setState({ showModal: true, modalComp: comp, modalData: data });
+    //document.body.style.overflowY = "hidden";
   };
 
   handleCloseModal = () => {
     this.setState({ showModal: false });
+    //document.body.style.overflowY = "scroll";
   };
 
   handleSetRefresh = bool => {
