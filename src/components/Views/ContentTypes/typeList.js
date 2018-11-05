@@ -1,39 +1,40 @@
 import React, { Component } from "react";
-import AppItem from "./appItem";
 import FAB from "../../UI/Buttons/fab";
+import TypeItem from "./typeItem";
 import { getRequest } from "../../../utils/requests";
 
-class AppList extends Component {
+class ContentTypeList extends Component {
   constructor(props) {
     super(props);
     props.loadbar.progressTo(15);
-    props.page.handlePageChange("Your Apps", "apps");
-    this.state = { apps: [], isLoaded: false };
+    props.page.handlePageChange("Content Types", "types");
+    props.session.handleSession(undefined, this.props.match.params.appuuid);
+    this.state = { types: [], isLoaded: false };
   }
 
   componentWillUpdate = () => {
     if (this.props.page.state.refreshView === true) {
-      this.getApps();
+      this.getTypes();
       this.props.page.handleSetRefresh(false);
     }
   };
 
-  getApps = async () => {
-    const resp = await getRequest("/api/panel/apps");
+  getTypes = async (uuid = this.props.session.state.selApp) => {
+    const resp = await getRequest("/api/panel/apps/" + uuid + "/types");
     if (resp.error) {
       this.props.loadbar.setToError(true);
     } else {
       const userId = resp.meta.userId;
-      const apps = resp.data.apps;
+      const types = resp.data.types;
       const selApp = resp.meta.appUUID;
-      this.setState({ apps, isLoaded: true });
+      this.setState({ types, isLoaded: true });
       this.props.session.handleSession(userId, selApp);
       this.props.loadbar.progressTo(100);
     }
   };
 
   componentDidMount = () => {
-    this.getApps();
+    this.getTypes(this.props.match.params.appuuid);
   };
 
   NoAppMsg = () => {
@@ -49,14 +50,14 @@ class AppList extends Component {
           </i>
           <br />
           <br />
-          You don't have any apps.
+          You don't have any content types for this app.
         </span>
         <br />
         <br />
         <br />
         <button
           style={{ fontSize: "9pt" }}
-          onClick={() => this.props.page.handleShowModal("newappform")}
+          onClick={() => this.props.page.handleShowModal("newtypeform")}
           className="raisedbut"
         >
           <span className="icolab">Create One</span>
@@ -71,14 +72,14 @@ class AppList extends Component {
   render() {
     return (
       <div>
-        <FAB page={this.props.page} modalComp="newappform">
+        <FAB page={this.props.page} modalComp="newtypeform">
           <i className="material-icons">add</i>
         </FAB>
-        {this.state.apps.length > 0 ? (
-          this.state.apps.map(app => (
-            <AppItem
-              key={app.uuid}
-              app={app}
+        {this.state.types.length > 0 ? (
+          this.state.types.map(type => (
+            <TypeItem
+              key={type.id}
+              type={type}
               session={this.props.session}
               page={this.props.page}
             />
@@ -93,4 +94,4 @@ class AppList extends Component {
   }
 }
 
-export default AppList;
+export default ContentTypeList;

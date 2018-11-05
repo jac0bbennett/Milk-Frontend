@@ -7,7 +7,7 @@ const Nav = props => {
   const navs = [
     { to: "/panel/apps", label: "apps", navId: "apps", appDep: false },
     {
-      to: "/panel/apps/" + selApp,
+      to: "/panel/apps/" + selApp + "/types",
       label: "content types",
       navId: "types",
       appDep: true
