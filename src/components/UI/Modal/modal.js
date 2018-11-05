@@ -1,6 +1,7 @@
 import React from "react";
 import EditAppForm from "../../Forms/editApp";
 import NewAppForm from "../../Forms/newApp";
+import NewTypeForm from "../../Forms/newType";
 
 const Content = props => {
   switch (props.page.state.modalComp) {
@@ -8,6 +9,8 @@ const Content = props => {
       return <NewAppForm {...props} />;
     case "editappform":
       return <EditAppForm {...props} />;
+    case "newtypeform":
+      return <NewTypeForm {...props} />;
     default:
       return <h2>Form</h2>;
   }

@@ -14,7 +14,9 @@ const TypeItem = props => {
         onClick={() => {
           props.page.handleShowModal("editappform", props.type);
         }}
-      />
+      >
+        Edit
+      </button>
     </div>
   );
 };

@@ -9,6 +9,9 @@ class SessionContainer extends Container {
   };
 
   handleSession = (userId = this.state.userId, selApp = this.state.selApp) => {
+    if (selApp !== "0") {
+      this.handleSelectApp(selApp);
+    }
     this.setState({ userId, selApp });
   };
 
