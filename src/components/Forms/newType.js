@@ -7,7 +7,8 @@ import SubmitButton from "../UI/Buttons/submitButton";
 class NewTypeForm extends Component {
   state = {
     form: { name: "", slug: "" },
-    msg: ""
+    msg: "",
+    changedSlug: false
   };
 
   handleSubmit = async event => {
@@ -29,16 +30,35 @@ class NewTypeForm extends Component {
       this.setState({ msg });
       this.props.loadbar.setToError(true);
     } else {
-      this.setState({ msg: "", form: { name: "" } });
+      this.setState({ msg: "", form: { name: "", slug: "" } });
       this.props.loadbar.progressTo(100);
       this.props.page.handleCloseModal();
       this.props.page.handleSetRefresh(true);
     }
   };
 
+  generateSlug = slug => {
+    if (!this.state.changedSlug) {
+      slug = slug.replace(/\b\w/g, l => l.toUpperCase());
+      slug = slug.charAt(0).toLowerCase() + slug.slice(1);
+    }
+    slug = slug.replace(/[^a-zA-Z0-9_]/g, "");
+    slug = slug.replace(/^\d+\.\s*/, "");
+    slug = slug.charAt(0).replace(/[^a-zA-Z_]/, "") + slug.slice(1);
+    return slug;
+  };
+
   handleChange = event => {
     let form = { ...this.state.form };
-    form[event.target.name] = event.target.value;
+    if (event.target.name === "name" && !this.state.changedSlug) {
+      form.slug = this.generateSlug(event.target.value);
+      form.name = event.target.value;
+    } else if (event.target.name === "slug") {
+      this.setState({ changedSlug: true });
+      form.slug = this.generateSlug(event.target.value);
+    } else {
+      form[event.target.name] = event.target.value;
+    }
     this.setState({ form });
   };
 
