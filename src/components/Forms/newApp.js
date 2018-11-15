@@ -35,7 +35,7 @@ class NewAppForm extends Component {
   handleChange = event => {
     let form = { ...this.state.form };
     form.name = event.target.value;
-    this.setState({ form });
+    this.setState({ form, msg: "" });
   };
 
   render() {

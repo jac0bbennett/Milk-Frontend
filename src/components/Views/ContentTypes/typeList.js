@@ -72,6 +72,7 @@ class ContentTypeList extends Component {
   render() {
     return (
       <div>
+        <h3 className="bgtext">{this.props.session.state.selAppName}</h3>
         <FAB page={this.props.page} modalComp="newtypeform">
           <i className="material-icons">add</i>
         </FAB>
@@ -82,6 +83,12 @@ class ContentTypeList extends Component {
               type={type}
               session={this.props.session}
               page={this.props.page}
+              url={
+                "/panel/apps/" +
+                this.props.session.state.selApp +
+                "/types/" +
+                type.id
+              }
             />
           ))
         ) : this.state.isLoaded ? (

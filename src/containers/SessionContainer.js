@@ -5,14 +5,19 @@ import { Container } from "unstated";
 class SessionContainer extends Container {
   state = {
     userId: 0,
-    selApp: "0"
+    selApp: "0",
+    selAppName: ""
   };
 
-  handleSession = (userId = this.state.userId, selApp = this.state.selApp) => {
+  handleSession = (
+    userId = this.state.userId,
+    selApp = this.state.selApp,
+    selAppName = this.state.selAppName
+  ) => {
     if (selApp !== "0") {
-      this.handleSelectApp(selApp);
+      this.handleSelectApp(selApp, selAppName);
     }
-    this.setState({ userId, selApp });
+    this.setState({ userId, selApp, selAppName });
   };
 
   handleSignIn = userId => {
@@ -36,10 +41,15 @@ class SessionContainer extends Container {
 
   handleSelectApp = async selApp => {
     this.setState({ selApp });
+
+    const appreq = await getRequest("/api/panel/apps/" + selApp);
+    this.setState({ selAppName: appreq.data.name });
+
     const resp = await getRequest("/api/panel/apps/select/" + selApp);
 
     if (resp.error) {
       this.loadbar.setToError(true);
+      this.setState({ selApp: "0" });
     }
   };
 

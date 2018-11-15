@@ -10,7 +10,7 @@ const AppItem = props => {
         }}
         sel={props.session.state.selApp === props.app.uuid}
       />
-      <h2 className="cmsappname">{props.app.name}</h2>
+      <h2>{props.app.name}</h2>
       <button
         className="flatbut cmsappmanage"
         style={{

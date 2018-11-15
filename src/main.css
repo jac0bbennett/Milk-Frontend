@@ -185,7 +185,7 @@ hr {
   margin-right: auto;
   max-width: 1000px;
   padding-left: 10px;
-  padding-top: 80px;
+  padding-top: 60px;
 }
 
 .gencontainer {
@@ -203,6 +203,13 @@ hr {
 
 .softtext {
   color: #9c9c9c;
+}
+
+.bgtext {
+  border-radius: 5px;
+  color: #3c81c8;
+  padding: 5px;
+  text-decoration: overline;
 }
 
 #modal {
@@ -328,6 +335,7 @@ hr {
 
 .floatright {
   float: right;
+  margin-left: 5px;
 }
 
 .submitbut {
@@ -504,7 +512,7 @@ hr {
   }
 
   #wrapper {
-    padding-top: 90px;
+    padding-top: 70px;
     margin-right: 10px;
   }
 

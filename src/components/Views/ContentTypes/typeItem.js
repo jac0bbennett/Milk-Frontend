@@ -1,22 +1,22 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const TypeItem = props => {
   return (
-    <div className={""}>
-      <h2 className="cmsappname">{props.type.name}</h2>
-      <button
-        className="flatbut cmsappmanage"
-        style={{
-          float: "right",
-          padding: "5px",
-          marginBottom: "5px"
-        }}
-        onClick={() => {
-          props.page.handleShowModal("editappform", props.type);
-        }}
-      >
-        Edit
-      </button>
+    <div className={"typeitem"}>
+      <Link to={props.url}>
+        <button
+          className="flatbut"
+          style={{
+            float: "right",
+            padding: "5px"
+          }}
+        >
+          <i className="material-icons">create</i>
+        </button>
+      </Link>
+      <h2>{props.type.name}</h2>
+      <h3 className="softtext">{props.type.slug}</h3>
     </div>
   );
 };

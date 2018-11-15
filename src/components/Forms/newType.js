@@ -39,12 +39,12 @@ class NewTypeForm extends Component {
 
   generateSlug = slug => {
     if (!this.state.changedSlug) {
-      slug = slug.replace(/\b\w/g, l => l.toUpperCase());
-      slug = slug.charAt(0).toLowerCase() + slug.slice(1);
+      slug = slug.replace(/\b\w/g, l => l.toUpperCase()); // Capitalize each word
+      slug = slug.charAt(0).toLowerCase() + slug.slice(1); // Lowercase first word
     }
-    slug = slug.replace(/[^a-zA-Z0-9_]/g, "");
-    slug = slug.replace(/^\d+\.\s*/, "");
-    slug = slug.charAt(0).replace(/[^a-zA-Z_]/, "") + slug.slice(1);
+    slug = slug.replace(/[^a-zA-Z0-9_]/g, ""); // Remove special characters
+    slug = slug.replace(/^\d+\.\s*/, ""); // Remove spaces
+    slug = slug.charAt(0).replace(/[^a-zA-Z_]/, "") + slug.slice(1); // Remove leading number
     return slug;
   };
 
@@ -59,7 +59,7 @@ class NewTypeForm extends Component {
     } else {
       form[event.target.name] = event.target.value;
     }
-    this.setState({ form });
+    this.setState({ form, msg: "" });
   };
 
   render() {
@@ -73,7 +73,7 @@ class NewTypeForm extends Component {
         <TextInput
           name="name"
           type="text"
-          label="Type Name"
+          label="Name"
           value={this.state.form.name}
           onChange={this.handleChange}
         />
@@ -81,7 +81,7 @@ class NewTypeForm extends Component {
         <TextInput
           name="slug"
           type="text"
-          label="Type Slug"
+          label="Slug"
           value={this.state.form.slug}
           onChange={this.handleChange}
         />
