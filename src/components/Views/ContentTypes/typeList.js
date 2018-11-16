@@ -72,7 +72,7 @@ class ContentTypeList extends Component {
   render() {
     return (
       <div>
-        <h3 className="bgtext">{this.props.session.state.selAppName}</h3>
+        <h3 className="miniheader">{this.props.session.state.selAppName}</h3>
         <FAB page={this.props.page} modalComp="newtypeform">
           <i className="material-icons">add</i>
         </FAB>
@@ -87,7 +87,7 @@ class ContentTypeList extends Component {
                 "/panel/apps/" +
                 this.props.session.state.selApp +
                 "/types/" +
-                type.id
+                type.slug
               }
             />
           ))
