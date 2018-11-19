@@ -140,7 +140,8 @@ body {
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
   font-weight: 400;
 }
 
@@ -276,12 +277,24 @@ hr {
 }
 
 .gentxtinp:focus ~ .floating-label,
-.gentxtinp:not(:focus):valid ~ .floating-label {
+.gentxtinp:not(:focus):valid ~ .floating-label,
+.gentxtinp:disabled ~ .floating-label {
   top: 2px;
   left: 0px;
   font-size: 12px;
   opacity: 1;
   color: #3c81c8;
+}
+
+.gentxtinp:disabled {
+  background: #fff;
+  color: gray;
+  border-bottom-color: gray;
+  cursor: not-allowed;
+}
+
+.gentxtinp:disabled ~ .floating-label {
+  color: gray;
 }
 
 .gentxtinp:not(:focus):valid ~ .floating-label {
@@ -513,7 +526,7 @@ hr {
   }
 
   #wrapper {
-    padding-top: 70px;
+    padding-top: 90px;
     margin-right: 10px;
   }
 

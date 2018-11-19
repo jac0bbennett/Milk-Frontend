@@ -12,7 +12,12 @@ const TypeItem = props => {
             padding: "5px"
           }}
         >
-          <i className="material-icons">create</i>
+          <i
+            style={{ paddingRight: "20px", paddingLeft: "20px" }}
+            className="material-icons"
+          >
+            create
+          </i>
         </button>
       </Link>
       <h2>{props.type.name}</h2>

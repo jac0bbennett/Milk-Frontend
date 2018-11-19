@@ -9,7 +9,8 @@ const TextInput = props => {
         onChange={props.onChange}
         type={props.type}
         value={props.value}
-        required
+        required={props.required}
+        disabled={props.disabled}
       />
       <span className="floating-label">{props.label}</span>
     </div>

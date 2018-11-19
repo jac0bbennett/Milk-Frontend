@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import FAB from "../../UI/Buttons/fab";
 import TypeItem from "./typeItem";
 import { getRequest } from "../../../utils/requests";
+import { MiniHeader } from "../../UI/Misc/miniHeader";
 
 class ContentTypeList extends Component {
   constructor(props) {
@@ -72,7 +73,7 @@ class ContentTypeList extends Component {
   render() {
     return (
       <div>
-        <h3 className="miniheader">{this.props.session.state.selAppName}</h3>
+        <MiniHeader header={this.props.session.state.selAppName} />
         <FAB page={this.props.page} modalComp="newtypeform">
           <i className="material-icons">add</i>
         </FAB>

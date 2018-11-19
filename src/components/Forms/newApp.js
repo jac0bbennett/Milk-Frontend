@@ -52,6 +52,7 @@ class NewAppForm extends Component {
           label="App Name"
           value={this.state.form.name}
           onChange={this.handleChange}
+          required={true}
         />
         <br />
         <br />

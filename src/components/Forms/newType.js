@@ -76,6 +76,7 @@ class NewTypeForm extends Component {
           label="Name"
           value={this.state.form.name}
           onChange={this.handleChange}
+          required={true}
         />
         <br />
         <TextInput
@@ -84,6 +85,7 @@ class NewTypeForm extends Component {
           label="Slug"
           value={this.state.form.slug}
           onChange={this.handleChange}
+          required={true}
         />
         <br />
         <br />

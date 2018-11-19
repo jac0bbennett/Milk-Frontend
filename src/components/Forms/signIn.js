@@ -12,12 +12,14 @@ const SignInForm = props => {
         onChange={e => props.handleChange(e)}
         type="text"
         label="Pseudonym"
+        required={true}
       />
       <TextInput
         name="key"
         onChange={e => props.handleChange(e)}
         type="password"
         label="Key"
+        required={true}
       />
       <br />
       <br />
