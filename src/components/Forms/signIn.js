@@ -12,6 +12,7 @@ const SignInForm = props => {
         onChange={e => props.handleChange(e)}
         type="text"
         label="Pseudonym"
+        autoComplete={"username"}
         required={true}
       />
       <TextInput
@@ -20,6 +21,7 @@ const SignInForm = props => {
         type="password"
         label="Key"
         required={true}
+        autoComplete={"current-password"}
       />
       <br />
       <br />

@@ -13,9 +13,9 @@ import { Provider, Subscribe } from "unstated";
 import SessionContainer from "./containers/SessionContainer";
 import LoadbarContainer from "./containers/LoadbarContainer";
 import PageContainer from "./containers/PageContainer";
-import UNSTATED from "unstated-debug";
+// import UNSTATED from "unstated-debug";
 
-UNSTATED.logStateChanges = true;
+// UNSTATED.logStateChanges = true;
 
 const sessionCont = new SessionContainer();
 const loadbarCont = new LoadbarContainer();

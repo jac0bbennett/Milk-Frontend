@@ -58,7 +58,7 @@ class EditContentType extends Component {
     event.preventDefault();
 
     this.props.loadbar.progressTo(15);
-    this.setState({ msg: "submitting..." });
+    this.setState({ msg: "saving..." });
 
     const typename = this.state.name;
 
@@ -94,7 +94,7 @@ class EditContentType extends Component {
               <TextInput
                 name="name"
                 type="text"
-                label="Type Name"
+                label="Name"
                 value={this.state.name}
                 onChange={this.handleChange}
                 required={true}
@@ -102,7 +102,7 @@ class EditContentType extends Component {
               <TextInput
                 name="slug"
                 type="text"
-                label="Type Slug"
+                label="Slug"
                 value={this.state.slug}
                 disabled={true}
               />

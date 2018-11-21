@@ -9,6 +9,7 @@ const TextInput = props => {
         onChange={props.onChange}
         type={props.type}
         value={props.value}
+        autoComplete={props.autoComplete}
         required={props.required}
         disabled={props.disabled}
       />
