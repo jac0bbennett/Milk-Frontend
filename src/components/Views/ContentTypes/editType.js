@@ -4,6 +4,7 @@ import { getRequest, patchRequest } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import FormMsg from "../../UI/Misc/formMsg";
+import FAB from "../../UI/Buttons/fab";
 
 class EditContentType extends Component {
   constructor(props) {
@@ -86,6 +87,13 @@ class EditContentType extends Component {
   render() {
     return (
       <React.Fragment>
+        <FAB
+          page={this.props.page}
+          modalComp="newfieldform"
+          modalData={{ slug: this.state.slug }}
+        >
+          <i className="material-icons">add</i>
+        </FAB>
         <MiniHeader header={this.props.session.state.selAppName} />
         {this.state.isLoaded ? (
           <div className="gencontainer">
@@ -113,7 +121,12 @@ class EditContentType extends Component {
             <hr />
             <h3>Fields</h3>
             {this.state.fields.length > 0 ? (
-              "Fields here"
+              this.state.fields.map(field => (
+                <div key={field.slug}>
+                  <h3>{field.name}</h3>
+                  <h4>{field.slug}</h4>
+                </div>
+              ))
             ) : (
               <center>
                 <span className="softtext">No Fields</span>

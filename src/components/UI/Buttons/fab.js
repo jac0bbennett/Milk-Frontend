@@ -11,7 +11,7 @@ const FAB = props => {
     if (props.page.state.showModal) {
       props.page.handleCloseModal();
     } else {
-      props.page.handleShowModal(props.modalComp);
+      props.page.handleShowModal(props.modalComp, props.modalData);
     }
   };
 

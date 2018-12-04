@@ -297,10 +297,6 @@ hr {
   color: gray;
 }
 
-.gentxtinp:not(:focus):valid ~ .floating-label {
-  color: #000;
-}
-
 .gentxtinp {
   margin-top: 12px;
   font-size: 14pt;
@@ -313,6 +309,34 @@ hr {
 
 .gentxtinp:focus {
   border-bottom: 2px solid #3c81c8;
+}
+
+.gendropinp {
+  margin-top: 12px;
+  font-size: 14pt;
+  width: 300px;
+  height: 40px;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid #000;
+}
+
+.gendropinp:focus ~ .floating-label,
+.gendropinp:not(:focus):valid ~ .floating-label {
+  top: 2px;
+  left: 0px;
+  font-size: 12px;
+  opacity: 1;
+  color: #3c81c8;
+}
+
+.gentxtinp:not(:focus):valid ~ .floating-label,
+.gendropinp:not(:focus):valid ~ .floating-label {
+  color: #000;
+}
+
+option {
+  font-size: 12pt;
 }
 
 .floating-label {

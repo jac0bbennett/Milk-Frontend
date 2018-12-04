@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import TextInput from "../UI/Inputs/txtInput";
+import DropDownInput from "../UI/Inputs/dropInput";
 import { postRequest } from "../../utils/requests";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 import { generateSlug } from "../../utils/text";
 
-class NewTypeForm extends Component {
+class NewFieldForm extends Component {
   state = {
-    form: { name: "", slug: "" },
+    form: { name: "", slug: "", fieldtype: "" },
     msg: "",
     changedSlug: false
   };
@@ -16,14 +17,19 @@ class NewTypeForm extends Component {
     event.preventDefault();
 
     this.props.loadbar.progressTo(15);
-    this.setState({ msg: "creating..." });
+    this.setState({ msg: "adding..." });
 
-    const typename = this.state.form.name;
-    const typeslug = this.state.form.slug;
+    const fieldname = this.state.form.name;
+    const fieldslug = this.state.form.slug;
+    const fieldtype = this.state.form.fieldtype;
 
     const req = await postRequest(
-      "/api/panel/apps/" + this.props.session.state.selApp + "/types",
-      { typename, typeslug }
+      "/api/panel/apps/" +
+        this.props.session.state.selApp +
+        "/types/" +
+        this.props.page.state.modalData.slug +
+        "/addfield",
+      { fieldname, fieldslug, fieldtype }
     );
 
     if (req.error) {
@@ -49,14 +55,13 @@ class NewTypeForm extends Component {
     } else {
       form[event.target.name] = event.target.value;
     }
-    form.name = event.target.value;
     this.setState({ form, msg: "" });
   };
 
   render() {
     return (
       <form onSubmit={this.handleSubmit} autoComplete="off">
-        <h2>New Content Type</h2>
+        <h2>New Field</h2>
         <TextInput
           name="name"
           type="text"
@@ -75,6 +80,14 @@ class NewTypeForm extends Component {
           required={true}
         />
         <br />
+        <DropDownInput
+          name="fieldtype"
+          label="Type"
+          onChange={this.handleChange}
+          value={this.state.form.fieldtype}
+          required={true}
+        />
+        <br />
         <br />
         <FormMsg msg={this.state.msg} />
         <SubmitButton>Submit</SubmitButton>
@@ -85,4 +98,4 @@ class NewTypeForm extends Component {
   }
 }
 
-export default NewTypeForm;
+export default NewFieldForm;

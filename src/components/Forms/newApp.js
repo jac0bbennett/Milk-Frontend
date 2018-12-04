@@ -40,11 +40,7 @@ class NewAppForm extends Component {
 
   render() {
     return (
-      <form
-        className={this.props.focus ? "focused" : ""}
-        onSubmit={this.handleSubmit}
-        autoComplete="off"
-      >
+      <form onSubmit={this.handleSubmit} autoComplete="off">
         <h2>New App</h2>
         <TextInput
           name="name"
