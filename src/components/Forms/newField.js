@@ -37,7 +37,7 @@ class NewFieldForm extends Component {
       this.setState({ msg });
       this.props.loadbar.setToError(true);
     } else {
-      this.setState({ msg: "", form: { name: "", slug: "" } });
+      this.setState({ msg: "", form: { name: "", slug: "", fieldtype: "" } });
       this.props.loadbar.progressTo(100);
       this.props.page.handleCloseModal();
       this.props.page.handleSetRefresh(true);

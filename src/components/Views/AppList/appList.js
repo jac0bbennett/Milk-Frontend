@@ -38,11 +38,7 @@ class AppList extends Component {
 
   NoAppMsg = () => {
     return (
-      <center>
-        <br />
-        <br />
-        <br />
-
+      <div id="midmsg">
         <span style={{ fontSize: "14pt" }} className="softtext">
           <i style={{ fontSize: "42pt" }} className="material-icons">
             sentiment_very_dissatisfied
@@ -64,7 +60,7 @@ class AppList extends Component {
             add
           </i>
         </button>
-      </center>
+      </div>
     );
   };
 

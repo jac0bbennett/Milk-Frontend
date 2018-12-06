@@ -5,6 +5,7 @@ import { MiniHeader } from "../../UI/Misc/miniHeader";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import FormMsg from "../../UI/Misc/formMsg";
 import FAB from "../../UI/Buttons/fab";
+import FieldList from "./fieldList";
 
 class EditContentType extends Component {
   constructor(props) {
@@ -114,24 +115,15 @@ class EditContentType extends Component {
                 value={this.state.slug}
                 disabled={true}
               />
-              <SubmitButton>Save</SubmitButton>
+              <div style={{ float: "right" }}>
+                <FormMsg msg={this.state.msg} />
+                <SubmitButton>Save</SubmitButton>
+              </div>
             </form>
-            <FormMsg msg={this.state.msg} />
+
             <br />
             <hr />
-            <h3>Fields</h3>
-            {this.state.fields.length > 0 ? (
-              this.state.fields.map(field => (
-                <div key={field.slug}>
-                  <h3>{field.name}</h3>
-                  <h4>{field.slug}</h4>
-                </div>
-              ))
-            ) : (
-              <center>
-                <span className="softtext">No Fields</span>
-              </center>
-            )}
+            <FieldList fields={this.state.fields} />
           </div>
         ) : (
           <br />
