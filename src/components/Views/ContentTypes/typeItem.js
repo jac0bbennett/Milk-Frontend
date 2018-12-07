@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const TypeItem = props => {
   return (
-    <div className={"typeitem"}>
+    <div className={"secondaryitemcont"}>
       <Link to={props.url}>
         <button
           className="flatbut"

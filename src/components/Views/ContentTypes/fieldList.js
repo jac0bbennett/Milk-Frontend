@@ -11,7 +11,9 @@ class FieldList extends Component {
       <React.Fragment>
         <h3>Fields</h3>
         {this.state.fields.length > 0 ? (
-          this.state.fields.map(field => <FieldItem field={field} />)
+          this.state.fields.map(field => (
+            <FieldItem key={field.slug} field={field} />
+          ))
         ) : (
           <center>
             <span className="softtext">No Fields</span>
