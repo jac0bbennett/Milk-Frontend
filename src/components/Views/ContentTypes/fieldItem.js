@@ -6,6 +6,7 @@ const FieldItem = props => {
     <div className={"secondaryitemcont"} key={field.slug}>
       <h4>{field.name}</h4>
       <h5>{field.slug}</h5>
+      <h5>{field.fieldType}</h5>
     </div>
   );
 };

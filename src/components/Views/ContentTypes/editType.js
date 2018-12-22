@@ -64,8 +64,6 @@ class EditContentType extends Component {
 
     const typename = this.state.name;
 
-    console.log(typename);
-
     const req = await patchRequest(
       "/api/panel/apps/" +
         this.props.session.state.selApp +
