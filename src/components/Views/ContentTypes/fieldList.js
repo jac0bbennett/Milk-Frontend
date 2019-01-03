@@ -1,23 +1,15 @@
-import React, { Component } from "react";
+import React from "react";
 import FieldItem from "./fieldItem";
+import { SortableContainer } from "react-sortable-hoc";
 
-class FieldList extends Component {
-  render() {
-    return (
-      <React.Fragment>
-        <h3>Fields</h3>
-        {this.props.fields.length > 0 ? (
-          this.props.fields.map(field => (
-            <FieldItem key={field.slug} field={field} />
-          ))
-        ) : (
-          <center>
-            <span className="softtext">No Fields</span>
-          </center>
-        )}
-      </React.Fragment>
-    );
-  }
-}
+const FieldList = SortableContainer(({ fields }) => {
+  return (
+    <div>
+      {fields.map((field, index) => (
+        <FieldItem key={field.slug} index={index} field={field} />
+      ))}
+    </div>
+  );
+});
 
 export default FieldList;

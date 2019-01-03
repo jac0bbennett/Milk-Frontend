@@ -6,6 +6,7 @@ import SubmitButton from "../../UI/Buttons/submitButton";
 import FormMsg from "../../UI/Misc/formMsg";
 import FAB from "../../UI/Buttons/fab";
 import FieldList from "./fieldList";
+import { arrayMove } from "react-sortable-hoc";
 
 class EditContentType extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class EditContentType extends Component {
   }
 
   componentWillUpdate = () => {
+    console.log(this.state);
     if (this.props.page.state.refreshView === true) {
       this.getType();
       this.props.page.handleSetRefresh(false);
@@ -83,6 +85,24 @@ class EditContentType extends Component {
     }
   };
 
+  onSortEnd = async ({ oldIndex, newIndex }) => {
+    this.setState({
+      fields: arrayMove(this.state.fields, oldIndex, newIndex)
+    });
+
+    const req = await patchRequest(
+      "/api/panel/apps/" +
+        this.props.session.state.selApp +
+        "/types/" +
+        this.state.slug,
+      { fields: this.state.fields }
+    );
+
+    if (req.error) {
+      alert("Fields could not be reordered!");
+    }
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -121,7 +141,19 @@ class EditContentType extends Component {
 
             <br />
             <hr />
-            <FieldList fields={this.state.fields} />
+            <h3>Fields</h3>
+            {this.state.fields.length > 0 ? (
+              <FieldList
+                fields={this.state.fields}
+                onSortEnd={this.onSortEnd}
+                useDragHandle={true}
+                useWindowAsScrollContainer={true}
+              />
+            ) : (
+              <center>
+                <span className="softtext">No Fields</span>
+              </center>
+            )}
           </div>
         ) : (
           <br />
