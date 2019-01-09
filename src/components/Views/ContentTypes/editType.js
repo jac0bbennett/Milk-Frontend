@@ -18,7 +18,6 @@ class EditContentType extends Component {
   }
 
   componentWillUpdate = () => {
-    console.log(this.state);
     if (this.props.page.state.refreshView === true) {
       this.getType();
       this.props.page.handleSetRefresh(false);
@@ -144,6 +143,8 @@ class EditContentType extends Component {
             <h3>Fields</h3>
             {this.state.fields.length > 0 ? (
               <FieldList
+                page={this.props.page}
+                contentType={this.state}
                 fields={this.state.fields}
                 onSortEnd={this.onSortEnd}
                 useDragHandle={true}

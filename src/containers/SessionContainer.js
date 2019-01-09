@@ -43,7 +43,7 @@ class SessionContainer extends Container {
     this.setState({ selApp });
 
     const appreq = await getRequest("/api/panel/apps/" + selApp);
-    if (appreq.data.name) {
+    if (appreq && "data" in appreq && "name" in appreq.data) {
       this.setState({ selAppName: appreq.data.name });
     }
 

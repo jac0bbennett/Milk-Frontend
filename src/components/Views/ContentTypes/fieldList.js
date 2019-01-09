@@ -2,11 +2,17 @@ import React from "react";
 import FieldItem from "./fieldItem";
 import { SortableContainer } from "react-sortable-hoc";
 
-const FieldList = SortableContainer(({ fields }) => {
+const FieldList = SortableContainer(props => {
   return (
     <div>
-      {fields.map((field, index) => (
-        <FieldItem key={field.slug} index={index} field={field} />
+      {props.fields.map((field, index) => (
+        <FieldItem
+          key={field.slug}
+          index={index}
+          field={field}
+          page={props.page}
+          contentType={props.contentType}
+        />
       ))}
     </div>
   );

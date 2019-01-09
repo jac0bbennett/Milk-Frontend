@@ -38,7 +38,7 @@ const getIcon = fieldtype => {
   }
 };
 
-const FieldItem = SortableElement(({ field }) => (
+const FieldItem = SortableElement(props => (
   <div className="secondaryitemcont">
     <div className="coloredbar">
       <DragHandle />
@@ -46,12 +46,30 @@ const FieldItem = SortableElement(({ field }) => (
         style={{ paddingRight: "15px", fontSize: "18pt" }}
         className="material-icons"
       >
-        {getIcon(field.fieldType)}
+        {getIcon(props.field.fieldType)}
       </i>
-      <span className="icolab">{decodeFieldType(field.fieldType)}</span>
+      <span className="icolab">{decodeFieldType(props.field.fieldType)}</span>
+      <button
+        className="flatbut cmsappmanage"
+        style={{
+          float: "right",
+          padding: "5px",
+          marginTop: "-5px",
+          background: "inherit",
+          color: "#fff"
+        }}
+        onClick={() => {
+          props.page.handleShowModal("editfieldform", {
+            field: props.field,
+            contentType: props.contentType
+          });
+        }}
+      >
+        <i className="material-icons">more_horiz</i>
+      </button>
     </div>
-    <span>{field.name}</span>
-    <span>{field.slug}</span>
+    <span>{props.field.name}</span>
+    <span>{props.field.slug}</span>
   </div>
 ));
 

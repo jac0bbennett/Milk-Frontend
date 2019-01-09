@@ -5,15 +5,15 @@ import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 import DeleteButton from "../UI/Buttons/deleteButton";
 
-class EditAppForm extends Component {
+class EditFieldForm extends Component {
   state = {
-    form: { name: this.props.page.state.modalData.name },
+    form: { name: this.props.page.state.modalData.field.name },
     msg: ""
   };
 
   componentWillUpdate = () => {
     this.state.form = {
-      name: this.props.page.state.modalData.name
+      name: this.props.page.state.modalData.field.name
     };
   };
 
@@ -78,11 +78,11 @@ class EditAppForm extends Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit} autoComplete="off">
-        <h2>Edit App</h2>
+        <h2>Edit Field</h2>
         <TextInput
           name="name"
           type="text"
-          label="App Name"
+          label="Field Name"
           value={this.state.form.name}
           onChange={this.handleChange}
           required={true}
@@ -99,4 +99,4 @@ class EditAppForm extends Component {
   }
 }
 
-export default EditAppForm;
+export default EditFieldForm;
