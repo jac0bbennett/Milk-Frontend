@@ -12,9 +12,11 @@ class EditAppForm extends Component {
   };
 
   componentWillUpdate = () => {
-    this.setState({
-      form: { name: this.props.page.state.modalData.name }
-    });
+    if (this.state.form.name !== this.props.page.state.modalData.name) {
+      this.setState({
+        form: { name: this.props.page.state.modalData.name }
+      });
+    }
   };
 
   handleSubmit = async event => {

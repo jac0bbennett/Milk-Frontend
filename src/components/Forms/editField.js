@@ -11,12 +11,6 @@ class EditFieldForm extends Component {
     msg: ""
   };
 
-  componentWillUpdate = () => {
-    this.setState({
-      form: { name: this.props.page.state.modalData.field.name }
-    });
-  };
-
   handleSubmit = async event => {
     event.preventDefault();
 
