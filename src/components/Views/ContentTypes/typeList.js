@@ -47,7 +47,7 @@ class ContentTypeList extends Component {
           </i>
           <br />
           <br />
-          You don't have any content types for this app.
+          You don&#39;t have any content types for this app.
         </span>
         <br />
         <br />
