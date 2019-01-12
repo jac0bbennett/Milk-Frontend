@@ -45,7 +45,7 @@ class AppList extends Component {
           </i>
           <br />
           <br />
-          You don't have any apps.
+          You don&#39;t have any apps.
         </span>
         <br />
         <br />
