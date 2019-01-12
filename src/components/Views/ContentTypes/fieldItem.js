@@ -59,10 +59,17 @@ const FieldItem = SortableElement(props => (
           color: "#fff"
         }}
         onClick={() => {
-          props.page.handleShowModal("editfieldform", {
-            field: props.field,
-            contentType: props.contentType
-          });
+          props.page.handleShowModal(
+            "editfieldform",
+            {
+              field: props.field,
+              contentType: props.contentType,
+              index: props.i,
+              saveField: props.saveField,
+              deleteField: props.deleteField
+            },
+            true
+          );
         }}
       >
         <i className="material-icons">more_horiz</i>

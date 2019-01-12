@@ -9,9 +9,12 @@ const FieldList = SortableContainer(props => {
         <FieldItem
           key={field.slug}
           index={index}
+          i={index}
           field={field}
           page={props.page}
           contentType={props.contentType}
+          saveField={props.saveField}
+          deleteField={props.deleteField}
         />
       ))}
     </div>

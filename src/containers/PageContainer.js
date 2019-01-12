@@ -18,9 +18,12 @@ class PageContainer extends Container {
 
   handleShowModal = (
     comp = this.state.modalComp,
-    data = this.state.modalData
+    data = this.state.modalData,
+    reset = false
   ) => {
-    this.setState({ modalComp: "none" });
+    if (reset) {
+      this.setState({ modalComp: "none" });
+    }
     this.setState({ showModal: true, modalComp: comp, modalData: data });
     //document.body.style.overflowY = "hidden";
   };

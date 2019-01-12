@@ -1,71 +1,41 @@
 import React, { Component } from "react";
 import TextInput from "../UI/Inputs/txtInput";
-import { patchRequest, deleteRequest } from "../../utils/requests";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 import DeleteButton from "../UI/Buttons/deleteButton";
 
 class EditFieldForm extends Component {
   state = {
-    form: { name: this.props.page.state.modalData.field.name },
+    form: {
+      name: this.props.page.state.modalData.field.name,
+      slug: this.props.page.state.modalData.field.slug
+    },
     msg: ""
   };
 
-  handleSubmit = async event => {
-    event.preventDefault();
+  handleSubmit = event => {
+    this.setState({ msg: "saving..." });
 
-    this.props.loadbar.progressTo(15);
-    this.setState({ msg: "submitting..." });
-
-    const appname = this.state.form.name;
-
-    const req = await patchRequest(
-      "/api/panel/apps/" + this.props.page.state.modalData.uuid,
-      { appname }
+    this.props.page.state.modalData.saveField(
+      event,
+      this.props.page.state.modalData.index,
+      this.state.form.name,
+      this.state.form.slug
     );
-
-    if (req.error) {
-      const msg = req.error;
-      this.setState({ msg });
-      this.props.loadbar.setToError(true);
-    } else {
-      this.setState({ msg: "" });
-      this.props.loadbar.progressTo(100);
-      this.props.page.handleCloseModal();
-      this.props.page.handleSetRefresh(true);
-    }
   };
 
-  handleDelete = async event => {
-    this.props.loadbar.progressTo(15);
+  handleDelete = event => {
     this.setState({ msg: "deleting..." });
-
-    const req = await deleteRequest(
-      "/api/panel/apps/" + this.props.page.state.modalData.uuid
+    this.props.page.state.modalData.deleteField(
+      event,
+      this.props.page.state.modalData.index
     );
-
-    if (req.error) {
-      const msg = req.error;
-      this.setState({ msg });
-      this.props.loadbar.setToError(true);
-    } else {
-      this.setState({ msg: "" });
-
-      if (
-        this.props.session.state.selApp === this.props.page.state.modalData.uuid
-      ) {
-        this.props.session.handleSession(undefined, "0");
-      }
-
-      this.props.loadbar.progressTo(100);
-      this.props.page.handleCloseModal();
-      this.props.page.handleSetRefresh(true);
-    }
   };
 
   handleChange = event => {
     let form = { ...this.state.form };
-    form.name = event.target.value;
+    const target = event.target.name;
+    form[target] = event.target.value;
     this.setState({ form, msg: "" });
   };
 
@@ -78,6 +48,15 @@ class EditFieldForm extends Component {
           type="text"
           label="Field Name"
           value={this.state.form.name}
+          onChange={this.handleChange}
+          required={true}
+        />
+        <br />
+        <TextInput
+          name="slug"
+          type="text"
+          label="Field Slug"
+          value={this.state.form.slug}
           onChange={this.handleChange}
           required={true}
         />

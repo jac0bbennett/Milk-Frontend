@@ -18,6 +18,7 @@ class SignIn extends Component {
     event.preventDefault();
 
     this.props.loadbar.progressTo(15);
+    this.setState({ msg: "signing in..." });
 
     const pseudo = this.state.pseudo;
     const key = this.state.key;

@@ -1,12 +1,18 @@
 import React, { Component } from "react";
 import TextInput from "../../UI/Inputs/txtInput";
-import { getRequest, patchRequest } from "../../../utils/requests";
+import {
+  getRequest,
+  patchRequest,
+  deleteRequest
+} from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
 import SubmitButton from "../../UI/Buttons/submitButton";
+import DeleteButton from "../../UI/Buttons/deleteButton";
 import FormMsg from "../../UI/Misc/formMsg";
 import FAB from "../../UI/Buttons/fab";
 import FieldList from "./fieldList";
 import { arrayMove } from "react-sortable-hoc";
+import history from "../../../utils/history";
 
 class EditContentType extends Component {
   constructor(props) {
@@ -70,7 +76,7 @@ class EditContentType extends Component {
         this.props.session.state.selApp +
         "/types/" +
         this.state.slug,
-      { name: typename }
+      { name: typename, fields: this.state.fields }
     );
 
     if (req.error) {
@@ -81,7 +87,50 @@ class EditContentType extends Component {
       this.setState({ msg: "" });
       this.props.loadbar.progressTo(100);
       this.props.page.handleSetRefresh(true);
+      this.props.page.handleCloseModal();
     }
+  };
+
+  handleDelete = async event => {
+    this.props.loadbar.progressTo(15);
+    this.setState({ msg: "deleting..." });
+
+    const req = await deleteRequest(
+      "/api/panel/apps/" +
+        this.props.session.state.selApp +
+        "/types/" +
+        this.state.slug
+    );
+
+    if (req.error) {
+      const msg = req.error;
+      this.setState({ msg });
+      this.props.loadbar.setToError(true);
+    } else {
+      this.setState({ msg: "" });
+      this.props.loadbar.progressTo(100);
+      history.push("/panel/apps/" + this.props.session.state.selApp + "/types");
+    }
+  };
+
+  saveField = (event, i, name, slug) => {
+    const fields = this.state.fields;
+    const field = fields[i];
+
+    field.name = name;
+    field.slug = slug;
+
+    this.setState({ fields });
+    this.handleSubmit(event);
+  };
+
+  deleteField = (event, i) => {
+    const fields = this.state.fields;
+
+    fields.splice(i, 1);
+
+    this.setState({ fields });
+    this.handleSubmit(event);
   };
 
   onSortEnd = async ({ oldIndex, newIndex }) => {
@@ -149,12 +198,22 @@ class EditContentType extends Component {
                 onSortEnd={this.onSortEnd}
                 useDragHandle={true}
                 useWindowAsScrollContainer={true}
+                saveField={this.saveField}
+                deleteField={this.deleteField}
               />
             ) : (
               <center>
                 <span className="softtext">No Fields</span>
               </center>
             )}
+            <DeleteButton
+              style={{ float: "right" }}
+              onClick={this.handleDelete}
+            >
+              Delete
+            </DeleteButton>
+            <br />
+            <br />
           </div>
         ) : (
           <br />
