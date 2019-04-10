@@ -479,6 +479,24 @@ option {
   background: #fff;
 }
 
+.darkflatbutton {
+  float: right;
+  padding: 5px;
+  margin-top: -6px;
+  background: inherit;
+  color: #fff;
+  margin-right: 5px;
+}
+
+.darkflatbutton:hover {
+  background: #505050;
+  color: #fff;
+}
+
+.darkflatbutton:focus {
+  background: inherit;
+}
+
 .material-icons {
   vertical-align: middle;
 }
