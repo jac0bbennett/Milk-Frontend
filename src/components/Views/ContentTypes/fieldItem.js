@@ -50,14 +50,7 @@ const FieldItem = SortableElement(props => (
       </i>
       <span className="icolab">{decodeFieldType(props.field.fieldType)}</span>
       <button
-        className="flatbut cmsappmanage"
-        style={{
-          float: "right",
-          padding: "5px",
-          marginTop: "-5px",
-          background: "inherit",
-          color: "#fff"
-        }}
+        className="flatbut darkflatbutton"
         onClick={() => {
           props.page.handleShowModal(
             "editfieldform",
