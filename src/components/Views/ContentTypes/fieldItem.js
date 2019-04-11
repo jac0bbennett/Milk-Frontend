@@ -68,8 +68,10 @@ const FieldItem = SortableElement(props => (
         <i className="material-icons">more_horiz</i>
       </button>
     </div>
-    <span>{props.field.name}</span>
-    <span>{props.field.slug}</span>
+    <h3>{props.field.name}</h3>
+    <h4>
+      <span className="graytext">Slug:</span> {props.field.slug}
+    </h4>
   </div>
 ));
 
