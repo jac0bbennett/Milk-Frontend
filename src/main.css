@@ -544,6 +544,10 @@ option {
   margin-bottom: 10px;
 }
 
+.graytext {
+  color: gray;
+}
+
 @media all and (max-width: 1200px) {
   #pagetitle {
     right: 5%;
