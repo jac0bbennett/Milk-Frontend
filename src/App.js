@@ -7,6 +7,7 @@ import SignOut from "./components/Views/Auth/signOut";
 import AppList from "./components/Views/AppList/appList";
 import ContentTypeList from "./components/Views/ContentTypes/typeList";
 import EditContentType from "./components/Views/ContentTypes/editType";
+import ContentList from "./components/Views/Content/contentList";
 import { Modal } from "./components/UI/Modal/modal";
 import Cloak from "./components/UI/Modal/cloak";
 import { Provider, Subscribe } from "unstated";
@@ -78,6 +79,18 @@ const App = () => {
                   path={"/panel/apps/:appuuid/types/:typeslug"}
                   render={props => (
                     <EditContentType
+                      {...props}
+                      loadbar={loadbar}
+                      page={page}
+                      session={session}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path={"/panel/apps/:appuuid/content"}
+                  render={props => (
+                    <ContentList
                       {...props}
                       loadbar={loadbar}
                       page={page}
