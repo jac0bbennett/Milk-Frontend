@@ -46,8 +46,8 @@ class NewContentForm extends Component {
       <form onSubmit={this.handleSubmit} autoComplete="off">
         <h2>New Content</h2>
         <DropDownInput
-          name="fieldtype"
-          label="Type"
+          name="type"
+          label="Content Type"
           onChange={this.handleChange}
           value={this.state.form.type}
           required={true}
