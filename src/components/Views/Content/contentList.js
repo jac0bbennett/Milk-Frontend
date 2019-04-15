@@ -9,7 +9,7 @@ class ContentList extends Component {
     props.loadbar.progressTo(15);
     props.page.handlePageChange("Content", "content");
     props.session.handleSession(undefined, this.props.match.params.appuuid);
-    this.state = { contents: [], isLoaded: false };
+    this.state = { contents: [], types: [], isLoaded: false };
   }
 
   componentWillUpdate = () => {
@@ -21,6 +21,7 @@ class ContentList extends Component {
 
   getContents = async (uuid = this.props.session.state.selApp) => {
     const resp = await getRequest("/api/panel/apps/" + uuid + "/content");
+
     if (resp.error) {
       this.props.loadbar.setToError(true);
     } else {
@@ -29,6 +30,17 @@ class ContentList extends Component {
       const selApp = resp.meta.appUUID;
       this.setState({ contents, isLoaded: true });
       this.props.session.handleSession(userId, selApp);
+      this.props.loadbar.progressTo(60);
+    }
+
+    const respTypes = await getRequest("/api/panel/apps/" + uuid + "/types");
+
+    if (respTypes.error) {
+      this.props.loadbar.setToError(true);
+      alert("Could not load some data!");
+    } else {
+      const types = respTypes.data.types;
+      this.setState({ types, isLoaded: true });
       this.props.loadbar.progressTo(100);
     }
   };
@@ -69,12 +81,18 @@ class ContentList extends Component {
     return (
       <div>
         <MiniHeader header={this.props.session.state.selAppName} />
-        <FAB page={this.props.page} modalComp="newtypeform">
-          <i className="material-icons">add</i>
-        </FAB>
+        {this.state.types.length > 0 ? (
+          <FAB
+            page={this.props.page}
+            modalComp="newcontentform"
+            modalData={{ types: this.state.types }}
+          >
+            <i className="material-icons">add</i>
+          </FAB>
+        ) : null}
         {this.state.contents.length > 0 ? (
           this.state.contents.map(content => (
-            <span key={content.id}>{content.slug}</span>
+            <span key={content.uuid}>{content.uuid}</span>
           ))
         ) : this.state.isLoaded ? (
           <this.NoAppMsg />

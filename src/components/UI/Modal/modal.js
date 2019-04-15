@@ -4,6 +4,7 @@ import NewAppForm from "../../Forms/newApp";
 import NewTypeForm from "../../Forms/newType";
 import NewFieldForm from "../../Forms/newField";
 import EditFieldForm from "../../Forms/editField";
+import NewContentForm from "../../Forms/newContent";
 
 const Content = props => {
   switch (props.page.state.modalComp) {
@@ -17,6 +18,8 @@ const Content = props => {
       return <NewFieldForm {...props} />;
     case "editfieldform":
       return <EditFieldForm {...props} />;
+    case "newcontentform":
+      return <NewContentForm {...props} />;
     default:
       return <h2>Form</h2>;
   }

@@ -13,8 +13,7 @@ const DropDownInput = props => {
         disabled={props.disabled}
       >
         <option disabled hidden style={{ display: "none" }} value="" />
-        <option value="text_short">Short Text</option>
-        <option value="text_long">Long Text</option>
+        {props.children}
       </select>
       <span className="floating-label">{props.label}</span>
     </div>

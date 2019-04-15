@@ -12,7 +12,7 @@ class PageContainer extends Container {
   };
 
   handlePageChange = (title, pageId) => {
-    document.title = "Milk | " + title;
+    document.title = title + " | Milk";
     this.setState({ title: title, pageId: pageId });
   };
 

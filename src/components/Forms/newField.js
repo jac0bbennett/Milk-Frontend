@@ -86,7 +86,10 @@ class NewFieldForm extends Component {
           onChange={this.handleChange}
           value={this.state.form.fieldtype}
           required={true}
-        />
+        >
+          <option value="text_short">Short Text</option>
+          <option value="text_long">Long Text</option>
+        </DropDownInput>
         <br />
         <br />
         <FormMsg msg={this.state.msg} />
