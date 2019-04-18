@@ -9,12 +9,19 @@ class ContentList extends Component {
     props.loadbar.progressTo(15);
     props.page.handlePageChange("Content", "content");
     props.session.handleSession(undefined, this.props.match.params.appuuid);
-    this.state = { contents: [], types: [], isLoaded: false };
+    this.state = {
+      contents: [],
+      types: [],
+      contentsLoaded: false,
+      typesLoaded: false,
+      isLoaded: false
+    };
   }
 
   componentWillUpdate = () => {
     if (this.props.page.state.refreshView === true) {
       this.getContents();
+      this.getTypes();
       this.props.page.handleSetRefresh(false);
     }
   };
@@ -28,11 +35,18 @@ class ContentList extends Component {
       const userId = resp.meta.userId;
       const contents = resp.data.contents;
       const selApp = resp.meta.appUUID;
-      this.setState({ contents, isLoaded: true });
+      this.setState({ contents, contentsLoaded: true });
       this.props.session.handleSession(userId, selApp);
-      this.props.loadbar.progressTo(60);
+      if (this.state.typesLoaded) {
+        this.props.loadbar.progressTo(100);
+        this.setState({ isLoaded: true });
+      } else {
+        this.props.loadbar.progressTo(60);
+      }
     }
+  };
 
+  getTypes = async (uuid = this.props.session.state.selApp) => {
     const respTypes = await getRequest("/api/panel/apps/" + uuid + "/types");
 
     if (respTypes.error) {
@@ -40,13 +54,19 @@ class ContentList extends Component {
       alert("Could not load some data!");
     } else {
       const types = respTypes.data.types;
-      this.setState({ types, isLoaded: true });
-      this.props.loadbar.progressTo(100);
+      this.setState({ types, typesLoaded: true });
+      if (this.state.contentsLoaded) {
+        this.props.loadbar.progressTo(100);
+        this.setState({ isLoaded: true });
+      } else {
+        this.props.loadbar.progressTo(60);
+      }
     }
   };
 
   componentDidMount = () => {
     this.getContents(this.props.match.params.appuuid);
+    this.getTypes(this.props.match.params.appuuid);
   };
 
   NoAppMsg = () => {
@@ -92,7 +112,10 @@ class ContentList extends Component {
         ) : null}
         {this.state.contents.length > 0 ? (
           this.state.contents.map(content => (
-            <span key={content.uuid}>{content.uuid}</span>
+            <span key={content.uuid}>
+              {content.uuid}
+              <br />
+            </span>
           ))
         ) : this.state.isLoaded ? (
           <this.NoAppMsg />

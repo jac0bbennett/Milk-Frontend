@@ -70,7 +70,7 @@ const FieldItem = SortableElement(props => (
     </div>
     <h3>{props.field.name}</h3>
     <h4>
-      <span className="graytext">Slug:</span> {props.field.slug}
+      <span className="graytext">{props.field.slug}</span>
     </h4>
   </div>
 ));

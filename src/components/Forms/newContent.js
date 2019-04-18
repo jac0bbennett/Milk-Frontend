@@ -14,13 +14,13 @@ class NewContentForm extends Component {
     event.preventDefault();
 
     this.props.loadbar.progressTo(15);
-    this.setState({ msg: "adding..." });
+    this.setState({ msg: "creating..." });
 
-    const contenttype = this.state.form.type;
+    const typeslug = this.state.form.type;
 
     const req = await postRequest(
       "/api/panel/apps/" + this.props.session.state.selApp + "/content",
-      { contenttype }
+      { typeslug }
     );
 
     if (req.error) {
