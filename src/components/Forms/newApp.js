@@ -1,64 +1,62 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import TextInput from "../UI/Inputs/txtInput";
 import { postRequest } from "../../utils/requests";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 
-class NewAppForm extends Component {
-  state = {
-    form: { name: "" },
-    msg: ""
-  };
+const NewAppForm = props => {
+  const [form, setForm] = useState({ name: "" });
+  const [msg, setMsg] = useState("");
 
-  handleSubmit = async event => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
-    this.props.loadbar.progressTo(15);
-    this.setState({ msg: "creating..." });
+    props.loadbar.progressTo(15);
+    setMsg("creating...");
 
-    const appname = this.state.form.name;
+    const appname = form.name;
 
     const req = await postRequest("/api/panel/apps", { appname });
 
     if (req.error) {
       const msg = req.error;
-      this.setState({ msg });
-      this.props.loadbar.setToError(true);
+      setMsg(msg);
+      props.loadbar.setToError(true);
     } else {
-      this.setState({ msg: "", form: { name: "" } });
-      this.props.loadbar.progressTo(100);
-      this.props.page.handleCloseModal();
-      this.props.page.handleSetRefresh(true);
+      setMsg("");
+      setForm({ name: "" });
+      props.loadbar.progressTo(100);
+      props.page.handleCloseModal();
+      props.page.handleSetRefresh(true);
     }
   };
 
-  handleChange = event => {
-    let form = { ...this.state.form };
-    form.name = event.target.value;
-    this.setState({ form, msg: "" });
+  const handleChange = event => {
+    let formCopy = { ...form };
+    formCopy.name = event.target.value;
+    setForm(formCopy);
+    setMsg("");
   };
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit} autoComplete="off">
-        <h2>New App</h2>
-        <TextInput
-          name="name"
-          type="text"
-          label="App Name"
-          value={this.state.form.name}
-          onChange={this.handleChange}
-          required={true}
-        />
-        <br />
-        <br />
-        <FormMsg msg={this.state.msg} />
-        <SubmitButton>Submit</SubmitButton>
-        <br />
-        <br />
-      </form>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleSubmit} autoComplete="off">
+      <h2>New App</h2>
+      <TextInput
+        name="name"
+        type="text"
+        label="App Name"
+        value={form.name}
+        onChange={handleChange}
+        required={true}
+      />
+      <br />
+      <br />
+      <FormMsg msg={msg} />
+      <SubmitButton>Submit</SubmitButton>
+      <br />
+      <br />
+    </form>
+  );
+};
 
 export default NewAppForm;

@@ -1,44 +1,43 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import FAB from "../../UI/Buttons/fab";
 import TypeItem from "./typeItem";
 import { getRequest } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
 
-class ContentTypeList extends Component {
-  constructor(props) {
-    super(props);
+const ContentTypeList = props => {
+  const [types, setTypes] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
     props.loadbar.progressTo(15);
     props.page.handlePageChange("Content Types", "types");
-    props.session.handleSession(undefined, this.props.match.params.appuuid);
-    this.state = { types: [], isLoaded: false };
-  }
+    props.session.handleSession(undefined, props.match.params.appuuid);
+    getTypes(props.match.params.appuuid);
+  }, []);
 
-  componentWillUpdate = () => {
-    if (this.props.page.state.refreshView === true) {
-      this.getTypes();
-      this.props.page.handleSetRefresh(false);
+  useEffect(() => {
+    if (props.page.state.refreshView === true) {
+      getTypes();
+      props.page.handleSetRefresh(false);
     }
-  };
+  }, [props.page.state.refreshView]);
 
-  getTypes = async (uuid = this.props.session.state.selApp) => {
+  const getTypes = async (uuid = props.session.state.selApp) => {
     const resp = await getRequest("/api/panel/apps/" + uuid + "/types");
     if (resp.error) {
-      this.props.loadbar.setToError(true);
+      props.loadbar.setToError(true);
     } else {
       const userId = resp.meta.userId;
-      const types = resp.data.types;
+      const respTypes = resp.data.types;
       const selApp = resp.meta.appUUID;
-      this.setState({ types, isLoaded: true });
-      this.props.session.handleSession(userId, selApp);
-      this.props.loadbar.progressTo(100);
+      setTypes(respTypes);
+      setIsLoaded(true);
+      props.session.handleSession(userId, selApp);
+      props.loadbar.progressTo(100);
     }
   };
 
-  componentDidMount = () => {
-    this.getTypes(this.props.match.params.appuuid);
-  };
-
-  NoAppMsg = () => {
+  const NoAppMsg = () => {
     return (
       <div id="midmsg">
         <span style={{ fontSize: "14pt" }} className="softtext">
@@ -54,7 +53,7 @@ class ContentTypeList extends Component {
         <br />
         <button
           style={{ fontSize: "9pt" }}
-          onClick={() => this.props.page.handleShowModal("newtypeform")}
+          onClick={() => props.page.handleShowModal("newtypeform")}
           className="raisedbut"
         >
           <span className="icolab">Create One</span>
@@ -66,36 +65,34 @@ class ContentTypeList extends Component {
     );
   };
 
-  render() {
-    return (
-      <div>
-        <MiniHeader header={this.props.session.state.selAppName} />
-        <FAB page={this.props.page} modalComp="newtypeform">
-          <i className="material-icons">add</i>
-        </FAB>
-        {this.state.types.length > 0 ? (
-          this.state.types.map(type => (
-            <TypeItem
-              key={type.id}
-              type={type}
-              session={this.props.session}
-              page={this.props.page}
-              url={
-                "/panel/apps/" +
-                this.props.session.state.selApp +
-                "/types/" +
-                type.slug
-              }
-            />
-          ))
-        ) : this.state.isLoaded ? (
-          <this.NoAppMsg />
-        ) : (
-          <br />
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <MiniHeader header={props.session.state.selAppName} />
+      <FAB page={props.page} modalComp="newtypeform">
+        <i className="material-icons">add</i>
+      </FAB>
+      {types.length > 0 ? (
+        types.map(type => (
+          <TypeItem
+            key={type.id}
+            type={type}
+            session={props.session}
+            page={props.page}
+            url={
+              "/panel/apps/" +
+              props.session.state.selApp +
+              "/types/" +
+              type.slug
+            }
+          />
+        ))
+      ) : isLoaded ? (
+        <NoAppMsg />
+      ) : (
+        <br />
+      )}
+    </div>
+  );
+};
 
 export default ContentTypeList;

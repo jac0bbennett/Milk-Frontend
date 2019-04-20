@@ -1,75 +1,73 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import FAB from "../../UI/Buttons/fab";
 import { getRequest } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
 
-class ContentList extends Component {
-  constructor(props) {
-    super(props);
+const ContentList = props => {
+  const [contents, setContents] = useState([]);
+  const [types, setTypes] = useState([]);
+  const [contentsLoaded, setContentsLoaded] = useState(false);
+  const [typesLoaded, setTypesLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
     props.loadbar.progressTo(15);
     props.page.handlePageChange("Content", "content");
-    props.session.handleSession(undefined, this.props.match.params.appuuid);
-    this.state = {
-      contents: [],
-      types: [],
-      contentsLoaded: false,
-      typesLoaded: false,
-      isLoaded: false
-    };
-  }
+    props.session.handleSession(undefined, props.match.params.appuuid);
 
-  componentWillUpdate = () => {
-    if (this.props.page.state.refreshView === true) {
-      this.getContents();
-      this.getTypes();
-      this.props.page.handleSetRefresh(false);
+    getContents(props.match.params.appuuid);
+    getTypes(props.match.params.appuuid);
+  }, []);
+
+  useEffect(() => {
+    if (props.page.state.refreshView === true) {
+      getContents();
+      getTypes();
+      props.page.handleSetRefresh(false);
     }
-  };
+  }, [props.page.state.refreshView]);
 
-  getContents = async (uuid = this.props.session.state.selApp) => {
+  const getContents = async (uuid = props.session.state.selApp) => {
     const resp = await getRequest("/api/panel/apps/" + uuid + "/content");
 
     if (resp.error) {
-      this.props.loadbar.setToError(true);
+      props.loadbar.setToError(true);
     } else {
       const userId = resp.meta.userId;
-      const contents = resp.data.contents;
+      const respContents = resp.data.contents;
       const selApp = resp.meta.appUUID;
-      this.setState({ contents, contentsLoaded: true });
-      this.props.session.handleSession(userId, selApp);
-      if (this.state.typesLoaded) {
-        this.props.loadbar.progressTo(100);
-        this.setState({ isLoaded: true });
+      setContents(respContents);
+      setContentsLoaded(true);
+      props.session.handleSession(userId, selApp);
+      if (typesLoaded) {
+        props.loadbar.progressTo(100);
+        setIsLoaded(true);
       } else {
-        this.props.loadbar.progressTo(60);
+        props.loadbar.progressTo(60);
       }
     }
   };
 
-  getTypes = async (uuid = this.props.session.state.selApp) => {
-    const respTypes = await getRequest("/api/panel/apps/" + uuid + "/types");
+  const getTypes = async (uuid = props.session.state.selApp) => {
+    const resp = await getRequest("/api/panel/apps/" + uuid + "/types");
 
-    if (respTypes.error) {
-      this.props.loadbar.setToError(true);
+    if (resp.error) {
+      props.loadbar.setToError(true);
       alert("Could not load some data!");
     } else {
-      const types = respTypes.data.types;
-      this.setState({ types, typesLoaded: true });
-      if (this.state.contentsLoaded) {
-        this.props.loadbar.progressTo(100);
-        this.setState({ isLoaded: true });
+      const respTypes = resp.data.types;
+      setTypes(respTypes);
+      setTypesLoaded(true);
+      if (contentsLoaded) {
+        props.loadbar.progressTo(100);
+        setIsLoaded(true);
       } else {
-        this.props.loadbar.progressTo(60);
+        props.loadbar.progressTo(60);
       }
     }
   };
 
-  componentDidMount = () => {
-    this.getContents(this.props.match.params.appuuid);
-    this.getTypes(this.props.match.params.appuuid);
-  };
-
-  NoAppMsg = () => {
+  const NoAppMsg = () => {
     return (
       <div id="midmsg">
         <span style={{ fontSize: "14pt" }} className="softtext">
@@ -85,7 +83,7 @@ class ContentList extends Component {
         <br />
         <button
           style={{ fontSize: "9pt" }}
-          onClick={() => this.props.page.handleShowModal("newtypeform")}
+          onClick={() => props.page.handleShowModal("newtypeform")}
           className="raisedbut"
         >
           <span className="icolab">Create One</span>
@@ -97,34 +95,32 @@ class ContentList extends Component {
     );
   };
 
-  render() {
-    return (
-      <div>
-        <MiniHeader header={this.props.session.state.selAppName} />
-        {this.state.types.length > 0 ? (
-          <FAB
-            page={this.props.page}
-            modalComp="newcontentform"
-            modalData={{ types: this.state.types }}
-          >
-            <i className="material-icons">add</i>
-          </FAB>
-        ) : null}
-        {this.state.contents.length > 0 ? (
-          this.state.contents.map(content => (
-            <span key={content.uuid}>
-              {content.uuid}
-              <br />
-            </span>
-          ))
-        ) : this.state.isLoaded ? (
-          <this.NoAppMsg />
-        ) : (
-          <br />
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <MiniHeader header={props.session.state.selAppName} />
+      {typesLoaded ? (
+        <FAB
+          page={props.page}
+          modalComp="newcontentform"
+          modalData={{ types: types }}
+        >
+          <i className="material-icons">add</i>
+        </FAB>
+      ) : null}
+      {contents.length > 0 ? (
+        contents.map(content => (
+          <span key={content.uuid}>
+            {content.uuid} | {content.type_name}
+            <br />
+          </span>
+        ))
+      ) : isLoaded ? (
+        <NoAppMsg />
+      ) : (
+        <br />
+      )}
+    </div>
+  );
+};
 
 export default ContentList;

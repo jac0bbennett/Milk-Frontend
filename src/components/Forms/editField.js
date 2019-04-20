@@ -1,75 +1,73 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import TextInput from "../UI/Inputs/txtInput";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 import DeleteButton from "../UI/Buttons/deleteButton";
 
-class EditFieldForm extends Component {
-  state = {
-    form: {
-      name: this.props.page.state.modalData.field.name,
-      slug: this.props.page.state.modalData.field.slug
-    },
-    msg: ""
+const EditFieldForm = props => {
+  const [form, setForm] = useState({
+    name: props.page.state.modalData.field.name,
+    slug: props.page.state.modalData.field.slug
+  });
+  const [msg, setMsg] = useState("");
+
+  const handleSubmit = event => {
+    setMsg("saving...");
+
+    props.page.state.modalData.saveField(
+      event,
+      props.page.state.modalData.index,
+      form.name,
+      form.slug
+    );
+
+    setMsg("");
   };
 
-  handleSubmit = event => {
-    this.setState({ msg: "saving..." });
-
-    this.props.page.state.modalData.saveField(
+  const handleDelete = event => {
+    setMsg("deleting...");
+    props.page.state.modalData.deleteField(
       event,
-      this.props.page.state.modalData.index,
-      this.state.form.name,
-      this.state.form.slug
+      props.page.state.modalData.index
     );
   };
 
-  handleDelete = event => {
-    this.setState({ msg: "deleting..." });
-    this.props.page.state.modalData.deleteField(
-      event,
-      this.props.page.state.modalData.index
-    );
-  };
-
-  handleChange = event => {
-    let form = { ...this.state.form };
+  const handleChange = event => {
+    let formCopy = { ...form };
     const target = event.target.name;
-    form[target] = event.target.value;
-    this.setState({ form, msg: "" });
+    formCopy[target] = event.target.value;
+    setForm(formCopy);
   };
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit} autoComplete="off">
-        <h2>Edit Field</h2>
-        <TextInput
-          name="name"
-          type="text"
-          label="Field Name"
-          value={this.state.form.name}
-          onChange={this.handleChange}
-          required={true}
-        />
-        <br />
-        <TextInput
-          name="slug"
-          type="text"
-          label="Field Slug"
-          value={this.state.form.slug}
-          onChange={this.handleChange}
-          required={true}
-        />
-        <br />
-        <br />
-        <DeleteButton onClick={this.handleDelete}>Delete</DeleteButton>
-        <SubmitButton>Submit</SubmitButton>
-        <br />
-        <br />
-        <FormMsg msg={this.state.msg} />
-      </form>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleSubmit} autoComplete="off">
+      <h2>Edit Field</h2>
+      <TextInput
+        name="name"
+        type="text"
+        label="Field Name"
+        value={form.name}
+        onChange={handleChange}
+        required={true}
+      />
+      <br />
+      <TextInput
+        name="slug"
+        type="text"
+        label="Field Slug"
+        value={form.slug}
+        onChange={handleChange}
+        required={true}
+      />
+      <br />
+      <br />
+      <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
+      <SubmitButton>Submit</SubmitButton>
+      <br />
+      <br />
+      <FormMsg msg={msg} />
+    </form>
+  );
+};
 
 export default EditFieldForm;

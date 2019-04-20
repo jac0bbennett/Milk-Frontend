@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import TextInput from "../../UI/Inputs/txtInput";
 import {
   getRequest,
@@ -14,136 +14,128 @@ import FieldList from "./fieldList";
 import { arrayMove } from "react-sortable-hoc";
 import history from "../../../utils/history";
 
-class EditContentType extends Component {
-  constructor(props) {
-    super(props);
+const EditContentType = props => {
+  const [form, setForm] = useState({ name: "", slug: "" });
+  const [fields, setFields] = useState([]);
+  const [msg, setMsg] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
     props.loadbar.progressTo(15);
     props.page.handlePageChange("", "type");
-    props.session.handleSession(undefined, this.props.match.params.appuuid);
-    this.state = { name: "", slug: "", fields: [], msg: "", isLoaded: false };
-  }
+    props.session.handleSession(undefined, props.match.params.appuuid);
 
-  componentWillUpdate = () => {
-    if (this.props.page.state.refreshView === true) {
-      this.getType();
-      this.props.page.handleSetRefresh(false);
+    getType(props.match.params.appuuid, props.match.params.typeslug);
+  }, []);
+
+  useEffect(() => {
+    if (props.page.state.refreshView === true) {
+      getType();
+      props.page.handleSetRefresh(false);
     }
-  };
+  }, [props.page.state.refreshView]);
 
-  getType = async (
-    uuid = this.props.session.state.selApp,
-    typeslug = this.state.slug
+  const getType = async (
+    uuid = props.session.state.selApp,
+    typeslug = form.slug
   ) => {
     const resp = await getRequest(
       "/api/panel/apps/" + uuid + "/types/" + typeslug
     );
     if (resp.error) {
-      this.props.loadbar.setToError(true);
+      props.loadbar.setToError(true);
     } else {
       const userId = resp.meta.userId;
-      const name = resp.data.name;
-      const slug = resp.data.slug;
-      const fields = resp.data.fields;
+      const respName = resp.data.name;
+      const respSlug = resp.data.slug;
+      const respFields = resp.data.fields;
       const selApp = resp.meta.appUUID;
-      this.setState({ name, fields, slug, isLoaded: true });
-      this.props.session.handleSession(userId, selApp);
-      this.props.page.handlePageChange(name, "type");
-      this.props.loadbar.progressTo(100);
+      setForm({ name: respName, slug: respSlug });
+      setFields(respFields);
+      setIsLoaded(true);
+      props.session.handleSession(userId, selApp);
+      props.page.handlePageChange(respName, "type");
+      props.loadbar.progressTo(100);
     }
   };
 
-  componentDidMount = () => {
-    this.getType(
-      this.props.match.params.appuuid,
-      this.props.match.params.typeslug
-    );
+  const handleChange = event => {
+    let formCopy = { ...form };
+    const target = event.target.name;
+    formCopy[target] = event.target.value;
+    setForm(formCopy);
   };
 
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  handleSubmit = async event => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
-    this.props.loadbar.progressTo(15);
-    this.setState({ msg: "saving..." });
+    props.loadbar.progressTo(15);
+    setMsg("saving...");
 
-    const typename = this.state.name;
+    const typename = form.name;
 
     const req = await patchRequest(
-      "/api/panel/apps/" +
-        this.props.session.state.selApp +
-        "/types/" +
-        this.state.slug,
-      { name: typename, fields: this.state.fields }
+      "/api/panel/apps/" + props.session.state.selApp + "/types/" + form.slug,
+      { name: typename, fields: fields }
     );
 
     if (req.error) {
       const msg = req.error;
-      this.setState({ msg });
-      this.props.loadbar.setToError(true);
+      setMsg(msg);
+      props.loadbar.setToError(true);
     } else {
-      this.setState({ msg: "" });
-      this.props.loadbar.progressTo(100);
-      this.props.page.handleSetRefresh(true);
-      this.props.page.handleCloseModal();
+      setMsg("");
+      props.loadbar.progressTo(100);
+      props.page.handleSetRefresh(true);
+      props.page.handleCloseModal();
     }
   };
 
-  handleDelete = async event => {
-    this.props.loadbar.progressTo(15);
-    this.setState({ msg: "deleting..." });
+  const handleDelete = async event => {
+    props.loadbar.progressTo(15);
+    setMsg("deleting...");
 
     const req = await deleteRequest(
-      "/api/panel/apps/" +
-        this.props.session.state.selApp +
-        "/types/" +
-        this.state.slug
+      "/api/panel/apps/" + props.session.state.selApp + "/types/" + form.slug
     );
 
     if (req.error) {
       const msg = req.error;
-      this.setState({ msg });
-      this.props.loadbar.setToError(true);
+      setMsg(msg);
+      props.loadbar.setToError(true);
     } else {
-      this.setState({ msg: "" });
-      this.props.loadbar.progressTo(100);
-      history.push("/panel/apps/" + this.props.session.state.selApp + "/types");
+      setMsg("");
+      props.loadbar.progressTo(100);
+      history.push("/panel/apps/" + props.session.state.selApp + "/types");
     }
   };
 
-  saveField = (event, i, name, slug) => {
-    const fields = this.state.fields;
-    const field = fields[i];
+  const saveField = (event, i, name, slug) => {
+    const fieldsCopy = [...fields];
+    const field = fieldsCopy[i];
 
     field.name = name;
     field.slug = slug;
 
-    this.setState({ fields });
-    this.handleSubmit(event);
+    setFields(fieldsCopy);
+    handleSubmit(event);
   };
 
-  deleteField = (event, i) => {
-    const fields = this.state.fields;
+  const deleteField = (event, i) => {
+    const fieldsCopy = [...fields];
 
     fields.splice(i, 1);
 
-    this.setState({ fields });
-    this.handleSubmit(event);
+    setFields(fieldsCopy);
+    handleSubmit(event);
   };
 
-  onSortEnd = async ({ oldIndex, newIndex }) => {
-    this.setState({
-      fields: arrayMove(this.state.fields, oldIndex, newIndex)
-    });
+  const onSortEnd = async ({ oldIndex, newIndex }) => {
+    setFields(arrayMove(fields, oldIndex, newIndex));
 
     const req = await patchRequest(
-      "/api/panel/apps/" +
-        this.props.session.state.selApp +
-        "/types/" +
-        this.state.slug,
-      { fields: this.state.fields }
+      "/api/panel/apps/" + props.session.state.selApp + "/types/" + form.slug,
+      { fields: fields }
     );
 
     if (req.error) {
@@ -151,76 +143,70 @@ class EditContentType extends Component {
     }
   };
 
-  render() {
-    return (
-      <React.Fragment>
-        <FAB
-          page={this.props.page}
-          modalComp="newfieldform"
-          modalData={{ slug: this.state.slug }}
-        >
-          <i className="material-icons">add</i>
-        </FAB>
-        <MiniHeader header={this.props.session.state.selAppName} />
-        {this.state.isLoaded ? (
-          <div className="gencontainer">
-            <h2>Edit Type</h2>
-            <form onSubmit={this.handleSubmit} autoComplete="off">
-              <TextInput
-                name="name"
-                type="text"
-                label="Name"
-                value={this.state.name}
-                onChange={this.handleChange}
-                required={true}
-              />
-              <TextInput
-                name="slug"
-                type="text"
-                label="Slug"
-                value={this.state.slug}
-                disabled={true}
-              />
-              <div style={{ float: "right" }}>
-                <FormMsg msg={this.state.msg} />
-                <SubmitButton>Save</SubmitButton>
-              </div>
-            </form>
+  return (
+    <React.Fragment>
+      <FAB
+        page={props.page}
+        modalComp="newfieldform"
+        modalData={{ slug: form.slug }}
+      >
+        <i className="material-icons">add</i>
+      </FAB>
+      <MiniHeader header={props.session.state.selAppName} />
+      {isLoaded ? (
+        <div className="gencontainer">
+          <h2>Edit Type</h2>
+          <form onSubmit={handleSubmit} autoComplete="off">
+            <TextInput
+              name="name"
+              type="text"
+              label="Name"
+              value={form.name}
+              onChange={handleChange}
+              required={true}
+            />
+            <TextInput
+              name="slug"
+              type="text"
+              label="Slug"
+              value={form.slug}
+              disabled={true}
+            />
+            <div style={{ float: "right" }}>
+              <FormMsg msg={msg} />
+              <SubmitButton>Save</SubmitButton>
+            </div>
+          </form>
 
-            <br />
-            <hr />
-            <h3>Fields</h3>
-            {this.state.fields.length > 0 ? (
-              <FieldList
-                page={this.props.page}
-                contentType={this.state}
-                fields={this.state.fields}
-                onSortEnd={this.onSortEnd}
-                useDragHandle={true}
-                useWindowAsScrollContainer={true}
-                saveField={this.saveField}
-                deleteField={this.deleteField}
-              />
-            ) : (
-              <center>
-                <span className="softtext">No Fields</span>
-              </center>
-            )}
-            <DeleteButton
-              style={{ float: "right" }}
-              onClick={this.handleDelete}
-            >
-              Delete
-            </DeleteButton>
-            <br />
-            <br />
-          </div>
-        ) : (
           <br />
-        )}
-      </React.Fragment>
-    );
-  }
-}
+          <hr />
+          <h3>Fields</h3>
+          {fields.length > 0 ? (
+            <FieldList
+              page={props.page}
+              fields={fields}
+              onSortEnd={onSortEnd}
+              useDragHandle={true}
+              useWindowAsScrollContainer={true}
+              saveField={saveField}
+              deleteField={deleteField}
+            />
+          ) : (
+            <center>
+              <span className="softtext">No Fields</span>
+            </center>
+          )}
+          <DeleteButton style={{ float: "right" }} onClick={handleDelete}>
+            Delete
+          </DeleteButton>
+          <br />
+          <br />
+        </div>
+      ) : (
+        <br />
+      )}
+    </React.Fragment>
+  );
+};
 
 export default EditContentType;

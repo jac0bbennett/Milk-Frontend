@@ -52,17 +52,12 @@ const FieldItem = SortableElement(props => (
       <button
         className="flatbut darkflatbutton"
         onClick={() => {
-          props.page.handleShowModal(
-            "editfieldform",
-            {
-              field: props.field,
-              contentType: props.contentType,
-              index: props.i,
-              saveField: props.saveField,
-              deleteField: props.deleteField
-            },
-            true
-          );
+          props.page.handleShowModal("editfieldform", {
+            field: props.field,
+            index: props.i,
+            saveField: props.saveField,
+            deleteField: props.deleteField
+          });
         }}
       >
         <i className="material-icons">more_horiz</i>

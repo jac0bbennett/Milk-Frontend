@@ -19,7 +19,7 @@ const AppItem = props => {
           marginBottom: "5px"
         }}
         onClick={() => {
-          props.page.handleShowModal("editappform", props.app, true);
+          props.page.handleShowModal("editappform", props.app);
         }}
       >
         <i className="material-icons">more_horiz</i>

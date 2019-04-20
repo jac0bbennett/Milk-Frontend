@@ -1,14 +1,12 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 
-class SignOut extends Component {
-  componentDidMount = () => {
-    this.props.page.handlePageChange("Signing Out", "signOut");
-    this.props.onSignOut();
-  };
+const SignOut = props => {
+  useEffect(() => {
+    props.page.handlePageChange("Signing Out", "signOut");
+    props.onSignOut();
+  });
 
-  render() {
-    return <h2>Signing Out...</h2>;
-  }
-}
+  return <h2>Signing Out...</h2>;
+};
 
 export default SignOut;
