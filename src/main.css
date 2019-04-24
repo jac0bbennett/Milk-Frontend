@@ -102,6 +102,12 @@ body {
   text-decoration: none;
 }
 
+a {
+  text-decoration: none;
+  color: #3c81c8;
+  border-bottom: 1px solid #3c81c8;
+}
+
 .LoadingBar {
   transition: all 0.3s ease;
   position: fixed;
