@@ -27,8 +27,8 @@ const SignIn = props => {
     });
 
     if (req.error) {
-      const msg = req.error;
-      setMsg(msg);
+      const reqMsg = req.error;
+      setMsg(reqMsg);
       props.loadbar.setToError(true);
     } else {
       props.loadbar.progressTo(100);

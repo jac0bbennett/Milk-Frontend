@@ -19,8 +19,8 @@ const NewAppForm = props => {
     const req = await postRequest("/api/panel/apps", { appname });
 
     if (req.error) {
-      const msg = req.error;
-      setMsg(msg);
+      const reqMsg = req.error;
+      setMsg(reqMsg);
       props.loadbar.setToError(true);
     } else {
       setMsg("");

@@ -27,6 +27,15 @@ const ContentList = props => {
     }
   }, [props.page.state.refreshView]);
 
+  useEffect(() => {
+    if (contentsLoaded && typesLoaded) {
+      props.loadbar.progressTo(100);
+      setIsLoaded(true);
+    } else if (contentsLoaded || typesLoaded) {
+      props.loadbar.progressTo(60);
+    }
+  }, [contentsLoaded, typesLoaded]);
+
   const getContents = async (uuid = props.session.state.selApp) => {
     const resp = await getRequest("/api/panel/apps/" + uuid + "/content");
 
@@ -39,12 +48,6 @@ const ContentList = props => {
       setContents(respContents);
       setContentsLoaded(true);
       props.session.handleSession(userId, selApp);
-      if (typesLoaded) {
-        props.loadbar.progressTo(100);
-        setIsLoaded(true);
-      } else {
-        props.loadbar.progressTo(60);
-      }
     }
   };
 
@@ -58,12 +61,6 @@ const ContentList = props => {
       const respTypes = resp.data.types;
       setTypes(respTypes);
       setTypesLoaded(true);
-      if (contentsLoaded) {
-        props.loadbar.progressTo(100);
-        setIsLoaded(true);
-      } else {
-        props.loadbar.progressTo(60);
-      }
     }
   };
 
@@ -81,16 +78,20 @@ const ContentList = props => {
         <br />
         <br />
         <br />
-        <button
-          style={{ fontSize: "9pt" }}
-          onClick={() => props.page.handleShowModal("newtypeform")}
-          className="raisedbut"
-        >
-          <span className="icolab">Create One</span>
-          <i style={{ fontSize: "11pt" }} className="material-icons">
-            add
-          </i>
-        </button>
+        {typesLoaded ? (
+          <button
+            style={{ fontSize: "9pt" }}
+            onClick={() =>
+              props.page.handleShowModal("newcontentform", { types: types })
+            }
+            className="raisedbut"
+          >
+            <span className="icolab">Create One</span>
+            <i style={{ fontSize: "11pt" }} className="material-icons">
+              add
+            </i>
+          </button>
+        ) : null}
       </div>
     );
   };

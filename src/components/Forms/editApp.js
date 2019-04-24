@@ -27,8 +27,8 @@ const EditAppForm = props => {
     );
 
     if (req.error) {
-      const msg = req.error;
-      setMsg(msg);
+      const reqMsg = req.error;
+      setMsg(reqMsg);
       props.loadbar.setToError(true);
     } else {
       setMsg("");
@@ -47,8 +47,8 @@ const EditAppForm = props => {
     );
 
     if (req.error) {
-      const msg = req.error;
-      setMsg(msg);
+      const reqMsg = req.error;
+      setMsg(reqMsg);
       props.loadbar.setToError(true);
     } else {
       setMsg("");

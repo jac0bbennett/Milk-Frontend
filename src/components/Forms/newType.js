@@ -1,88 +1,85 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import TextInput from "../UI/Inputs/txtInput";
 import { postRequest } from "../../utils/requests";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 import { generateSlug } from "../../utils/text";
+const NewTypeForm = props => {
+  const [form, setForm] = useState({ name: "", slug: "" });
+  const [msg, setMsg] = useState("");
+  const [changedSlug, setChangedSlug] = useState(false);
 
-class NewTypeForm extends Component {
-  state = {
-    form: { name: "", slug: "" },
-    msg: "",
-    changedSlug: false
-  };
-
-  handleSubmit = async event => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
-    this.props.loadbar.progressTo(15);
-    this.setState({ msg: "creating..." });
+    props.loadbar.progressTo(15);
+    setMsg("creating...");
 
-    const typename = this.state.form.name;
-    const typeslug = this.state.form.slug;
+    const typename = form.name;
+    const typeslug = form.slug;
 
     const req = await postRequest(
-      "/api/panel/apps/" + this.props.session.state.selApp + "/types",
+      "/api/panel/apps/" + props.session.state.selApp + "/types",
       { typename, typeslug }
     );
 
     if (req.error) {
-      const msg = req.error;
-      this.setState({ msg });
-      this.props.loadbar.setToError(true);
+      const reqMsg = req.error;
+      setMsg(reqMsg);
+      props.loadbar.setToError(true);
     } else {
-      this.setState({ msg: "", form: { name: "", slug: "" } });
-      this.props.loadbar.progressTo(100);
-      this.props.page.handleCloseModal();
-      this.props.page.handleSetRefresh(true);
+      setMsg("");
+      setForm({ name: "", slug: "" });
+      props.loadbar.progressTo(100);
+      props.page.handleCloseModal();
+      props.page.handleSetRefresh(true);
     }
   };
 
-  handleChange = event => {
-    let form = { ...this.state.form };
-    if (event.target.name === "name" && !this.state.changedSlug) {
-      form.slug = generateSlug(event.target.value, this.state.changedSlug);
-      form.name = event.target.value;
+  const handleChange = event => {
+    let formCopy = { ...form };
+
+    if (event.target.name === "name" && !changedSlug) {
+      formCopy.slug = generateSlug(event.target.value, changedSlug);
+      formCopy.name = event.target.value;
     } else if (event.target.name === "slug") {
-      this.setState({ changedSlug: true });
-      form.slug = generateSlug(event.target.value, this.state.changedSlug);
+      setChangedSlug(true);
+      formCopy.slug = generateSlug(event.target.value, changedSlug);
     } else {
-      form[event.target.name] = event.target.value;
+      formCopy[event.target.name] = event.target.value;
     }
-    form.name = event.target.value;
-    this.setState({ form, msg: "" });
+    setForm(formCopy);
+    setMsg("");
   };
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit} autoComplete="off">
-        <h2>New Content Type</h2>
-        <TextInput
-          name="name"
-          type="text"
-          label="Name"
-          value={this.state.form.name}
-          onChange={this.handleChange}
-          required={true}
-        />
-        <br />
-        <TextInput
-          name="slug"
-          type="text"
-          label="Slug"
-          value={this.state.form.slug}
-          onChange={this.handleChange}
-          required={true}
-        />
-        <br />
-        <br />
-        <FormMsg msg={this.state.msg} />
-        <SubmitButton>Submit</SubmitButton>
-        <br />
-        <br />
-      </form>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleSubmit} autoComplete="off">
+      <h2>New Content Type</h2>
+      <TextInput
+        name="name"
+        type="text"
+        label="Name"
+        value={form.name}
+        onChange={handleChange}
+        required={true}
+      />
+      <br />
+      <TextInput
+        name="slug"
+        type="text"
+        label="Slug"
+        value={form.slug}
+        onChange={handleChange}
+        required={true}
+      />
+      <br />
+      <br />
+      <FormMsg msg={msg} />
+      <SubmitButton>Submit</SubmitButton>
+      <br />
+      <br />
+    </form>
+  );
+};
 
 export default NewTypeForm;

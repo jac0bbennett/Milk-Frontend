@@ -80,8 +80,8 @@ const EditContentType = props => {
     );
 
     if (req.error) {
-      const msg = req.error;
-      setMsg(msg);
+      const reqMsg = req.error;
+      setMsg(reqMsg);
       props.loadbar.setToError(true);
     } else {
       setMsg("");
@@ -100,8 +100,8 @@ const EditContentType = props => {
     );
 
     if (req.error) {
-      const msg = req.error;
-      setMsg(msg);
+      const reqMsg = req.error;
+      setMsg(reqMsg);
       props.loadbar.setToError(true);
     } else {
       setMsg("");

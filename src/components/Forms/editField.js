@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextInput from "../UI/Inputs/txtInput";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
@@ -11,6 +11,17 @@ const EditFieldForm = props => {
   });
   const [msg, setMsg] = useState("");
 
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    setForm({
+      name: props.page.state.modalData.field.name,
+      slug: props.page.state.modalData.field.slug
+    });
+    setIsDeleting(false);
+    setMsg("");
+  }, [props.page.state.modalData.field]);
+
   const handleSubmit = event => {
     setMsg("saving...");
 
@@ -20,12 +31,11 @@ const EditFieldForm = props => {
       form.name,
       form.slug
     );
-
-    setMsg("");
   };
 
   const handleDelete = event => {
     setMsg("deleting...");
+    setIsDeleting(true);
     props.page.state.modalData.deleteField(
       event,
       props.page.state.modalData.index
@@ -61,7 +71,9 @@ const EditFieldForm = props => {
       />
       <br />
       <br />
-      <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
+      {!isDeleting ? (
+        <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
+      ) : null}
       <SubmitButton>Submit</SubmitButton>
       <br />
       <br />
