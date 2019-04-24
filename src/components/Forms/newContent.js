@@ -4,6 +4,7 @@ import { postRequest } from "../../utils/requests";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 import { Link } from "react-router-dom";
+import history from "../../utils/history";
 
 const NewContentForm = props => {
   const [form, setForm] = useState({ type: "" });
@@ -31,7 +32,9 @@ const NewContentForm = props => {
       setForm({ type: "" });
       props.loadbar.progressTo(100);
       props.page.handleCloseModal();
-      props.page.handleSetRefresh(true);
+      history.push(
+        "/panel/apps/" + props.session.state.selApp + "/content/" + req.uuid
+      );
     }
   };
 
