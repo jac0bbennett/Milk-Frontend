@@ -15,7 +15,7 @@ const Nav = props => {
     {
       to: "/panel/apps/" + selApp + "/content",
       label: "content",
-      navId: "content",
+      navId: "contents",
       appDep: true
     },
     {

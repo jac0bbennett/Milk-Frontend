@@ -6,7 +6,7 @@ const TopBar = props => {
   return (
     <div id="top">
       <div id="top-branding">MILK</div>
-      <div id="pagetitle">{Truncate(props.page.state.title, 20)}</div>
+      <div id="pagetitle">{Truncate(props.page.state.title, 30)}</div>
       <Nav pageId={props.page.state.pageId} session={props.session} />
     </div>
   );
