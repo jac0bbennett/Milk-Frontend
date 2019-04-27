@@ -110,32 +110,20 @@ const EditContentType = props => {
     }
   };
 
-  const saveField = (event, i, name, slug) => {
-    const fieldsCopy = [...fields];
-    const field = fieldsCopy[i];
-
-    field.name = name;
-    field.slug = slug;
-
-    setFields(fieldsCopy);
-    handleSubmit(event);
-  };
-
-  const deleteField = (event, i) => {
-    const fieldsCopy = [...fields];
-
-    fields.splice(i, 1);
-
-    setFields(fieldsCopy);
-    handleSubmit(event);
-  };
-
   const onSortEnd = async ({ oldIndex, newIndex }) => {
-    setFields(arrayMove(fields, oldIndex, newIndex));
+    const rearange = [...arrayMove(fields, oldIndex, newIndex)];
+
+    setFields(rearange);
+
+    const newOrder = { ...rearange };
 
     const req = await patchRequest(
-      "/api/panel/apps/" + props.session.state.selApp + "/types/" + form.slug,
-      { fields: fields }
+      "/api/panel/apps/" +
+        props.session.state.selApp +
+        "/types/" +
+        form.slug +
+        "/reorderfields",
+      { newOrder: newOrder }
     );
 
     if (req.error) {
@@ -188,8 +176,7 @@ const EditContentType = props => {
               onSortEnd={onSortEnd}
               useDragHandle={true}
               useWindowAsScrollContainer={true}
-              saveField={saveField}
-              deleteField={deleteField}
+              typeSlug={form.slug}
             />
           ) : (
             <center>

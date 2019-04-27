@@ -3,6 +3,7 @@ import TextInput from "../UI/Inputs/txtInput";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 import DeleteButton from "../UI/Buttons/deleteButton";
+import { patchRequest, deleteRequest } from "../../utils/requests";
 
 const EditFieldForm = props => {
   const [form, setForm] = useState({
@@ -22,24 +23,67 @@ const EditFieldForm = props => {
     setMsg("");
   }, [props.page.state.modalData.field]);
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
+    event.preventDefault();
+
+    props.loadbar.progressTo(15);
     setMsg("saving...");
 
-    props.page.state.modalData.saveField(
-      event,
-      props.page.state.modalData.index,
-      form.name,
-      form.slug
+    const fieldid = props.page.state.modalData.field.id;
+    const fieldname = form.name;
+    const fieldslug = form.slug;
+
+    const req = await patchRequest(
+      "/api/panel/apps/" +
+        props.session.state.selApp +
+        "/types/" +
+        props.page.state.modalData.typeSlug +
+        "/fields/" +
+        fieldid,
+      { fieldname, fieldslug }
     );
+
+    if (req.error) {
+      const reqMsg = req.error;
+      setMsg(reqMsg);
+      props.loadbar.setToError(true);
+    } else {
+      setMsg("");
+      props.loadbar.progressTo(100);
+      props.page.handleCloseModal();
+      props.page.handleSetRefresh(true);
+    }
   };
 
-  const handleDelete = event => {
+  const handleDelete = async event => {
+    event.preventDefault();
+
+    props.loadbar.progressTo(15);
     setMsg("deleting...");
     setIsDeleting(true);
-    props.page.state.modalData.deleteField(
-      event,
-      props.page.state.modalData.index
+
+    const fieldid = props.page.state.modalData.field.id;
+
+    const req = await deleteRequest(
+      "/api/panel/apps/" +
+        props.session.state.selApp +
+        "/types/" +
+        props.page.state.modalData.typeSlug +
+        "/fields/" +
+        fieldid
     );
+
+    if (req.error) {
+      const reqMsg = req.error;
+      setMsg(reqMsg);
+      props.loadbar.setToError(true);
+      setIsDeleting(false);
+    } else {
+      setMsg("");
+      props.loadbar.progressTo(100);
+      props.page.handleCloseModal();
+      props.page.handleSetRefresh(true);
+    }
   };
 
   const handleChange = event => {

@@ -55,8 +55,7 @@ const FieldItem = SortableElement(props => (
           props.page.handleShowModal("editfieldform", {
             field: props.field,
             index: props.i,
-            saveField: props.saveField,
-            deleteField: props.deleteField
+            typeSlug: props.typeSlug
           });
         }}
       >

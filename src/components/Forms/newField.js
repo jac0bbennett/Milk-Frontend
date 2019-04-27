@@ -26,7 +26,7 @@ const NewFieldForm = props => {
         props.session.state.selApp +
         "/types/" +
         props.page.state.modalData.slug +
-        "/addfield",
+        "/fields",
       { fieldname, fieldslug, fieldtype }
     );
 
