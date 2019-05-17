@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import FAB from "../../UI/Buttons/fab";
 import { getRequest } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
+import ContentItem from "./contentItem";
 
 const ContentList = props => {
   const [contents, setContents] = useState([]);
@@ -12,7 +13,7 @@ const ContentList = props => {
 
   useEffect(() => {
     props.loadbar.progressTo(15);
-    props.page.handlePageChange("Content", "content");
+    props.page.handlePageChange("Content", "contents");
     props.session.handleSession(undefined, props.match.params.appuuid);
 
     getContents(props.match.params.appuuid);
@@ -110,10 +111,16 @@ const ContentList = props => {
       ) : null}
       {contents.length > 0 ? (
         contents.map(content => (
-          <span key={content.uuid}>
-            {content.uuid} | {content.type_name}
-            <br />
-          </span>
+          <ContentItem
+            key={content.uuid}
+            content={content}
+            url={
+              "/panel/apps/" +
+              props.session.state.selApp +
+              "/content/" +
+              content.uuid
+            }
+          />
         ))
       ) : isLoaded ? (
         <NoAppMsg />
