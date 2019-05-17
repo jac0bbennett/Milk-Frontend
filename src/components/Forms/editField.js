@@ -3,7 +3,7 @@ import TextInput from "../UI/Inputs/txtInput";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 import DeleteButton from "../UI/Buttons/deleteButton";
-import { patchRequest, deleteRequest } from "../../utils/requests";
+import { patchRequest } from "../../utils/requests";
 
 const EditFieldForm = props => {
   const [form, setForm] = useState({
@@ -12,14 +12,11 @@ const EditFieldForm = props => {
   });
   const [msg, setMsg] = useState("");
 
-  const [isDeleting, setIsDeleting] = useState(false);
-
   useEffect(() => {
     setForm({
       name: props.page.state.modalData.field.name,
       slug: props.page.state.modalData.field.slug
     });
-    setIsDeleting(false);
     setMsg("");
   }, [props.page.state.modalData.field]);
 
@@ -58,32 +55,21 @@ const EditFieldForm = props => {
   const handleDelete = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
-    setMsg("deleting...");
-    setIsDeleting(true);
-
     const fieldid = props.page.state.modalData.field.id;
 
-    const req = await deleteRequest(
+    const url =
       "/api/panel/apps/" +
-        props.session.state.selApp +
-        "/types/" +
-        props.page.state.modalData.typeSlug +
-        "/fields/" +
-        fieldid
-    );
+      props.session.state.selApp +
+      "/types/" +
+      props.page.state.modalData.typeSlug +
+      "/fields/" +
+      fieldid;
 
-    if (req.error) {
-      const reqMsg = req.error;
-      setMsg(reqMsg);
-      props.loadbar.setToError(true);
-      setIsDeleting(false);
-    } else {
-      setMsg("");
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.handleSetRefresh(true);
-    }
+    props.page.handleShowModal("confirmdeleteform", {
+      deleteUrl: url,
+      extraText:
+        "Deleting this field will delete any content stored in it and could break your app/website!"
+    });
   };
 
   const handleChange = event => {
@@ -115,9 +101,7 @@ const EditFieldForm = props => {
       />
       <br />
       <br />
-      {!isDeleting ? (
-        <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
-      ) : null}
+      <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
       <SubmitButton>Submit</SubmitButton>
       <br />
       <br />

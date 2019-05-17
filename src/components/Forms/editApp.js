@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TextInput from "../UI/Inputs/txtInput";
-import { patchRequest, deleteRequest } from "../../utils/requests";
+import { patchRequest } from "../../utils/requests";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 import DeleteButton from "../UI/Buttons/deleteButton";
@@ -38,29 +38,21 @@ const EditAppForm = props => {
     }
   };
 
-  const handleDelete = async event => {
-    props.loadbar.progressTo(15);
-    setMsg("deleting...");
-
-    const req = await deleteRequest(
-      "/api/panel/apps/" + props.page.state.modalData.uuid
-    );
-
-    if (req.error) {
-      const reqMsg = req.error;
-      setMsg(reqMsg);
-      props.loadbar.setToError(true);
-    } else {
-      setMsg("");
-
-      if (props.session.state.selApp === props.page.state.modalData.uuid) {
-        props.session.handleSession(undefined, "0");
-      }
-
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.handleSetRefresh(true);
+  const deleteCallback = () => {
+    if (props.session.state.selApp === props.page.state.modalData.uuid) {
+      props.session.handleSession(undefined, "0");
     }
+  };
+
+  const handleDelete = async event => {
+    const url = "/api/panel/apps/" + props.page.state.modalData.uuid;
+
+    props.page.handleShowModal("confirmdeleteform", {
+      deleteUrl: url,
+      callback: deleteCallback,
+      extraText:
+        "By deleting this app, all content types and content will be deleted forever!"
+    });
   };
 
   const handleChange = event => {

@@ -5,6 +5,7 @@ import NewTypeForm from "../../Forms/newType";
 import NewFieldForm from "../../Forms/newField";
 import EditFieldForm from "../../Forms/editField";
 import NewContentForm from "../../Forms/newContent";
+import ConfirmDeleteForm from "../../Forms/confirmDelete";
 
 const Content = props => {
   switch (props.page.state.modalComp) {
@@ -20,6 +21,8 @@ const Content = props => {
       return <EditFieldForm {...props} />;
     case "newcontentform":
       return <NewContentForm {...props} />;
+    case "confirmdeleteform":
+      return <ConfirmDeleteForm {...props} />;
     default:
       return <h2>Form</h2>;
   }

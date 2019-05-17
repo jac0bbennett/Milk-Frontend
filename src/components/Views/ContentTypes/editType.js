@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TextInput from "../../UI/Inputs/txtInput";
-import {
-  getRequest,
-  patchRequest,
-  deleteRequest
-} from "../../../utils/requests";
+import { getRequest, patchRequest } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import DeleteButton from "../../UI/Buttons/deleteButton";
@@ -91,23 +87,19 @@ const EditContentType = props => {
     }
   };
 
+  const deleteCallback = () => {
+    history.push("/panel/apps/" + props.session.state.selApp + "/types");
+  };
+
   const handleDelete = async event => {
-    props.loadbar.progressTo(15);
-    setMsg("deleting...");
+    const url =
+      "/api/panel/apps/" + props.session.state.selApp + "/types/" + form.slug;
 
-    const req = await deleteRequest(
-      "/api/panel/apps/" + props.session.state.selApp + "/types/" + form.slug
-    );
-
-    if (req.error) {
-      const reqMsg = req.error;
-      setMsg(reqMsg);
-      props.loadbar.setToError(true);
-    } else {
-      setMsg("");
-      props.loadbar.progressTo(100);
-      history.push("/panel/apps/" + props.session.state.selApp + "/types");
-    }
+    props.page.handleShowModal("confirmdeleteform", {
+      deleteUrl: url,
+      callback: deleteCallback,
+      extraText: "This type cannot be resurrected!"
+    });
   };
 
   const onSortEnd = async ({ oldIndex, newIndex }) => {
