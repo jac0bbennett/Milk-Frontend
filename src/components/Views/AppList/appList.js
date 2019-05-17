@@ -30,7 +30,7 @@ const AppList = props => {
       const selApp = resp.meta.appUUID;
       setApps(respApps);
       setIsLoaded(true);
-      props.session.handleSession(userId, selApp);
+      props.session.handleSession(userId, selApp, true);
       props.loadbar.progressTo(100);
     }
   };

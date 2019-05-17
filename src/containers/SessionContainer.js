@@ -12,12 +12,12 @@ class SessionContainer extends Container {
   handleSession = (
     userId = this.state.userId,
     selApp = this.state.selApp,
-    selAppName = this.state.selAppName
+    localUpdate = false
   ) => {
-    if (selApp !== "0") {
-      this.handleSelectApp(selApp, selAppName);
+    if (selApp !== "0" && localUpdate === true) {
+      this.handleSelectApp(selApp);
     }
-    this.setState({ userId, selApp, selAppName });
+    this.setState({ userId, selApp });
   };
 
   handleSignIn = userId => {
@@ -42,16 +42,13 @@ class SessionContainer extends Container {
   handleSelectApp = async selApp => {
     this.setState({ selApp });
 
-    const appreq = await getRequest("/api/panel/apps/" + selApp);
-    if (appreq && "data" in appreq && "name" in appreq.data) {
-      this.setState({ selAppName: appreq.data.name });
-    }
-
     const resp = await getRequest("/api/panel/apps/select/" + selApp);
 
     if (resp.error) {
       this.loadbar.setToError(true);
       this.setState({ selApp: "0" });
+    } else {
+      this.setState({ selAppName: resp.name });
     }
   };
 
