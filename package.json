@@ -20,6 +20,7 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^4.3.1",
     "react-sortable-hoc": "^1.9.1",
+    "react-timestamp": "^5.0.0",
     "s-ago": "^2.0.1",
     "webpack": "^3.1.0"
   }
