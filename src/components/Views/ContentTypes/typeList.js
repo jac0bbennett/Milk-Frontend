@@ -12,6 +12,7 @@ const ContentTypeList = props => {
     props.loadbar.progressTo(15);
     props.page.handlePageChange("Content Types", "types");
     props.session.handleSession(undefined, props.match.params.appuuid);
+    props.page.handleCloseModal();
     getTypes(props.match.params.appuuid);
   }, []);
 

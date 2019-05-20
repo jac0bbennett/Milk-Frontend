@@ -9,12 +9,12 @@ import FAB from "../../UI/Buttons/fab";
 import FieldList from "./fieldList";
 import { arrayMove } from "react-sortable-hoc";
 import history from "../../../utils/history";
+import TimeAgoStamp from "../../UI/Misc/timeAgoStamp";
 
 const EditContentType = props => {
-  const [form, setForm] = useState({ name: "", slug: "" });
-  const [fields, setFields] = useState([]);
   const [msg, setMsg] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [typeData, setTypeData] = useState({});
 
   useEffect(() => {
     props.loadbar.progressTo(15);
@@ -33,7 +33,7 @@ const EditContentType = props => {
 
   const getType = async (
     uuid = props.session.state.selApp,
-    typeslug = form.slug
+    typeslug = typeData.slug
   ) => {
     const resp = await getRequest(
       "/api/panel/apps/" + uuid + "/types/" + typeslug
@@ -42,24 +42,20 @@ const EditContentType = props => {
       props.loadbar.setToError(true);
     } else {
       const userId = resp.meta.userId;
-      const respName = resp.data.name;
-      const respSlug = resp.data.slug;
-      const respFields = resp.data.fields;
       const selApp = resp.meta.appUUID;
-      setForm({ name: respName, slug: respSlug });
-      setFields(respFields);
+      setTypeData(resp.data);
       setIsLoaded(true);
       props.session.handleSession(userId, selApp);
-      props.page.handlePageChange(respName, "type");
+      props.page.handlePageChange(resp.data.name, "type");
       props.loadbar.progressTo(100);
     }
   };
 
   const handleChange = event => {
-    let formCopy = { ...form };
+    let typeCopy = { ...typeData };
     const target = event.target.name;
-    formCopy[target] = event.target.value;
-    setForm(formCopy);
+    typeCopy[target] = event.target.value;
+    setTypeData(typeCopy);
   };
 
   const handleSubmit = async event => {
@@ -68,11 +64,14 @@ const EditContentType = props => {
     props.loadbar.progressTo(15);
     setMsg("saving...");
 
-    const typename = form.name;
+    const typename = typeData.name;
 
     const req = await patchRequest(
-      "/api/panel/apps/" + props.session.state.selApp + "/types/" + form.slug,
-      { name: typename, fields: fields }
+      "/api/panel/apps/" +
+        props.session.state.selApp +
+        "/types/" +
+        typeData.slug,
+      { name: typename }
     );
 
     if (req.error) {
@@ -83,7 +82,6 @@ const EditContentType = props => {
       setMsg("");
       props.loadbar.progressTo(100);
       props.page.handleSetRefresh(true);
-      props.page.handleCloseModal();
     }
   };
 
@@ -93,7 +91,10 @@ const EditContentType = props => {
 
   const handleDelete = async event => {
     const url =
-      "/api/panel/apps/" + props.session.state.selApp + "/types/" + form.slug;
+      "/api/panel/apps/" +
+      props.session.state.selApp +
+      "/types/" +
+      typeData.slug;
 
     props.page.handleShowModal("confirmdeleteform", {
       deleteUrl: url,
@@ -103,9 +104,11 @@ const EditContentType = props => {
   };
 
   const onSortEnd = async ({ oldIndex, newIndex }) => {
-    const rearange = [...arrayMove(fields, oldIndex, newIndex)];
+    let typeCopy = { ...typeData };
+    const rearange = [...arrayMove(typeData.fields, oldIndex, newIndex)];
+    typeCopy.fields = rearange;
 
-    setFields(rearange);
+    setTypeData(typeCopy);
 
     const newOrder = { ...rearange };
 
@@ -113,7 +116,7 @@ const EditContentType = props => {
       "/api/panel/apps/" +
         props.session.state.selApp +
         "/types/" +
-        form.slug +
+        typeData.slug +
         "/reorderfields",
       { newOrder: newOrder }
     );
@@ -128,20 +131,23 @@ const EditContentType = props => {
       <FAB
         page={props.page}
         modalComp="newfieldform"
-        modalData={{ slug: form.slug }}
+        modalData={{ slug: typeData.slug }}
       >
         <i className="material-icons">add</i>
       </FAB>
       <MiniHeader header={props.session.state.selAppName} />
       {isLoaded ? (
         <div className="gencontainer">
+          <TimeAgoStamp className="softtext floatright">
+            {typeData.editedAt}
+          </TimeAgoStamp>
           <h2>Edit Type</h2>
           <form onSubmit={handleSubmit} autoComplete="off">
             <TextInput
               name="name"
               type="text"
               label="Name"
-              value={form.name}
+              value={typeData.name}
               onChange={handleChange}
               required={true}
             />
@@ -149,7 +155,7 @@ const EditContentType = props => {
               name="slug"
               type="text"
               label="Slug"
-              value={form.slug}
+              value={typeData.slug}
               disabled={true}
             />
             <div style={{ float: "right" }}>
@@ -161,14 +167,14 @@ const EditContentType = props => {
           <br />
           <hr />
           <h3>Fields</h3>
-          {fields.length > 0 ? (
+          {typeData.fields.length > 0 ? (
             <FieldList
               page={props.page}
-              fields={fields}
+              fields={typeData.fields}
               onSortEnd={onSortEnd}
               useDragHandle={true}
               useWindowAsScrollContainer={true}
-              typeSlug={form.slug}
+              typeSlug={typeData.slug}
             />
           ) : (
             <center>
