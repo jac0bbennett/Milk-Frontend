@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import TextInput from "../../UI/Inputs/txtInput";
 import { patchRequest } from "../../../utils/requests";
 
-const ShortTextField = props => {
+const LongTextField = props => {
   const [content, setContent] = useState(props.value);
   const [typingTimeout, setTypingTimeout] = useState(0);
   const [changeCount, setChangeCount] = useState(0);
@@ -68,15 +67,12 @@ const ShortTextField = props => {
 
   return (
     <div style={{ marginBottom: "10px" }}>
-      <TextInput
-        dataId={props.dataId}
+      <textarea
         name={props.name}
-        type="text"
-        label={props.label}
+        placeholder={props.label}
         value={content}
         onChange={handleChange}
         required={false}
-        autoComplete="off"
       />
       <span
         className="softtext"
@@ -89,4 +85,4 @@ const ShortTextField = props => {
   );
 };
 
-export default ShortTextField;
+export default LongTextField;

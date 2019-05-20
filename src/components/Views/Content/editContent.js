@@ -8,9 +8,10 @@ import {
 import { MiniHeader } from "../../UI/Misc/miniHeader";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import DeleteButton from "../../UI/Buttons/deleteButton";
-import FormMsg from "../../UI/Misc/formMsg";
 import history from "../../../utils/history";
 import ShortTextField from "./shortTextField";
+import LongTextField from "./longTextField";
+import Timestamp from "react-timestamp";
 
 const EditContent = props => {
   const [contentUuid, setContentUuid] = useState(
@@ -49,9 +50,12 @@ const EditContent = props => {
       props.loadbar.progressTo(100);
       setIsLoaded(true);
       const title =
-        getTitleShortText.length > 0 && contentData.content.title
-          ? contentData.content.title
+        getTitleShortText.length > 0 &&
+        contentData.content.title &&
+        contentData.content.title.draft.replace(/\s/g, "").length
+          ? contentData.content.title.draft || "Untitled"
           : "Untitled";
+
       setPageTitle(title);
       props.page.handlePageChange(title, "content");
     } else if (contentLoaded || typeLoaded) {
@@ -142,32 +146,59 @@ const EditContent = props => {
     });
   };
 
+  const getFieldValue = fieldSlug => {
+    return contentData.content[fieldSlug]
+      ? contentData.content[fieldSlug].draft || ""
+      : "";
+  };
+
+  const handleUpdateTitle = newTitle => {
+    if (newTitle === "") {
+      newTitle = "Untitled";
+    }
+
+    setPageTitle(newTitle);
+    props.page.handlePageChange(newTitle, "content");
+  };
+
   return (
     <React.Fragment>
       <MiniHeader header={props.session.state.selAppName} />
       {isLoaded ? (
         <div className="gencontainer">
-          <span className="softtext floatright">
-            <h4>{contentData.typeName}</h4>
-          </span>
-          <h1>{pageTitle}</h1>
-          {contentData.editedAt}
-          <br />
+          <div className="coloredbar">
+            <span
+              className="floatright"
+              style={{ marginRight: "10px", marginTop: "-15px" }}
+            >
+              <h4>{contentData.typeName}</h4>
+            </span>
+            <h1>{pageTitle}</h1>
+            <Timestamp date={contentData.editedAt} />
+          </div>
           <br />
           {fields.map(field =>
             field.fieldType === "text_short" ? (
               <ShortTextField
+                contentUuid={contentUuid}
+                dataId={field.id}
                 key={field.slug}
                 name={field.slug}
                 label={field.name}
-                value={contentData.content[field.slug] || ""}
+                value={getFieldValue(field.slug)}
+                updateTitle={handleUpdateTitle}
+                session={props.session}
               />
             ) : (
-              <textarea
+              <LongTextField
+                contentUuid={contentUuid}
+                dataId={field.id}
                 key={field.slug}
-                placeholder={field.name}
-                value={contentData.content[field.slug] || ""}
-                onChange={handleChange}
+                name={field.slug}
+                label={field.name}
+                value={getFieldValue(field.slug)}
+                updateTitle={handleUpdateTitle}
+                session={props.session}
               />
             )
           )}
