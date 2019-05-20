@@ -27,6 +27,8 @@ const ConfirmDeleteForm = props => {
       if (props.page.state.modalData.callback) {
         props.page.state.modalData.callback();
       }
+
+      setIsDeleting(false);
     }
   };
 
