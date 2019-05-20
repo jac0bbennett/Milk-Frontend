@@ -14,6 +14,7 @@ const SignInForm = props => {
         label="Pseudonym"
         autoComplete={"username"}
         required={true}
+        value={props.form.pseudo}
       />
       <TextInput
         name="key"
@@ -22,6 +23,7 @@ const SignInForm = props => {
         label="Key"
         required={true}
         autoComplete={"current-password"}
+        value={props.form.key}
       />
       <br />
       <br />
