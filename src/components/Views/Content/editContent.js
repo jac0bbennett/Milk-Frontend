@@ -9,8 +9,8 @@ import { MiniHeader } from "../../UI/Misc/miniHeader";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import DeleteButton from "../../UI/Buttons/deleteButton";
 import history from "../../../utils/history";
-import ShortTextField from "./shortTextField";
-import LongTextField from "./longTextField";
+import ShortTextField from "./Fields/shortTextField";
+import LongTextField from "./Fields/longTextField";
 import Timestamp from "react-timestamp";
 
 const EditContent = props => {
@@ -161,20 +161,40 @@ const EditContent = props => {
     props.page.handlePageChange(newTitle, "content");
   };
 
+  const handleUpdateEditedTime = timestamp => {
+    const contentCopy = { ...contentData };
+    contentCopy.editedAt = timestamp;
+    setContentData(contentCopy);
+  };
+
   return (
     <React.Fragment>
       <MiniHeader header={props.session.state.selAppName} />
       {isLoaded ? (
         <div className="gencontainer">
-          <div className="coloredbar">
+          <div className="coloredbar" style={{ paddingBottom: "20px" }}>
             <span
               className="floatright"
-              style={{ marginRight: "10px", marginTop: "-15px" }}
+              style={{ marginRight: "20px", marginTop: "-15px" }}
             >
-              <h4>{contentData.typeName}</h4>
+              <h4>
+                {contentData.status === 0 ||
+                (contentData.editedAt !== contentData.publishedAt ||
+                  contentData.editedAt !== contentData.updatedAt) ? (
+                  <span className="softtext">Draft</span>
+                ) : (
+                  <span className="greentext">Published</span>
+                )}
+              </h4>
             </span>
             <h1>{pageTitle}</h1>
             <Timestamp date={contentData.editedAt} />
+            <button
+              className="raisedbut floatright"
+              style={{ marginTop: "-10px", marginRight: "15px" }}
+            >
+              Publish
+            </button>
           </div>
           <br />
           {fields.map(field =>
@@ -187,6 +207,7 @@ const EditContent = props => {
                 label={field.name}
                 value={getFieldValue(field.slug)}
                 updateTitle={handleUpdateTitle}
+                updateEditedTime={handleUpdateEditedTime}
                 session={props.session}
               />
             ) : (
@@ -198,6 +219,7 @@ const EditContent = props => {
                 label={field.name}
                 value={getFieldValue(field.slug)}
                 updateTitle={handleUpdateTitle}
+                updateEditedTime={handleUpdateEditedTime}
                 session={props.session}
               />
             )
