@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { patchRequest } from "../../../utils/requests";
+import { patchRequest } from "../../../../utils/requests";
+import FieldMsg from "./fieldMsg";
 
 const LongTextField = props => {
   const [content, setContent] = useState(props.value);
@@ -23,10 +24,11 @@ const LongTextField = props => {
       const reqMsg = req.error;
       setMsg(reqMsg);
     } else {
-      setMsg("Saved draft");
+      setMsg("Saved to draft");
       if (props.name === "title") {
         props.updateTitle(newVal);
       }
+      props.updateEditedTime(req.editedAt);
     }
   };
 
@@ -54,7 +56,7 @@ const LongTextField = props => {
         setTimeout(function() {
           autoSave(newValue);
           setChangeCount(0);
-        }, 1000)
+        }, 700)
       );
     }
   };
@@ -74,13 +76,14 @@ const LongTextField = props => {
         onChange={handleChange}
         required={false}
       />
+      <br />
       <span
         className="softtext"
         style={{ fontSize: "11pt", marginRight: "15px" }}
       >
         {charCount} / 256
       </span>
-      <span style={{ fontSize: "11pt" }}>{msg}</span>
+      <FieldMsg msg={msg} />
     </div>
   );
 };

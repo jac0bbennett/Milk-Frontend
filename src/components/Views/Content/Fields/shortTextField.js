@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import TextInput from "../../UI/Inputs/txtInput";
-import { patchRequest } from "../../../utils/requests";
+import TextInput from "../../../UI/Inputs/txtInput";
+import { patchRequest } from "../../../../utils/requests";
+import FieldMsg from "./fieldMsg";
 
 const ShortTextField = props => {
   const [content, setContent] = useState(props.value);
@@ -24,10 +25,10 @@ const ShortTextField = props => {
       const reqMsg = req.error;
       setMsg(reqMsg);
     } else {
-      setMsg("Saved draft");
       if (props.name === "title") {
         props.updateTitle(newVal);
       }
+      props.updateEditedTime(req.editedAt);
     }
   };
 
@@ -55,7 +56,8 @@ const ShortTextField = props => {
         setTimeout(function() {
           autoSave(newValue);
           setChangeCount(0);
-        }, 1000)
+          setMsg("Saved to draft");
+        }, 700)
       );
     }
   };
@@ -84,7 +86,7 @@ const ShortTextField = props => {
       >
         {charCount} / 256
       </span>
-      <span style={{ fontSize: "11pt" }}>{msg}</span>
+      <FieldMsg msg={msg} />
     </div>
   );
 };
