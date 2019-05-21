@@ -14,7 +14,7 @@ class SessionContainer extends Container {
     selApp = this.state.selApp,
     localUpdate = false
   ) => {
-    if (selApp !== "0" && localUpdate === true) {
+    if (selApp !== "0" && localUpdate === false) {
       this.handleSelectApp(selApp);
     }
     this.setState({ userId, selApp });
