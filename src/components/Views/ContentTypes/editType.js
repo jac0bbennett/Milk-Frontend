@@ -7,9 +7,9 @@ import DeleteButton from "../../UI/Buttons/deleteButton";
 import FormMsg from "../../UI/Misc/formMsg";
 import FAB from "../../UI/Buttons/fab";
 import FieldList from "./fieldList";
-import { arrayMove } from "react-sortable-hoc";
 import history from "../../../utils/history";
 import TimeAgoStamp from "../../UI/Misc/timeAgoStamp";
+import arrayMove from "array-move";
 
 const EditContentType = props => {
   const [msg, setMsg] = useState("");

@@ -69,7 +69,7 @@ const NewContentForm = props => {
           <SubmitButton>Submit</SubmitButton>{" "}
         </div>
       ) : (
-        <span className="graytext">
+        <span className="softtext">
           Create a{" "}
           <Link to={"/panel/apps/" + props.session.state.selApp + "/types"}>
             content type

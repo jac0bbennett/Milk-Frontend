@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
-import TextInput from "../../UI/Inputs/txtInput";
-import {
-  getRequest,
-  patchRequest,
-  deleteRequest
-} from "../../../utils/requests";
+import { getRequest, postRequest } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
-import SubmitButton from "../../UI/Buttons/submitButton";
 import DeleteButton from "../../UI/Buttons/deleteButton";
 import history from "../../../utils/history";
 import ShortTextField from "./Fields/shortTextField";
@@ -19,12 +13,15 @@ const EditContent = props => {
   );
   const [contentData, setContentData] = useState({});
   const [pageTitle, setPageTitle] = useState("");
-  const [form, setForm] = useState({});
   const [fields, setFields] = useState([]);
   const [msg, setMsg] = useState("");
   const [contentLoaded, setContentLoaded] = useState(false);
   const [typeLoaded, setTypeLoaded] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [contentStatus, setContentStatus] = useState("draft");
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [isDrafting, setIsDrafting] = useState(false);
+  const [isDraftDiscarded, setIsDraftDiscarded] = useState(false);
 
   useEffect(() => {
     props.loadbar.progressTo(15);
@@ -49,19 +46,33 @@ const EditContent = props => {
     if (contentLoaded && typeLoaded) {
       props.loadbar.progressTo(100);
       setIsLoaded(true);
-      const title =
-        getTitleShortText.length > 0 &&
-        contentData.content.title &&
-        contentData.content.title.draft.replace(/\s/g, "").length
-          ? contentData.content.title.draft || "Untitled"
-          : "Untitled";
-
-      setPageTitle(title);
-      props.page.handlePageChange(title, "content");
+      handleUpdateTitle();
     } else if (contentLoaded || typeLoaded) {
       props.loadbar.progressTo(60);
     }
   }, [contentLoaded, typeLoaded]);
+
+  useEffect(() => {
+    if (
+      props.page.state.showModal === false &&
+      props.page.state.modalComp === "confirmdiscarddraftform"
+    ) {
+      setIsPublishing(false);
+    }
+  }, [props.page.state.showModal]);
+
+  useEffect(() => {
+    if (contentData.status === 0) {
+      setContentStatus("draft");
+    } else if (
+      contentData.editedAt !== contentData.publishedAt &&
+      contentData.editedAt !== contentData.updatedAt
+    ) {
+      setContentStatus("publishedChange");
+    } else {
+      setContentStatus("published");
+    }
+  }, [contentData.editedAt]);
 
   const getContent = async (uuid = props.session.state.selApp) => {
     const resp = await getRequest(
@@ -93,39 +104,37 @@ const EditContent = props => {
     }
   };
 
-  const handleChange = event => {
-    let contentCopy = { ...contentData };
-
-    const target = event.target.name;
-
-    contentCopy.content[target] = event.target.value;
-
-    setContentData(contentCopy);
-  };
-
-  const handleSubmit = async event => {
+  const handlePublish = async event => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("saving...");
+    setMsg("publishing...");
 
-    const typename = form.name;
+    setIsPublishing(true);
 
-    const req = await patchRequest(
-      "/api/panel/apps/" + props.session.state.selApp + "/types/" + form.slug,
-      { name: typename, fields: fields }
+    const req = await postRequest(
+      "/api/panel/apps/" +
+        props.session.state.selApp +
+        "/content/" +
+        contentUuid,
+      { action: "publish" }
     );
 
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
+      setIsPublishing(false);
       props.loadbar.setToError(true);
     } else {
       setMsg("");
+      setContentData(req.data);
+      setIsPublishing(false);
       props.loadbar.progressTo(100);
-      props.page.handleSetRefresh(true);
-      props.page.handleCloseModal();
     }
+  };
+
+  const handleDrafting = bool => {
+    setIsDrafting(bool);
   };
 
   const deleteCallback = () => {
@@ -146,13 +155,48 @@ const EditContent = props => {
     });
   };
 
+  const discardCallback = data => {
+    setContentData(data);
+    setIsPublishing(false);
+    setIsDraftDiscarded(true);
+    handleUpdateTitle();
+  };
+
+  const handleDiscardDraft = () => {
+    setIsPublishing(true);
+
+    const url =
+      "/api/panel/apps/" +
+      props.session.state.selApp +
+      "/content/" +
+      contentUuid;
+
+    props.page.handleShowModal("confirmdiscarddraftform", {
+      discardUrl: url,
+      callback: discardCallback,
+      extraText: "This draft cannot be resurrected!"
+    });
+  };
+
   const getFieldValue = fieldSlug => {
     return contentData.content[fieldSlug]
       ? contentData.content[fieldSlug].draft || ""
       : "";
   };
 
-  const handleUpdateTitle = newTitle => {
+  const handleUpdateTitle = (newTitle = false) => {
+    if (!newTitle) {
+      newTitle =
+        getTitleShortText.length > 0 &&
+        contentData.content.title &&
+        contentData.content.title.draft.replace(/\s/g, "").length
+          ? contentData.content.title.draft || "Untitled"
+          : "Untitled";
+    }
+
+    setPageTitle(newTitle);
+    props.page.handlePageChange(newTitle, "content");
+
     if (newTitle === "") {
       newTitle = "Untitled";
     }
@@ -165,36 +209,53 @@ const EditContent = props => {
     const contentCopy = { ...contentData };
     contentCopy.editedAt = timestamp;
     setContentData(contentCopy);
+    setIsDraftDiscarded(false);
+  };
+
+  const getStatus = () => {
+    if (isDrafting) {
+      return <span className="softtext">saving...</span>;
+    } else if (contentStatus === "draft") {
+      return <span className="softtext">Draft</span>;
+    } else if (contentStatus === "publishedChange") {
+      return (
+        <React.Fragment>
+          <span className="yellowtext">Published</span>
+          <span className="softtext"> (Pending draft)</span>
+        </React.Fragment>
+      );
+    } else {
+      return <span className="greentext">Published</span>;
+    }
   };
 
   return (
     <React.Fragment>
       <MiniHeader header={props.session.state.selAppName} />
       {isLoaded ? (
-        <div className="gencontainer">
+        <div className="gencontainer" style={{ marginBottom: "300px" }}>
           <div className="coloredbar" style={{ paddingBottom: "20px" }}>
-            <span
-              className="floatright"
-              style={{ marginRight: "20px", marginTop: "-15px" }}
-            >
-              <h4>
-                {contentData.status === 0 ||
-                (contentData.editedAt !== contentData.publishedAt ||
-                  contentData.editedAt !== contentData.updatedAt) ? (
-                  <span className="softtext">Draft</span>
-                ) : (
-                  <span className="greentext">Published</span>
-                )}
-              </h4>
+            <span className="floatright" style={{ marginRight: "20px" }}>
+              <span className="contentstatus">{getStatus()}</span>
             </span>
             <h1>{pageTitle}</h1>
-            <Timestamp date={contentData.editedAt} />
-            <button
-              className="raisedbut floatright"
+            <span className="softtext">
+              <Timestamp date={contentData.editedAt} />
+            </span>
+            <span
+              className="floatright"
               style={{ marginTop: "-10px", marginRight: "15px" }}
             >
-              Publish
-            </button>
+              <span style={{ fontSize: "11pt" }}>{msg}</span>
+              <button
+                onClick={handlePublish}
+                className="raisedbut"
+                style={{ marginLeft: "10px" }}
+                disabled={isPublishing || isDrafting}
+              >
+                Publish
+              </button>
+            </span>
           </div>
           <br />
           {fields.map(field =>
@@ -208,6 +269,10 @@ const EditContent = props => {
                 value={getFieldValue(field.slug)}
                 updateTitle={handleUpdateTitle}
                 updateEditedTime={handleUpdateEditedTime}
+                disabled={isPublishing}
+                drafting={handleDrafting}
+                contentStatus={contentStatus}
+                isDraftDiscarded={isDraftDiscarded}
                 session={props.session}
               />
             ) : (
@@ -220,15 +285,31 @@ const EditContent = props => {
                 value={getFieldValue(field.slug)}
                 updateTitle={handleUpdateTitle}
                 updateEditedTime={handleUpdateEditedTime}
+                disabled={isPublishing}
+                drafting={handleDrafting}
+                contentStatus={contentStatus}
+                isDraftDiscarded={isDraftDiscarded}
                 session={props.session}
               />
             )
           )}
-          <DeleteButton style={{ float: "right" }} onClick={handleDelete}>
-            Delete
-          </DeleteButton>
-          <br />
-          <br />
+          <div className="gencontainerfooter">
+            <DeleteButton style={{ float: "right" }} onClick={handleDelete}>
+              Delete
+            </DeleteButton>
+
+            {contentStatus === "draft" ||
+            contentStatus === "publishedChange" ? (
+              <button className="flatbut" onClick={handleDiscardDraft}>
+                Discard Draft
+              </button>
+            ) : (
+              <React.Fragment>
+                <br />
+                <br />
+              </React.Fragment>
+            )}
+          </div>
         </div>
       ) : (
         <br />

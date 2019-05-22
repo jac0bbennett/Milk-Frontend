@@ -5,10 +5,20 @@ import FieldMsg from "./fieldMsg";
 
 const ShortTextField = props => {
   const [content, setContent] = useState(props.value);
+  const [isTyping, setIsTyping] = useState(false);
+  const [editedTime, setEditedTime] = useState(0);
   const [typingTimeout, setTypingTimeout] = useState(0);
   const [changeCount, setChangeCount] = useState(0);
   const [charCount, setCharCount] = useState(props.value.length);
+  const [saved, setSaved] = useState(false);
   const [msg, setMsg] = useState("");
+
+  useEffect(() => {
+    if (!isTyping && saved) {
+      setMsg("Saved to draft");
+      props.updateEditedTime(editedTime);
+    }
+  }, [isTyping, saved]);
 
   const autoSave = async newVal => {
     const fieldcontentid = props.dataId;
@@ -24,17 +34,21 @@ const ShortTextField = props => {
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
+      props.drafting(false);
     } else {
+      setEditedTime(req.editedAt);
       if (props.name === "title") {
         props.updateTitle(newVal);
       }
-      props.updateEditedTime(req.editedAt);
+      setSaved(true);
     }
   };
 
   const handleChange = event => {
     const newValue = event.target.value;
     setContent(newValue);
+    setIsTyping(true);
+    setSaved(false);
 
     if (typingTimeout) {
       clearTimeout(typingTimeout);
@@ -44,6 +58,7 @@ const ShortTextField = props => {
     setChangeCount(changeCount + 1);
 
     if (changeCount > 20) {
+      setMsg("saving...");
       autoSave(newValue);
       setChangeCount(0);
     }
@@ -52,11 +67,13 @@ const ShortTextField = props => {
       setMsg(props.label + " too long!");
     } else {
       setMsg("saving...");
+      props.drafting(true);
       setTypingTimeout(
         setTimeout(function() {
+          setIsTyping(false);
           autoSave(newValue);
           setChangeCount(0);
-          setMsg("Saved to draft");
+          props.drafting(false);
         }, 700)
       );
     }
@@ -67,6 +84,18 @@ const ShortTextField = props => {
       clearTimeout(typingTimeout);
     };
   }, []);
+
+  useEffect(() => {
+    if (props.contentStatus === "published") {
+      setMsg("");
+    }
+  }, [props.contentStatus]);
+
+  useEffect(() => {
+    if (props.isDraftDiscarded) {
+      setContent(props.value);
+    }
+  }, [props.isDraftDiscarded]);
 
   return (
     <div style={{ marginBottom: "10px" }}>
@@ -79,6 +108,7 @@ const ShortTextField = props => {
         onChange={handleChange}
         required={false}
         autoComplete="off"
+        disabled={props.disabled}
       />
       <span
         className="softtext"

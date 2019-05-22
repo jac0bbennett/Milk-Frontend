@@ -16,8 +16,10 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "array-move": "^2.1.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-markdown": "^4.0.8",
     "react-router-dom": "^4.3.1",
     "react-sortable-hoc": "^1.9.1",
     "react-timestamp": "^5.0.0",
