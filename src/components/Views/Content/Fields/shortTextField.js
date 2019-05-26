@@ -111,6 +111,7 @@ const ShortTextField = props => {
         disabled={props.disabled}
       />
       <span
+        title="Characters"
         className="softtext"
         style={{ fontSize: "11pt", marginRight: "15px" }}
       >

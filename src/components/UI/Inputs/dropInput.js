@@ -2,7 +2,7 @@ import React from "react";
 
 const DropDownInput = props => {
   return (
-    <div className="geninpdiv">
+    <div className="geninpdiv" style={props.style}>
       <select
         name={props.name}
         className="gendropinp"
@@ -11,6 +11,7 @@ const DropDownInput = props => {
         autoComplete={props.autoComplete}
         required={props.required}
         disabled={props.disabled}
+        style={props.style}
       >
         <option disabled hidden style={{ display: "none" }} value="" />
         {props.children}

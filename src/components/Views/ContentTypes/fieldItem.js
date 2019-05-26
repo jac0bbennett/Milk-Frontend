@@ -46,9 +46,9 @@ const FieldItem = SortableElement(props => (
         style={{ paddingRight: "15px", fontSize: "18pt" }}
         className="material-icons"
       >
-        {getIcon(props.field.field_type)}
+        {getIcon(props.field.fieldType)}
       </i>
-      <span className="icolab">{decodeFieldType(props.field.field_type)}</span>
+      <span className="icolab">{decodeFieldType(props.field.fieldType)}</span>
       <button
         className="flatbut darkflatbutton"
         onClick={() => {
@@ -70,3 +70,4 @@ const FieldItem = SortableElement(props => (
 ));
 
 export default FieldItem;
+export { getIcon };

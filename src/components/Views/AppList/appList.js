@@ -6,6 +6,7 @@ import { getRequest } from "../../../utils/requests";
 const AppList = props => {
   const [apps, setApps] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [appCount, setAppCount] = useState(0);
 
   useEffect(() => {
     props.loadbar.progressTo(15);
@@ -30,6 +31,7 @@ const AppList = props => {
       const selApp = resp.meta.appUUID;
       setApps(respApps);
       setIsLoaded(true);
+      setAppCount(resp.meta.appCount);
       props.session.handleSession(userId, selApp, true);
       props.loadbar.progressTo(100);
     }
@@ -40,7 +42,7 @@ const AppList = props => {
       <div id="midmsg">
         <span style={{ fontSize: "14pt" }} className="softtext">
           <i style={{ fontSize: "42pt" }} className="material-icons">
-            sentiment_very_dissatisfied
+            inbox
           </i>
           <br />
           <br />
@@ -65,9 +67,13 @@ const AppList = props => {
 
   return (
     <div>
+      <span className="floatright contentstatus" style={{ marginTop: "-15px" }}>
+        {appCount} / 10
+      </span>
       <FAB page={props.page} modalComp="newappform">
         <i className="material-icons">add</i>
       </FAB>
+      <br />
       {apps.length > 0 ? (
         apps.map(app => (
           <AppItem

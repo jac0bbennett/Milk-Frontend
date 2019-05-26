@@ -205,6 +205,7 @@ hr {
   padding-top: 5px;
   padding-bottom: 20px;
   margin-bottom: 50px;
+  border-radius: 5px;
 }
 
 .coloredbar {
@@ -216,6 +217,8 @@ hr {
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 15px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .topicon {
@@ -228,6 +231,7 @@ hr {
   padding: 5px;
   text-decoration: overline;
   margin-top: -10px;
+  display: inline-block;
 }
 
 .gencontainerfooter {
@@ -332,6 +336,7 @@ hr {
   outline: none;
   border: none;
   border-bottom: 2px solid #000;
+  background: inherit;
 }
 
 .gendropinp:focus ~ .floating-label,
@@ -374,6 +379,7 @@ option {
 .geninpdiv {
   position: relative;
   height: 60px;
+  background: inherit;
 }
 
 .raisedbut {
@@ -462,7 +468,7 @@ option {
   padding: 15px;
   padding-top: 5px;
   margin-bottom: 15px;
-  border-radius: 2px;
+  border-radius: 5px;
 }
 
 .flatbut {
@@ -627,6 +633,11 @@ textarea {
   text-transform: uppercase;
 }
 
+.contentlistheader {
+  display: flex;
+  justify-content: space-between;
+}
+
 @media all and (max-width: 1200px) {
   #pagetitle {
     right: 5%;
@@ -731,6 +742,9 @@ textarea {
   }
   #fieldoptions {
     width: 98%;
+  }
+  .hidesmallscreen {
+    display: none;
   }
 }
 

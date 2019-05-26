@@ -22,30 +22,33 @@ const ContentItem = props => {
   };
 
   return (
-    <Link to={props.url}>
-      <div className={"secondaryitemcont"}>
-        <span
-          className="softtext"
-          style={{ fontSize: "11pt", color: "#808080" }}
-        >
-          {props.content.typeName}
-        </span>
-        <span className="floatright contentstatus" style={{ marginTop: "5px" }}>
-          {getStatus()}
-        </span>
+    <div className={"secondaryitemcont"}>
+      <span className="softtext" style={{ fontSize: "11pt", color: "#808080" }}>
+        {props.content.typeName}
+      </span>
+      <span className="floatright contentstatus" style={{ marginTop: "5px" }}>
+        {getStatus()}
+      </span>
+      <Link to={props.url}>
         <h2>
           {props.content.content.title &&
           props.content.content.title.draft.replace(/\s/g, "").length
             ? props.content.content.title.draft || "Untitled"
             : "Untitled"}
         </h2>
-        <span className="softtext" title={new Date(props.content.editedAt)}>
-          <TimeAgoStamp style={{ fontSize: "11pt" }}>
-            {props.content.editedAt}
-          </TimeAgoStamp>
-        </span>
-      </div>
-    </Link>
+      </Link>
+      <span className="softtext" style={{ fontSize: "11pt", cursor: "text" }}>
+        {props.content.uuid}
+      </span>{" "}
+      <span
+        className="softtext floatright"
+        title={new Date(props.content.editedAt)}
+      >
+        <TimeAgoStamp style={{ fontSize: "11pt" }}>
+          {props.content.editedAt}
+        </TimeAgoStamp>
+      </span>
+    </div>
   );
 };
 

@@ -50,7 +50,7 @@ const LongTextField = props => {
 
   useEffect(() => {
     if (tabKeyPress) {
-      input.current.selectionStart = input.current.selectionEnd = oldCaret + 1;
+      input.current.selectionStart = input.current.selectionEnd = oldCaret + 4;
       setTabKeyPress(false);
     }
   });
@@ -61,7 +61,7 @@ const LongTextField = props => {
       const val = content;
       const start = event.target.selectionStart;
       const end = event.target.selectionEnd;
-      const newContent = val.substring(0, start) + "\t" + val.substring(end);
+      const newContent = val.substring(0, start) + "    " + val.substring(end);
       setContent(newContent);
       setOldCaret(start);
       setTabKeyPress(true);
@@ -130,6 +130,23 @@ const LongTextField = props => {
     }
   };
 
+  const ContentCount = () => {
+    return (
+      <span
+        className="softtext"
+        style={{ fontSize: "11pt", marginRight: "15px" }}
+      >
+        <span title="Characters">{content.length} / 50000</span> (
+        <span title="Words">
+          {/\S/.test(content) && !content.startsWith(" ")
+            ? content.replace(/# |- |[0-9]. /g, "").split(/\s+/).length
+            : content.replace(/# |- |[0-9]. /g, "").split(/\s+/).length - 1}
+          )
+        </span>
+      </span>
+    );
+  };
+
   return (
     <div className="longtxtinp" style={{ marginBottom: "30px" }}>
       <h4
@@ -151,31 +168,13 @@ const LongTextField = props => {
             ref={input}
           />
           <br />
-          <span
-            className="softtext"
-            style={{ fontSize: "11pt", marginRight: "15px" }}
-          >
-            {content.length} / 50000 (
-            {/\S/.test(content) && !content.startsWith(" ")
-              ? content.replace("# ", "").split(/\s+/).length
-              : content.replace("# ", "").split(/\s+/).length - 1}
-            )
-          </span>
+          <ContentCount />
           <FieldMsg msg={msg} />
         </React.Fragment>
       ) : (
         <React.Fragment>
           <ReactMarkdown className="minimarkdownprev" source={content} />
-          <span
-            className="softtext"
-            style={{ fontSize: "11pt", marginRight: "15px" }}
-          >
-            {content.length} / 50000 (
-            {/\S/.test(content) && !content.startsWith(" ")
-              ? content.replace("# ", "").split(/\s+/).length
-              : content.replace("# ", "").split(/\s+/).length - 1}
-            )
-          </span>
+          <ContentCount />
         </React.Fragment>
       )}
       <span

@@ -7,6 +7,7 @@ import { MiniHeader } from "../../UI/Misc/miniHeader";
 const ContentTypeList = props => {
   const [types, setTypes] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [typeCount, setTypeCount] = useState(0);
 
   useEffect(() => {
     props.loadbar.progressTo(15);
@@ -33,6 +34,7 @@ const ContentTypeList = props => {
       const selApp = resp.meta.appUUID;
       setTypes(respTypes);
       setIsLoaded(true);
+      setTypeCount(resp.meta.typeCount);
       props.session.handleSession(userId, selApp);
       props.loadbar.progressTo(100);
     }
@@ -43,7 +45,7 @@ const ContentTypeList = props => {
       <div id="midmsg">
         <span style={{ fontSize: "14pt" }} className="softtext">
           <i style={{ fontSize: "42pt" }} className="material-icons">
-            sentiment_very_dissatisfied
+            inbox
           </i>
           <br />
           <br />
@@ -69,6 +71,9 @@ const ContentTypeList = props => {
   return (
     <div>
       <MiniHeader header={props.session.state.selAppName} />
+      {isLoaded ? (
+        <span className="floatright contentstatus">{typeCount} / 25</span>
+      ) : null}
       <FAB page={props.page} modalComp="newtypeform">
         <i className="material-icons">add</i>
       </FAB>
@@ -78,6 +83,7 @@ const ContentTypeList = props => {
             key={type.id}
             type={type}
             session={props.session}
+            loadbar={props.loadbar}
             page={props.page}
             url={
               "/panel/apps/" +

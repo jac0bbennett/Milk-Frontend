@@ -24,7 +24,6 @@ const AppItem = props => {
       >
         <i className="material-icons">more_horiz</i>
       </button>
-      <span style={{ fontSize: "9pt" }}>UUID:</span>{" "}
       <span className="cmsappuuid">{props.app.uuid}</span>
     </div>
   );
