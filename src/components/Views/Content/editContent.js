@@ -235,6 +235,7 @@ const EditContent = props => {
       {isLoaded ? (
         <div className="gencontainer" style={{ marginBottom: "300px" }}>
           <div className="coloredbar" style={{ paddingBottom: "20px" }}>
+            <span className="softtext">{contentData.typeName}</span>
             <span className="floatright" style={{ marginRight: "20px" }}>
               <span className="contentstatus">{getStatus()}</span>
             </span>

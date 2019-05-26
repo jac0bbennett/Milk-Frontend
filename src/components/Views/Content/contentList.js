@@ -5,6 +5,7 @@ import { MiniHeader } from "../../UI/Misc/miniHeader";
 import ContentItem from "./contentItem";
 import BottomScrollListener from "react-bottom-scroll-listener";
 import DropDownInput from "../../UI/Inputs/dropInput";
+import history from "../../../utils/history";
 
 const ContentList = props => {
   const [contents, setContents] = useState([]);
@@ -16,6 +17,7 @@ const ContentList = props => {
   const [loadedAll, setLoadedAll] = useState(false);
   const [contentsCount, setContentsCount] = useState(0);
   const [typeFilter, setTypeFilter] = useState("");
+  const [sortOrder, setSortOrder] = useState("dateDescending");
 
   useEffect(() => {
     props.page.handlePageChange("Content", "contents");
@@ -23,6 +25,19 @@ const ContentList = props => {
 
     getContents(1, props.match.params.appuuid);
     getTypes(props.match.params.appuuid);
+
+    const params = new URLSearchParams(props.location.search);
+
+    const paramTypeFilter = params.get("contentType");
+    const paramSortOrder = params.get("sort");
+
+    if (paramTypeFilter) {
+      setTypeFilter(paramTypeFilter);
+    }
+
+    if (paramSortOrder) {
+      setSortOrder(paramSortOrder);
+    }
   }, []);
 
   useEffect(() => {
@@ -74,7 +89,7 @@ const ContentList = props => {
           setContents(respContents);
         }
         setContentsLoaded(true);
-        if (page > 1 && respContents === []) {
+        if (page > 1 && respContents.length === 0) {
           setLoadedAll(true);
         }
         setNextPage(page + 1);
@@ -101,11 +116,37 @@ const ContentList = props => {
     const typeslug = event.target.value;
     if (typeslug !== "0") {
       setTypeFilter(typeslug);
-      getContents(1, undefined, { contentType: typeslug }, true);
+      getContents(
+        1,
+        undefined,
+        { contentType: typeslug, sortOrder: sortOrder },
+        true
+      );
+      history.push(
+        window.location.pathname +
+          "?contentType=" +
+          typeslug +
+          "&sort=" +
+          sortOrder
+      );
     } else {
       setTypeFilter("");
-      getContents(1, undefined, {}, true);
+      getContents(1, undefined, { sortOrder: sortOrder }, true);
     }
+    document.activeElement.blur();
+  };
+
+  const handleSortOrder = event => {
+    const order = event.target.value;
+    setSortOrder(order);
+    let filters = { sortOrder: order };
+    if (typeFilter !== "") {
+      filters.contentType = typeFilter;
+    }
+    getContents(1, undefined, { ...filters }, true);
+    history.push(
+      window.location.pathname + "?contentType=" + typeFilter + "&sort=" + order
+    );
     document.activeElement.blur();
   };
 
@@ -154,7 +195,11 @@ const ContentList = props => {
                 onChange={handleFilterType}
                 value={typeFilter}
                 required={true}
-                style={{ display: "inline-block" }}
+                style={{
+                  display: "inline-block",
+                  width: "150px",
+                  marginRight: "20px"
+                }}
               >
                 <option value={"0"}>No Filter</option>
                 {types.map(type => (
@@ -163,9 +208,22 @@ const ContentList = props => {
                   </option>
                 ))}
               </DropDownInput>
-            </span>
-            <span className="contentstatus hidesmallscreen">
-              {contentsCount} / 1000
+
+              <DropDownInput
+                name="sort"
+                label="Sort"
+                onChange={handleSortOrder}
+                value={sortOrder}
+                required={true}
+                style={{ display: "inline-block", width: "150px" }}
+              >
+                <option value="dateDescending">Last edited</option>
+                <option value="dateAscending">Oldest edited</option>
+              </DropDownInput>
+
+              <span className="contentstatus" style={{ marginLeft: "20px" }}>
+                {contentsCount} / 1000
+              </span>
             </span>
           </React.Fragment>
         ) : null}

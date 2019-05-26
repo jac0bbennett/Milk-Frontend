@@ -4,7 +4,8 @@ import { Switch, Route } from "react-router-dom";
 import LoadingBar from "./components/UI/LoadingBar/loadingBar";
 import SignIn from "./components/Views/Auth/signIn";
 import SignOut from "./components/Views/Auth/signOut";
-import AppList from "./components/Views/AppList/appList";
+import AppList from "./components/Views/Apps/appList";
+import AppPage from "./components/Views/Apps/appPage";
 import ContentTypeList from "./components/Views/ContentTypes/typeList";
 import EditContentType from "./components/Views/ContentTypes/editType";
 import ContentList from "./components/Views/Content/contentList";
@@ -98,6 +99,11 @@ const App = () => {
                       session={session}
                     />
                   )}
+                />
+                <Route
+                  exact
+                  path={"/panel/apps/:appuuid"}
+                  render={props => <AppPage {...props} />}
                 />
                 <Route
                   exact
