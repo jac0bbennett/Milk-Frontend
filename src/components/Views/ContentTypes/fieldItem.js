@@ -22,6 +22,10 @@ const decodeFieldType = fieldtype => {
       return "Short Text";
     case "text_long":
       return "Long Text";
+    case "number_int":
+      return "Integer";
+    case "number_float":
+      return "Decimal";
     default:
       return "Field";
   }
@@ -33,6 +37,10 @@ const getIcon = fieldtype => {
       return "text_fields";
     case "text_long":
       return "format_align_left";
+    case "number_int":
+      return "exposure_plus_1";
+    case "number_float":
+      return "filter_5";
     default:
       return "text_fields";
   }

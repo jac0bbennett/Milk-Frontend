@@ -5,6 +5,7 @@ import DeleteButton from "../../UI/Buttons/deleteButton";
 import history from "../../../utils/history";
 import ShortTextField from "./Fields/shortTextField";
 import LongTextField from "./Fields/longTextField";
+import NumberField from "./Fields/numberField";
 import Timestamp from "react-timestamp";
 
 const EditContent = props => {
@@ -229,6 +230,37 @@ const EditContent = props => {
     }
   };
 
+  const FieldInput = field => {
+    const passProps = {
+      contentUuid: contentUuid,
+      dataId: field.id,
+      key: field.slug,
+      fieldType: field.fieldType,
+      label: field.name,
+      value: getFieldValue(field.slug),
+      updateTitle: handleUpdateTitle,
+      updateEditedTime: handleUpdateEditedTime,
+      disabled: isPublishing,
+      drafting: handleDrafting,
+      contentStatus: contentStatus,
+      isDraftDiscarded: isDraftDiscarded,
+      session: props.session
+    };
+
+    switch (field.fieldType) {
+      case "text_short":
+        return <ShortTextField {...passProps} />;
+      case "text_long":
+        return <LongTextField {...passProps} />;
+      case "number_int":
+        return <NumberField {...passProps} />;
+      case "number_float":
+        return <NumberField {...passProps} />;
+      default:
+        return <ShortTextField {...passProps} />;
+    }
+  };
+
   return (
     <React.Fragment>
       <MiniHeader header={props.session.state.selAppName} />
@@ -259,41 +291,7 @@ const EditContent = props => {
             </span>
           </div>
           <br />
-          {fields.map(field =>
-            field.fieldType === "text_short" ? (
-              <ShortTextField
-                contentUuid={contentUuid}
-                dataId={field.id}
-                key={field.slug}
-                name={field.slug}
-                label={field.name}
-                value={getFieldValue(field.slug)}
-                updateTitle={handleUpdateTitle}
-                updateEditedTime={handleUpdateEditedTime}
-                disabled={isPublishing}
-                drafting={handleDrafting}
-                contentStatus={contentStatus}
-                isDraftDiscarded={isDraftDiscarded}
-                session={props.session}
-              />
-            ) : (
-              <LongTextField
-                contentUuid={contentUuid}
-                dataId={field.id}
-                key={field.slug}
-                name={field.slug}
-                label={field.name}
-                value={getFieldValue(field.slug)}
-                updateTitle={handleUpdateTitle}
-                updateEditedTime={handleUpdateEditedTime}
-                disabled={isPublishing}
-                drafting={handleDrafting}
-                contentStatus={contentStatus}
-                isDraftDiscarded={isDraftDiscarded}
-                session={props.session}
-              />
-            )
-          )}
+          {fields.map(field => FieldInput(field))}
           <div className="gencontainerfooter">
             <DeleteButton style={{ float: "right" }} onClick={handleDelete}>
               Delete
