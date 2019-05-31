@@ -2,28 +2,29 @@ import React, { useState } from "react";
 import { postRequest } from "../../utils/requests";
 import DeleteButton from "../UI/Buttons/deleteButton";
 
-const ConfirmDiscardDraftForm = props => {
+const ConfirmActionForm = props => {
   const [msg, setMsg] = useState("");
-  const [isDiscarding, setIsDiscarding] = useState(false);
+  const [isActing, setIsActing] = useState(false);
 
   const handleDiscard = async () => {
     props.loadbar.progressTo(15);
     setMsg("discarding...");
 
-    setIsDiscarding(true);
+    setIsActing(true);
 
     const req = await postRequest(props.page.state.modalData.discardUrl, {
-      action: "discardDraft"
+      action: props.page.state.modalData.action
     });
 
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
       props.loadbar.setToError(true);
+      setIsActing(false);
     } else {
       setMsg("");
       props.page.state.modalData.callback(req.data);
-      setIsDiscarding(false);
+      setIsActing(false);
       props.loadbar.progressTo(100);
       props.page.handleCloseModal();
     }
@@ -31,7 +32,7 @@ const ConfirmDiscardDraftForm = props => {
 
   return (
     <div style={{ width: "100%" }}>
-      <h3>Are you sure you want to discard this draft?</h3>
+      <h3>{props.page.state.modalData.titleText}</h3>
       <div className="softtext" style={{ width: "100%" }}>
         {props.page.state.modalData.extraText}
       </div>
@@ -40,9 +41,9 @@ const ConfirmDiscardDraftForm = props => {
       <button onClick={props.page.handleCloseModal} className="flatbut">
         Cancel
       </button>
-      {!isDiscarding ? (
+      {!isActing ? (
         <DeleteButton style={{ float: "right" }} onClick={handleDiscard}>
-          Discard
+          Confirm
         </DeleteButton>
       ) : null}
 
@@ -51,4 +52,4 @@ const ConfirmDiscardDraftForm = props => {
   );
 };
 
-export default ConfirmDiscardDraftForm;
+export default ConfirmActionForm;

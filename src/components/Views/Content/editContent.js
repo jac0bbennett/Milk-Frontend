@@ -216,10 +216,35 @@ const EditContent = props => {
       "/content/" +
       props.match.params.contentuuid;
 
-    props.page.handleShowModal("confirmdiscarddraftform", {
+    props.page.handleShowModal("confirmactionform", {
       discardUrl: url,
+      action: "discarddraft",
       callback: discardCallback,
+      titleText: "Are you sure you want to discard this draft?",
       extraText: "This draft cannot be resurrected!"
+    });
+  };
+
+  const unpublishCallback = data => {
+    setContentData(data);
+    setIsPublishing(false);
+  };
+
+  const handleUnpublish = () => {
+    setIsPublishing(true);
+
+    const url =
+      "/api/panel/apps/" +
+      props.session.state.selApp +
+      "/content/" +
+      props.match.params.contentuuid;
+
+    props.page.handleShowModal("confirmactionform", {
+      discardUrl: url,
+      action: "unpublish",
+      callback: unpublishCallback,
+      titleText: "Are you sure you want to unpublish this?",
+      extraText: "It will no longer be available through the API!"
     });
   };
 
@@ -325,12 +350,13 @@ const EditContent = props => {
               <button className="flatbut" onClick={handleDiscardDraft}>
                 Discard Draft
               </button>
-            ) : (
-              <React.Fragment>
-                <br />
-                <br />
-              </React.Fragment>
-            )}
+            ) : null}
+            {contentStatus === "published" ||
+            contentStatus === "publishedChange" ? (
+              <button className="flatbut bluetext" onClick={handleUnpublish}>
+                Unpublish
+              </button>
+            ) : null}
           </div>
         </div>
       ) : (

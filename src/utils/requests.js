@@ -7,7 +7,7 @@ let baseApiUrl = "";
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   baseApiUrl = "http://localhost:5100";
 } else {
-  baseApiUrl = "https://0.0.0.0";
+  baseApiUrl = "https://milk.jwb.cloud";
 }
 
 const api = axios.create({
