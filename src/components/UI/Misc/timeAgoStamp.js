@@ -16,7 +16,7 @@ const TimeAgoStamp = props => {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [timestamp]);
 
   return (
     <span style={props.style} className={props.className}>

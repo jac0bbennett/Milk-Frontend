@@ -3,9 +3,9 @@ import { Container } from "unstated";
 class PageContainer extends Container {
   // NOTE: Cache data in state for reopen
   state = {
-    title: "Home",
+    title: "",
     pageId: "",
-    refreshView: false,
+    refreshView: 0,
     showModal: false,
     modalComp: "none",
     modalData: {}
@@ -29,8 +29,8 @@ class PageContainer extends Container {
     //document.body.style.overflowY = "scroll";
   };
 
-  handleSetRefresh = bool => {
-    this.setState({ refreshView: bool });
+  handleSetRefresh = () => {
+    this.setState({ refreshView: this.state.refreshView + 1 });
   };
 }
 

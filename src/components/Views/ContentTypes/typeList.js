@@ -1,44 +1,43 @@
 import React, { useState, useEffect } from "react";
 import FAB from "../../UI/Buttons/fab";
 import TypeItem from "./typeItem";
-import { getRequest } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
+import { getRequest } from "../../../utils/requests";
 
 const ContentTypeList = props => {
-  const [types, setTypes] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [typeCount, setTypeCount] = useState(0);
+  const [types, setTypes] = useState([]);
 
   useEffect(() => {
-    props.loadbar.progressTo(15);
     props.page.handlePageChange("Content Types", "types");
-    props.session.handleSession(undefined, props.match.params.appuuid);
-    props.page.handleCloseModal();
-    getTypes(props.match.params.appuuid);
-  }, []);
+    const req = async () => {
+      const resp = await getRequest(
+        "/api/panel/apps/" + props.match.params.appuuid + "/types"
+      );
 
-  useEffect(() => {
-    if (props.page.state.refreshView === true) {
-      getTypes();
-      props.page.handleSetRefresh(false);
-    }
-  }, [props.page.state.refreshView]);
-
-  const getTypes = async (uuid = props.session.state.selApp) => {
-    const resp = await getRequest("/api/panel/apps/" + uuid + "/types");
-    if (resp.error) {
-      props.loadbar.setToError(true);
-    } else {
-      const userId = resp.meta.userId;
-      const respTypes = resp.data.types;
-      const selApp = resp.meta.appUUID;
-      setTypes(respTypes);
-      setIsLoaded(true);
-      setTypeCount(resp.meta.typeCount);
-      props.session.handleSession(userId, selApp);
-      props.loadbar.progressTo(100);
-    }
-  };
+      if (resp.error) {
+        props.loadbar.setToError(true);
+      } else {
+        const userId = resp.meta.userId;
+        const selApp = resp.meta.appUUID;
+        const selAppName = resp.meta.appName;
+        setTypes(resp.data.types);
+        setTypeCount(resp.meta.typeCount);
+        setIsLoaded(true);
+        props.session.handleSession(userId, selApp, selAppName);
+        props.loadbar.progressTo(100);
+      }
+    };
+    props.loadbar.progressTo(15);
+    req();
+  }, [
+    props.page.state.refreshView,
+    props.match.params.appuuid,
+    props.loadbar,
+    props.session,
+    props.page
+  ]);
 
   const NoAppMsg = () => {
     return (
@@ -72,7 +71,9 @@ const ContentTypeList = props => {
     <div>
       <MiniHeader header={props.session.state.selAppName} />
       {isLoaded ? (
-        <span className="floatright contentstatus">{typeCount} / 25</span>
+        <span className="pageData">
+          <span className="floatright contentstatus">{typeCount} / 25</span>
+        </span>
       ) : null}
       <FAB page={props.page} modalComp="newtypeform">
         <i className="material-icons">add</i>

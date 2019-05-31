@@ -4,38 +4,30 @@ import FAB from "../../UI/Buttons/fab";
 import { getRequest } from "../../../utils/requests";
 
 const AppList = props => {
-  const [apps, setApps] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(0);
   const [appCount, setAppCount] = useState(0);
+  const [apps, setApps] = useState([]);
 
   useEffect(() => {
-    props.loadbar.progressTo(15);
     props.page.handlePageChange("Your Apps", "apps");
-    getApps();
-  }, []);
 
-  useEffect(() => {
-    if (props.page.state.refreshView === true) {
-      getApps();
-      props.page.handleSetRefresh(false);
-    }
-  }, [props.page.state.refreshView]);
+    const req = async () => {
+      const resp = await getRequest("/api/panel/apps");
+      if (resp.error) {
+        props.loadbar.setToError(true);
+      } else {
+        const userId = resp.meta.userId;
+        const selApp = resp.meta.appUUID;
+        setApps(resp.data.apps);
+        setAppCount(resp.meta.appCount);
+        setIsLoaded(true);
+        props.session.handleSession(userId, selApp);
+        props.loadbar.progressTo(100);
+      }
+    };
 
-  const getApps = async () => {
-    const resp = await getRequest("/api/panel/apps");
-    if (resp.error) {
-      props.loadbar.setToError(true);
-    } else {
-      const userId = resp.meta.userId;
-      const respApps = resp.data.apps;
-      const selApp = resp.meta.appUUID;
-      setApps(respApps);
-      setIsLoaded(true);
-      setAppCount(resp.meta.appCount);
-      props.session.handleSession(userId, selApp, true);
-      props.loadbar.progressTo(100);
-    }
-  };
+    req();
+  }, [props.page, props.session, props.loadbar, props.page.state.refreshView]);
 
   const NoAppMsg = () => {
     return (
@@ -66,9 +58,9 @@ const AppList = props => {
   };
 
   return (
-    <div>
-      <span className="floatright contentstatus" style={{ marginTop: "-15px" }}>
-        {appCount} / 10
+    <div className="applist">
+      <span className="pageData" style={{ marginBottom: "15px" }}>
+        <span className="floatright contentstatus">{appCount} / 10</span>
       </span>
       <FAB page={props.page} modalComp="newappform">
         <i className="material-icons">add</i>

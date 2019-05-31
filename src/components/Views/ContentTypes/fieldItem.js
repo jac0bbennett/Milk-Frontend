@@ -56,7 +56,9 @@ const FieldItem = SortableElement(props => (
       >
         {getIcon(props.field.fieldType)}
       </i>
-      <span className="icolab">{decodeFieldType(props.field.fieldType)}</span>
+      <span className="icolab">
+        <span>{props.field.name}</span>
+      </span>
       <button
         className="flatbut darkflatbutton"
         onClick={() => {
@@ -70,10 +72,10 @@ const FieldItem = SortableElement(props => (
         <i className="material-icons">more_horiz</i>
       </button>
     </div>
-    <h3>{props.field.name}</h3>
-    <h4>
+    <div className="fieldattr" style={{ marginTop: "10px" }}>
+      <span>{decodeFieldType(props.field.fieldType)}</span>
       <span className="softtext">{props.field.slug}</span>
-    </h4>
+    </div>
   </div>
 ));
 

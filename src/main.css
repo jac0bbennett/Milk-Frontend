@@ -633,9 +633,65 @@ textarea {
   text-transform: uppercase;
 }
 
-.contentlistheader {
+.flexspacebetween {
   display: flex;
   justify-content: space-between;
+}
+
+.fieldattr {
+  margin-left: 50px;
+}
+
+.fieldattr span {
+  margin-right: 15px;
+}
+
+.pageData {
+  margin-top: -20px;
+}
+
+.applist {
+  margin-top: -15px;
+}
+
+.loadingicon {
+  width: 20px;
+  height: 20px;
+  background-color: #3c81c8;
+  border-radius: 100%;
+  -webkit-animation: sk-scaleout 1s infinite ease-in-out;
+  animation: sk-scaleout 1s infinite ease-in-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+@-webkit-keyframes sk-scaleout {
+  0% {
+    -webkit-transform: translate(-20px);
+    transform: translate(-20px);
+  }
+  50% {
+    -webkit-transform: translate(20px);
+    transform: translate(20px);
+  }
+  100% {
+    -webkit-transform: translate(-20px);
+    transform: translate(-20px);
+  }
+}
+
+@keyframes sk-scaleout {
+  0% {
+    -webkit-transform: translate(-20px);
+    transform: translate(-20px);
+  }
+  50% {
+    -webkit-transform: translate(20px);
+    transform: translate(20px);
+  }
+  100% {
+    -webkit-transform: translate(-20px);
+    transform: translate(-20px);
+  }
 }
 
 @media all and (max-width: 1200px) {
@@ -704,6 +760,12 @@ textarea {
     font-size: 14pt;
     top: -5px;
     right: 30px;
+  }
+  .pageData {
+    margin-top: 5px;
+  }
+  .applist {
+    margin-top: 0px;
   }
 }
 

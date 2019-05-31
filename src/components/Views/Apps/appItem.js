@@ -11,6 +11,7 @@ const AppItem = props => {
         sel={props.session.state.selApp === props.app.uuid}
       />
       <h2>{props.app.name}</h2>
+      <span className="cmsappuuid">{props.app.uuid}</span>{" "}
       <button
         className="flatbut cmsappmanage"
         style={{
@@ -24,7 +25,6 @@ const AppItem = props => {
       >
         <i className="material-icons">more_horiz</i>
       </button>
-      <span className="cmsappuuid">{props.app.uuid}</span>
     </div>
   );
 };

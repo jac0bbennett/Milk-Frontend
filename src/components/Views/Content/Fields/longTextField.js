@@ -6,7 +6,6 @@ import ReactMarkdown from "react-markdown";
 const LongTextField = props => {
   const [content, setContent] = useState(props.value);
   const [isTyping, setIsTyping] = useState(false);
-  const [editedTime, setEditedTime] = useState(0);
   const [typingTimeout, setTypingTimeout] = useState(0);
   const [changeCount, setChangeCount] = useState(0);
   const [saved, setSaved] = useState(false);
@@ -20,7 +19,6 @@ const LongTextField = props => {
   useEffect(() => {
     if (!isTyping && saved) {
       setMsg("Saved to draft");
-      props.updateEditedTime(editedTime);
     }
   }, [isTyping, saved]);
 
@@ -40,7 +38,8 @@ const LongTextField = props => {
       setMsg(reqMsg);
       props.drafting(false);
     } else {
-      setEditedTime(req.editedAt);
+      props.drafting(false);
+      props.updateEditedTime(req.edited);
       if (props.name === "title") {
         props.updateTitle(newVal);
       }
@@ -49,11 +48,11 @@ const LongTextField = props => {
   };
 
   useEffect(() => {
-    if (tabKeyPress) {
+    if (tabKeyPress === true) {
       input.current.selectionStart = input.current.selectionEnd = oldCaret + 4;
       setTabKeyPress(false);
     }
-  });
+  }, [tabKeyPress, oldCaret]);
 
   const handleKeyPress = event => {
     if (event.keyCode === 9) {
@@ -98,7 +97,6 @@ const LongTextField = props => {
           setIsTyping(false);
           autoSave(newValue);
           setChangeCount(0);
-          props.drafting(false);
         }, 700)
       );
     }
@@ -108,7 +106,7 @@ const LongTextField = props => {
     return () => {
       clearTimeout(typingTimeout);
     };
-  }, []);
+  }, [typingTimeout]);
 
   useEffect(() => {
     if (props.contentStatus === "published") {
@@ -120,7 +118,7 @@ const LongTextField = props => {
     if (props.isDraftDiscarded) {
       setContent(props.value);
     }
-  }, [props.isDraftDiscarded]);
+  }, [props.isDraftDiscarded, props.value]);
 
   const getViewLinkClasses = link => {
     if (link === view) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import FAB from "../../UI/Buttons/fab";
 import { getRequest } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
@@ -19,35 +19,89 @@ const ContentList = props => {
   const [typeFilter, setTypeFilter] = useState("");
   const [sortOrder, setSortOrder] = useState("dateDescending");
 
+  const getContents = useCallback(async () => {
+    if (!loadedAll) {
+      const getFilter = () => {
+        const params = new URLSearchParams(props.location.search);
+
+        const paramTypeFilter = params.get("contentType");
+        const paramSortOrder = params.get("sort");
+
+        let filter = {};
+
+        if (paramSortOrder) {
+          setSortOrder(paramSortOrder);
+          filter.sortOrder = paramSortOrder;
+        }
+
+        if (paramTypeFilter) {
+          setTypeFilter(paramTypeFilter);
+          filter.contentType = paramTypeFilter;
+        }
+
+        return filter;
+      };
+
+      const resp = await getRequest(
+        "/api/panel/apps/" +
+          props.match.params.appuuid +
+          "/content?page=" +
+          nextPage +
+          "&q=" +
+          JSON.stringify(getFilter())
+      );
+      if (resp.error) {
+        props.loadbar.setToError(true);
+      } else {
+        const userId = resp.meta.userId;
+        const selApp = resp.meta.appUUID;
+        const selAppName = resp.meta.appName;
+        const respContents = resp.data.contents;
+        if (nextPage > 1) {
+          setContents(c => c.concat(respContents));
+        } else {
+          setContents(respContents);
+        }
+        setContentsLoaded(true);
+        if (nextPage > 1 && resp.data.contents.length === 0) {
+          setLoadedAll(true);
+        }
+        setContentsCount(resp.meta.contentCount);
+        props.session.handleSession(userId, selApp, selAppName);
+      }
+    }
+  }, [
+    props.loadbar,
+    props.session,
+    nextPage,
+    props.match.params.appuuid,
+    props.location.search,
+    loadedAll
+  ]);
+
+  const getTypes = useCallback(async () => {
+    const resp = await getRequest(
+      "/api/panel/apps/" + props.match.params.appuuid + "/types"
+    );
+    if (resp.error) {
+      props.loadbar.setToError(true);
+      alert("Could not load some data!");
+    } else {
+      setTypes(resp.data.types);
+      setTypesLoaded(true);
+    }
+  }, [props.match.params.appuuid, props.loadbar]);
+
   useEffect(() => {
     props.page.handlePageChange("Content", "contents");
-    props.session.handleSession(undefined, props.match.params.appuuid);
-
-    getContents(1, props.match.params.appuuid);
-    getTypes(props.match.params.appuuid);
-
-    const params = new URLSearchParams(props.location.search);
-
-    const paramTypeFilter = params.get("contentType");
-    const paramSortOrder = params.get("sort");
-
-    if (paramTypeFilter) {
-      setTypeFilter(paramTypeFilter);
-    }
-
-    if (paramSortOrder) {
-      setSortOrder(paramSortOrder);
-    }
-  }, []);
+    setContentsLoaded(false);
+    props.loadbar.progressTo(15);
+    getContents();
+  }, [loadedAll, props.loadbar, props.page, getContents, getTypes]);
 
   useEffect(() => {
-    if (props.page.state.refreshView === true) {
-      setContents([]);
-      getContents(1);
-      getTypes();
-      props.page.handleSetRefresh(false);
-    }
-  }, [props.page.state.refreshView]);
+    getTypes();
+  }, [getTypes]);
 
   useEffect(() => {
     if (contentsLoaded && typesLoaded) {
@@ -56,72 +110,12 @@ const ContentList = props => {
     } else if (contentsLoaded || typesLoaded) {
       props.loadbar.progressTo(60);
     }
-  }, [contentsLoaded, typesLoaded]);
-
-  const getContents = async (
-    page = nextPage,
-    uuid = props.session.state.selApp,
-    filter = {},
-    reset = false
-  ) => {
-    if (!loadedAll) {
-      props.loadbar.progressTo(15);
-      const resp = await getRequest(
-        "/api/panel/apps/" +
-          uuid +
-          "/content?page=" +
-          page +
-          "&q=" +
-          JSON.stringify(filter)
-      );
-
-      if (resp.error) {
-        props.loadbar.setToError(true);
-      } else {
-        const userId = resp.meta.userId;
-        const respContents = resp.data.contents;
-        const selApp = resp.meta.appUUID;
-        const curContents = [...contents];
-        props.loadbar.progressTo(100);
-        if (!reset) {
-          setContents(curContents.concat(respContents));
-        } else {
-          setContents(respContents);
-        }
-        setContentsLoaded(true);
-        if (page > 1 && respContents.length === 0) {
-          setLoadedAll(true);
-        }
-        setNextPage(page + 1);
-        setContentsCount(resp.meta.contentCount);
-        props.session.handleSession(userId, selApp);
-      }
-    }
-  };
-
-  const getTypes = async (uuid = props.session.state.selApp) => {
-    const resp = await getRequest("/api/panel/apps/" + uuid + "/types");
-
-    if (resp.error) {
-      props.loadbar.setToError(true);
-      alert("Could not load some data!");
-    } else {
-      const respTypes = resp.data.types;
-      setTypes(respTypes);
-      setTypesLoaded(true);
-    }
-  };
+  }, [contentsLoaded, typesLoaded, props.loadbar]);
 
   const handleFilterType = event => {
     const typeslug = event.target.value;
     if (typeslug !== "0") {
       setTypeFilter(typeslug);
-      getContents(
-        1,
-        undefined,
-        { contentType: typeslug, sortOrder: sortOrder },
-        true
-      );
       history.push(
         window.location.pathname +
           "?contentType=" +
@@ -131,7 +125,7 @@ const ContentList = props => {
       );
     } else {
       setTypeFilter("");
-      getContents(1, undefined, { sortOrder: sortOrder }, true);
+      history.push(window.location.pathname + "?sort=" + sortOrder);
     }
     document.activeElement.blur();
   };
@@ -139,14 +133,17 @@ const ContentList = props => {
   const handleSortOrder = event => {
     const order = event.target.value;
     setSortOrder(order);
-    let filters = { sortOrder: order };
     if (typeFilter !== "") {
-      filters.contentType = typeFilter;
+      history.push(
+        window.location.pathname +
+          "?contentType=" +
+          typeFilter +
+          "&sort=" +
+          order
+      );
+    } else {
+      history.push(window.location.pathname + "?sort=" + order);
     }
-    getContents(1, undefined, { ...filters }, true);
-    history.push(
-      window.location.pathname + "?contentType=" + typeFilter + "&sort=" + order
-    );
     document.activeElement.blur();
   };
 
@@ -184,43 +181,44 @@ const ContentList = props => {
 
   return (
     <div>
-      <div className="contentlistheader">
+      <div className="flexspacebetween">
         <MiniHeader header={props.session.state.selAppName} />
         {isLoaded ? (
           <React.Fragment>
-            <span className="hidesmallscreen" style={{ marginTop: "-20px" }}>
-              <DropDownInput
-                name="contenttype"
-                label="Filter Type"
-                onChange={handleFilterType}
-                value={typeFilter}
-                required={true}
-                style={{
-                  display: "inline-block",
-                  width: "150px",
-                  marginRight: "20px"
-                }}
-              >
-                <option value={"0"}>No Filter</option>
-                {types.map(type => (
-                  <option key={type.id} value={type.slug}>
-                    {type.slug}
-                  </option>
-                ))}
-              </DropDownInput>
+            <span className="pageData">
+              <span className="hidesmallscreen">
+                <DropDownInput
+                  name="contenttype"
+                  label="Filter Type"
+                  onChange={handleFilterType}
+                  value={typeFilter}
+                  required={true}
+                  style={{
+                    display: "inline-block",
+                    width: "150px",
+                    marginRight: "20px"
+                  }}
+                >
+                  <option value={"0"}>No Filter</option>
+                  {types.map(type => (
+                    <option key={type.id} value={type.slug}>
+                      {type.slug}
+                    </option>
+                  ))}
+                </DropDownInput>
 
-              <DropDownInput
-                name="sort"
-                label="Sort"
-                onChange={handleSortOrder}
-                value={sortOrder}
-                required={true}
-                style={{ display: "inline-block", width: "150px" }}
-              >
-                <option value="dateDescending">Last edited</option>
-                <option value="dateAscending">Oldest edited</option>
-              </DropDownInput>
-
+                <DropDownInput
+                  name="sort"
+                  label="Sort"
+                  onChange={handleSortOrder}
+                  value={sortOrder}
+                  required={true}
+                  style={{ display: "inline-block", width: "150px" }}
+                >
+                  <option value="dateDescending">Last edited</option>
+                  <option value="dateAscending">Oldest edited</option>
+                </DropDownInput>
+              </span>
               <span className="contentstatus" style={{ marginLeft: "20px" }}>
                 {contentsCount} / 1000
               </span>
@@ -251,7 +249,21 @@ const ContentList = props => {
               }
             />
           ))}
-          <BottomScrollListener offset={500} onBottom={getContents} />
+          <center>
+            {loadedAll ? (
+              <span className="softtext" style={{ paddingBottom: "30px" }}>
+                El Fin
+              </span>
+            ) : contents.length >= 20 ? (
+              <div className="loadingicon" style={{ marginBottom: "30px" }} />
+            ) : null}
+          </center>
+          {contents.length >= 20 ? (
+            <BottomScrollListener
+              offset={500}
+              onBottom={() => setNextPage(nextPage + 1)}
+            />
+          ) : null}
         </React.Fragment>
       ) : isLoaded ? (
         typeFilter === "" ? (

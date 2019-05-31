@@ -39,7 +39,7 @@ const NewFieldForm = props => {
       setForm({ name: "", slug: "", fieldtype: "" });
       props.loadbar.progressTo(100);
       props.page.handleCloseModal();
-      props.page.handleSetRefresh(true);
+      props.page.handleSetRefresh();
     }
   };
 

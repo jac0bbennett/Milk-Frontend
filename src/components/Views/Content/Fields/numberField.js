@@ -5,7 +5,6 @@ import FieldMsg from "./fieldMsg";
 
 const NumberField = props => {
   const [content, setContent] = useState(props.value);
-  const [editedTime, setEditedTime] = useState(0);
   const [typingTimeout, setTypingTimeout] = useState(0);
   const [saved, setSaved] = useState(false);
   const [msg, setMsg] = useState("");
@@ -13,7 +12,6 @@ const NumberField = props => {
   useEffect(() => {
     if (saved) {
       setMsg("Saved to draft");
-      props.updateEditedTime(editedTime);
     }
   }, [saved]);
 
@@ -33,7 +31,8 @@ const NumberField = props => {
       setMsg(reqMsg);
       props.drafting(false);
     } else {
-      setEditedTime(req.editedAt);
+      props.drafting(false);
+      props.updateEditedTime(req.edited);
       if (props.name === "title") {
         props.updateTitle(newVal);
       }
@@ -43,11 +42,11 @@ const NumberField = props => {
 
   const getNumValue = fieldVal => {
     if (props.fieldType === "number_int") {
-      if (fieldVal == "") {
+      if (fieldVal === "") {
         return "";
       }
       if (Number.isInteger(parseFloat(fieldVal))) {
-        return parseInt(fieldVal);
+        return parseInt(fieldVal, 10);
       } else {
         setMsg("Value has to be integer!");
         return NaN;
@@ -69,8 +68,8 @@ const NumberField = props => {
     if (typingTimeout) {
       clearTimeout(typingTimeout);
     }
-    if (Number.isNaN(newValue) && newValue != "") {
-      null;
+    if (Number.isNaN(newValue) && newValue !== "") {
+      return null;
     } else if (newValue > Number.MAX_SAFE_INTEGER) {
       setMsg("Number is too big!");
     } else {
@@ -79,7 +78,6 @@ const NumberField = props => {
       setTypingTimeout(
         setTimeout(function() {
           autoSave(newValue);
-          props.drafting(false);
         }, 700)
       );
     }
@@ -89,7 +87,7 @@ const NumberField = props => {
     return () => {
       clearTimeout(typingTimeout);
     };
-  }, []);
+  }, [typingTimeout]);
 
   useEffect(() => {
     if (props.contentStatus === "published") {
@@ -101,7 +99,7 @@ const NumberField = props => {
     if (props.isDraftDiscarded) {
       setContent(props.value);
     }
-  }, [props.isDraftDiscarded]);
+  }, [props.isDraftDiscarded, props.value]);
 
   return (
     <div style={{ marginBottom: "10px" }}>

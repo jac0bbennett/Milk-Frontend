@@ -6,7 +6,6 @@ import FieldMsg from "./fieldMsg";
 const ShortTextField = props => {
   const [content, setContent] = useState(props.value);
   const [isTyping, setIsTyping] = useState(false);
-  const [editedTime, setEditedTime] = useState(0);
   const [typingTimeout, setTypingTimeout] = useState(0);
   const [changeCount, setChangeCount] = useState(0);
   const [charCount, setCharCount] = useState(props.value.length);
@@ -16,7 +15,6 @@ const ShortTextField = props => {
   useEffect(() => {
     if (!isTyping && saved) {
       setMsg("Saved to draft");
-      props.updateEditedTime(editedTime);
     }
   }, [isTyping, saved]);
 
@@ -36,7 +34,8 @@ const ShortTextField = props => {
       setMsg(reqMsg);
       props.drafting(false);
     } else {
-      setEditedTime(req.editedAt);
+      props.drafting(false);
+      props.updateEditedTime(req.edited);
       if (props.name === "title") {
         props.updateTitle(newVal);
       }
@@ -73,7 +72,6 @@ const ShortTextField = props => {
           setIsTyping(false);
           autoSave(newValue);
           setChangeCount(0);
-          props.drafting(false);
         }, 700)
       );
     }
@@ -83,7 +81,7 @@ const ShortTextField = props => {
     return () => {
       clearTimeout(typingTimeout);
     };
-  }, []);
+  }, [typingTimeout]);
 
   useEffect(() => {
     if (props.contentStatus === "published") {
@@ -95,7 +93,7 @@ const ShortTextField = props => {
     if (props.isDraftDiscarded) {
       setContent(props.value);
     }
-  }, [props.isDraftDiscarded]);
+  }, [props.isDraftDiscarded, props.value]);
 
   return (
     <div style={{ marginBottom: "10px" }}>

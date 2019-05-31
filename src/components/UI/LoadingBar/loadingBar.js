@@ -92,7 +92,7 @@ class LoadingBar extends Component {
     }
   }
 
-  // Check whether the proggress is full
+  // Check whether the progress is full
   isFull() {
     // Full Indicator
     let isFull = this.state.width === 100;

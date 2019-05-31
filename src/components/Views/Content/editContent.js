@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { getRequest, postRequest } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
 import DeleteButton from "../../UI/Buttons/deleteButton";
@@ -9,9 +9,6 @@ import NumberField from "./Fields/numberField";
 import Timestamp from "react-timestamp";
 
 const EditContent = props => {
-  const [contentUuid, setContentUuid] = useState(
-    props.match.params.contentuuid
-  );
   const [contentData, setContentData] = useState({});
   const [pageTitle, setPageTitle] = useState("");
   const [fields, setFields] = useState([]);
@@ -24,34 +21,106 @@ const EditContent = props => {
   const [isDrafting, setIsDrafting] = useState(false);
   const [isDraftDiscarded, setIsDraftDiscarded] = useState(false);
 
+  const handleUpdateTitle = useCallback(
+    (newTitle = "") => {
+      setPageTitle(newTitle);
+      props.page.handlePageChange(newTitle, "content");
+
+      if (newTitle === "") {
+        newTitle = "Untitled";
+      }
+    },
+    [props.page]
+  );
+
+  const getType = useCallback(
+    async typeslug => {
+      const resp = await getRequest(
+        "/api/panel/apps/" + props.session.state.selApp + "/types/" + typeslug
+      );
+      if (resp.error) {
+        props.loadbar.setToError(true);
+      } else {
+        const respFields = resp.data.fields;
+        setFields(respFields);
+        setTypeLoaded(true);
+      }
+    },
+    [props.loadbar, props.session]
+  );
+
+  const getContent = useCallback(async () => {
+    const resp = await getRequest(
+      "/api/panel/apps/" +
+        props.match.params.appuuid +
+        "/content/" +
+        props.match.params.contentuuid
+    );
+    if (resp.error) {
+      props.loadbar.setToError(true);
+    } else {
+      const userId = resp.meta.userId;
+      const selApp = resp.meta.appUUID;
+      const selAppName = resp.meta.appName;
+      setContentData(resp.data);
+      setContentLoaded(true);
+      props.session.handleSession(userId, selApp, selAppName);
+      handleUpdateTitle();
+      getType(resp.data.typeSlug);
+    }
+  }, [
+    props.loadbar,
+    props.session,
+    getType,
+    props.match.params.appuuid,
+    props.match.params.contentuuid,
+    handleUpdateTitle
+  ]);
+
   useEffect(() => {
     props.loadbar.progressTo(15);
     props.page.handlePageChange("", "content");
     props.session.handleSession(undefined, props.match.params.appuuid);
-
-    getContent(props.match.params.appuuid);
-  }, []);
-
-  useEffect(() => {
-    if (props.page.state.refreshView === true) {
-      getContent();
-      props.page.handleSetRefresh(false);
-    }
-  }, [props.page.state.refreshView]);
-
-  const getTitleShortText = fields.filter((v, i) => {
-    return v.slug === "title" && v.fieldType === "text_short";
-  });
+    getContent();
+  }, [
+    props.loadbar,
+    props.page,
+    props.session,
+    props.match.params.contentuuid,
+    props.match.params.appuuid,
+    getContent,
+    props.page.state.refreshView,
+    handleUpdateTitle
+  ]);
 
   useEffect(() => {
     if (contentLoaded && typeLoaded) {
       props.loadbar.progressTo(100);
       setIsLoaded(true);
-      handleUpdateTitle();
+
+      const getTitleShortText = fields.filter((v, i) => {
+        return v.slug === "title" && v.fieldType === "text_short";
+      });
+
+      const newTitle =
+        getTitleShortText.length > 0 &&
+        contentData.content.title &&
+        contentData.content.title.draft.replace(/\s/g, "").length
+          ? contentData.content.title.draft || "Untitled"
+          : "Untitled";
+
+      handleUpdateTitle(newTitle);
     } else if (contentLoaded || typeLoaded) {
       props.loadbar.progressTo(60);
     }
-  }, [contentLoaded, typeLoaded]);
+  }, [
+    contentLoaded,
+    typeLoaded,
+    props.loadbar,
+    contentData.content,
+    handleUpdateTitle,
+    fields
+  ]);
 
   useEffect(() => {
     if (
@@ -60,7 +129,7 @@ const EditContent = props => {
     ) {
       setIsPublishing(false);
     }
-  }, [props.page.state.showModal]);
+  }, [props.page.state.showModal, props.page.state.modalComp]);
 
   useEffect(() => {
     if (contentData.status === 0) {
@@ -73,37 +142,12 @@ const EditContent = props => {
     } else {
       setContentStatus("published");
     }
-  }, [contentData.editedAt]);
-
-  const getContent = async (uuid = props.session.state.selApp) => {
-    const resp = await getRequest(
-      "/api/panel/apps/" + uuid + "/content/" + contentUuid
-    );
-    if (resp.error) {
-      props.loadbar.setToError(true);
-    } else {
-      const userId = resp.meta.userId;
-      const selApp = resp.meta.appUUID;
-      setContentData(resp.data);
-      setContentLoaded(true);
-      props.session.handleSession(userId, selApp);
-
-      getType(resp.data.typeSlug);
-    }
-  };
-
-  const getType = async typeslug => {
-    const resp = await getRequest(
-      "/api/panel/apps/" + props.session.state.selApp + "/types/" + typeslug
-    );
-    if (resp.error) {
-      props.loadbar.setToError(true);
-    } else {
-      const respFields = resp.data.fields;
-      setFields(respFields);
-      setTypeLoaded(true);
-    }
-  };
+  }, [
+    contentData.editedAt,
+    contentData.status,
+    contentData.publishedAt,
+    contentData.updatedAt
+  ]);
 
   const handlePublish = async event => {
     event.preventDefault();
@@ -117,7 +161,7 @@ const EditContent = props => {
       "/api/panel/apps/" +
         props.session.state.selApp +
         "/content/" +
-        contentUuid,
+        props.match.params.contentuuid,
       { action: "publish" }
     );
 
@@ -147,7 +191,7 @@ const EditContent = props => {
       "/api/panel/apps/" +
       props.session.state.selApp +
       "/content/" +
-      contentUuid;
+      props.match.params.contentuuid;
 
     props.page.handleShowModal("confirmdeleteform", {
       deleteUrl: url,
@@ -170,7 +214,7 @@ const EditContent = props => {
       "/api/panel/apps/" +
       props.session.state.selApp +
       "/content/" +
-      contentUuid;
+      props.match.params.contentuuid;
 
     props.page.handleShowModal("confirmdiscarddraftform", {
       discardUrl: url,
@@ -183,27 +227,6 @@ const EditContent = props => {
     return contentData.content[fieldSlug]
       ? contentData.content[fieldSlug].draft || ""
       : "";
-  };
-
-  const handleUpdateTitle = (newTitle = false) => {
-    if (!newTitle) {
-      newTitle =
-        getTitleShortText.length > 0 &&
-        contentData.content.title &&
-        contentData.content.title.draft.replace(/\s/g, "").length
-          ? contentData.content.title.draft || "Untitled"
-          : "Untitled";
-    }
-
-    setPageTitle(newTitle);
-    props.page.handlePageChange(newTitle, "content");
-
-    if (newTitle === "") {
-      newTitle = "Untitled";
-    }
-
-    setPageTitle(newTitle);
-    props.page.handlePageChange(newTitle, "content");
   };
 
   const handleUpdateEditedTime = timestamp => {
@@ -232,7 +255,7 @@ const EditContent = props => {
 
   const FieldInput = field => {
     const passProps = {
-      contentUuid: contentUuid,
+      contentUuid: props.match.params.contentuuid,
       dataId: field.id,
       key: field.slug,
       fieldType: field.fieldType,

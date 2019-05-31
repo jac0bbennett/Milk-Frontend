@@ -17,39 +17,37 @@ const EditContentType = props => {
   const [typeData, setTypeData] = useState({});
 
   useEffect(() => {
-    props.loadbar.progressTo(15);
     props.page.handlePageChange("", "type");
-    props.session.handleSession(undefined, props.match.params.appuuid);
+    const req = async () => {
+      const resp = await getRequest(
+        "/api/panel/apps/" +
+          props.match.params.appuuid +
+          "/types/" +
+          props.match.params.typeslug
+      );
 
-    getType(props.match.params.appuuid, props.match.params.typeslug);
-  }, []);
-
-  useEffect(() => {
-    if (props.page.state.refreshView === true) {
-      getType();
-      props.page.handleSetRefresh(false);
-    }
-  }, [props.page.state.refreshView]);
-
-  const getType = async (
-    uuid = props.session.state.selApp,
-    typeslug = typeData.slug
-  ) => {
-    const resp = await getRequest(
-      "/api/panel/apps/" + uuid + "/types/" + typeslug
-    );
-    if (resp.error) {
-      props.loadbar.setToError(true);
-    } else {
-      const userId = resp.meta.userId;
-      const selApp = resp.meta.appUUID;
-      setTypeData(resp.data);
-      setIsLoaded(true);
-      props.session.handleSession(userId, selApp);
-      props.page.handlePageChange(resp.data.name, "type");
-      props.loadbar.progressTo(100);
-    }
-  };
+      if (resp.error) {
+        props.loadbar.setToError(true);
+      } else {
+        const userId = resp.meta.userId;
+        const selApp = resp.meta.appUUID;
+        const appName = resp.meta.appName;
+        setTypeData(resp.data);
+        setIsLoaded(true);
+        props.session.handleSession(userId, selApp, appName);
+        props.loadbar.progressTo(100);
+      }
+    };
+    props.loadbar.progressTo(15);
+    req();
+  }, [
+    props.page.state.refreshView,
+    props.match.params.appuuid,
+    props.match.params.typeslug,
+    props.loadbar,
+    props.session,
+    props.page
+  ]);
 
   const handleChange = event => {
     let typeCopy = { ...typeData };
@@ -81,7 +79,7 @@ const EditContentType = props => {
     } else {
       setMsg("");
       props.loadbar.progressTo(100);
-      props.page.handleSetRefresh(true);
+      props.page.handleSetRefresh();
     }
   };
 

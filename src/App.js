@@ -136,7 +136,6 @@ const App = () => {
                     <SignOut
                       {...props}
                       loadbar={loadbar}
-                      onSignOut={session.handleSignOut}
                       page={page}
                       session={session}
                     />
