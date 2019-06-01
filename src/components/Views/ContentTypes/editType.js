@@ -36,6 +36,7 @@ const EditContentType = props => {
         setIsLoaded(true);
         props.session.handleSession(userId, selApp, appName);
         props.loadbar.progressTo(100);
+        props.page.handlePageChange(resp.data.name, "type");
       }
     };
     props.loadbar.progressTo(15);
