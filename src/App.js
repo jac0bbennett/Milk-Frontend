@@ -5,6 +5,7 @@ import LoadingBar from "./components/UI/LoadingBar/loadingBar";
 import SignIn from "./components/Views/Auth/signIn";
 import SignOut from "./components/Views/Auth/signOut";
 import AppList from "./components/Views/Apps/appList";
+import AppApiKeys from "./components/Views/Apps/appApiKeys";
 import AppPage from "./components/Views/Apps/appPage";
 import ContentTypeList from "./components/Views/ContentTypes/typeList";
 import EditContentType from "./components/Views/ContentTypes/editType";
@@ -57,6 +58,18 @@ const App = () => {
                   path="/panel/apps"
                   render={props => (
                     <AppList
+                      {...props}
+                      loadbar={loadbar}
+                      page={page}
+                      session={session}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/panel/apps/:appuuid/apikeys"
+                  render={props => (
+                    <AppApiKeys
                       {...props}
                       loadbar={loadbar}
                       page={page}

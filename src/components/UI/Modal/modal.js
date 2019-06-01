@@ -1,6 +1,8 @@
 import React from "react";
 import EditAppForm from "../../Forms/editApp";
 import NewAppForm from "../../Forms/newApp";
+import NewApiKeyForm from "../../Forms/newApiKey";
+import EditApiKeyForm from "../../Forms/editApiKey";
 import NewTypeForm from "../../Forms/newType";
 import NewFieldForm from "../../Forms/newField";
 import EditFieldForm from "../../Forms/editField";
@@ -14,6 +16,10 @@ const Content = props => {
       return <NewAppForm {...props} />;
     case "editappform":
       return <EditAppForm {...props} />;
+    case "newapikeyform":
+      return <NewApiKeyForm {...props} />;
+    case "editapikeyform":
+      return <EditApiKeyForm {...props} />;
     case "newtypeform":
       return <NewTypeForm {...props} />;
     case "newfieldform":

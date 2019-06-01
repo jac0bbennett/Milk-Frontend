@@ -1,30 +1,37 @@
 import React, { useState, useEffect } from "react";
 import TextInput from "../UI/Inputs/txtInput";
-import { patchRequest } from "../../utils/requests";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 import DeleteButton from "../UI/Buttons/deleteButton";
-import { Link } from "react-router-dom";
+import { patchRequest } from "../../utils/requests";
 
-const EditAppForm = props => {
-  const [form, setForm] = useState({ name: props.page.state.modalData.name });
+const EditApiKeyForm = props => {
+  const [form, setForm] = useState({
+    name: props.page.state.modalData.key.name,
+    key: props.page.state.modalData.key.key
+  });
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
-    setForm({ name: props.page.state.modalData.name });
-  }, [props.page.state.modalData.name]);
+    setForm({
+      name: props.page.state.modalData.key.name,
+      key: props.page.state.modalData.key.key
+    });
+    setMsg("");
+  }, [props.page.state.modalData.key]);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("submitting...");
+    setMsg("saving...");
 
-    const appname = form.name;
+    const keyname = form.name;
+    const apikey = form.key;
 
     const req = await patchRequest(
-      "/api/panel/apps/" + props.page.state.modalData.uuid,
-      { appname }
+      "/api/panel/apps/" + props.session.state.selApp + "/apikeys/" + apikey,
+      { keyname }
     );
 
     if (req.error) {
@@ -39,44 +46,34 @@ const EditAppForm = props => {
     }
   };
 
-  const deleteCallback = () => {
-    if (props.session.state.selApp === props.page.state.modalData.uuid) {
-      props.session.handleSession(undefined, "0");
-    }
-  };
-
   const handleDelete = async event => {
-    const url = "/api/panel/apps/" + props.page.state.modalData.uuid;
+    event.preventDefault();
+
+    const apikey = props.page.state.modalData.key.key;
+
+    const url =
+      "/api/panel/apps/" + props.session.state.selApp + "/apikeys/" + apikey;
 
     props.page.handleShowModal("confirmdeleteform", {
       deleteUrl: url,
-      callback: deleteCallback,
-      extraText:
-        "By deleting this app, all content types and content will be deleted forever!"
+      extraText: "You will no longer be able to access content with this token!"
     });
   };
 
   const handleChange = event => {
     let formCopy = { ...form };
-    formCopy.name = event.target.value;
+    const target = event.target.name;
+    formCopy[target] = event.target.value;
     setForm(formCopy);
-    setMsg("");
   };
 
   return (
     <form onSubmit={handleSubmit} autoComplete="off">
-      <Link
-        to={"/panel/apps/" + props.page.state.modalData.uuid + "/apikeys"}
-        onClick={props.page.handleCloseModal}
-        className="floatright"
-      >
-        API Keys
-      </Link>
-      <h2>Edit App</h2>
+      <h2>Edit API Key</h2>
       <TextInput
         name="name"
         type="text"
-        label="App Name"
+        label="Key Name"
         value={form.name}
         onChange={handleChange}
         required={true}
@@ -92,4 +89,4 @@ const EditAppForm = props => {
   );
 };
 
-export default EditAppForm;
+export default EditApiKeyForm;
