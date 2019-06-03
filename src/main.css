@@ -208,7 +208,7 @@ hr {
   border-radius: 5px;
 }
 
-.smallcontainer {
+.narrowcontainer {
   width: 300px;
   margin: auto;
 }
@@ -824,7 +824,7 @@ textarea {
   .hidesmallscreen {
     display: none;
   }
-  .smallcontainer {
+  .narrowcontainer {
     width: 90%;
   }
 }

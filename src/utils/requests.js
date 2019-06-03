@@ -1,6 +1,5 @@
 import axios from "axios";
 import history from "./history";
-import { useReducer } from "react";
 
 let baseApiUrl = "";
 
@@ -79,74 +78,4 @@ const deleteRequest = async url => {
   }
 };
 
-const prefix = "useReq/";
-
-const FETCHING = `${prefix}FETCHING`;
-const SUCCESS = `${prefix}SUCCESS`;
-const ERROR = `${prefix}ERROR`;
-
-const fetching = () => ({ type: FETCHING });
-const success = resp => ({ type: SUCCESS, resp });
-const error = resp => ({ type: ERROR, resp });
-
-const initialReqState = {
-  status: null,
-  resp: null
-};
-
-const reqReducer = (state = initialReqState, { type, resp } = {}) => {
-  switch (type) {
-    case FETCHING:
-      return { ...initialReqState, status: FETCHING };
-    case SUCCESS:
-      return { ...state, status: SUCCESS, resp };
-    case ERROR:
-      return { ...state, status: ERROR, resp };
-    default:
-      return state;
-  }
-};
-
-const useReq = (endpoint, { verb = "get", params = {} } = {}) => {
-  const [state, dispatch] = useReducer(reqReducer, initialReqState);
-
-  const makeRequest = async () => {
-    dispatch(fetching());
-
-    const matchReq = verb => {
-      switch (verb) {
-        case "get":
-          return getRequest(endpoint);
-        case "post":
-          return postRequest(endpoint, params);
-        case "patch":
-          return patchRequest(endpoint, params);
-        case "delete":
-          return deleteRequest(endpoint, params);
-        default:
-          return getRequest(endpoint);
-      }
-    };
-
-    const resp = await matchReq(verb);
-
-    if (resp.error) {
-      dispatch(error(resp.error));
-    } else {
-      dispatch(success(resp));
-    }
-  };
-
-  return [state, makeRequest];
-};
-
-export {
-  useReq,
-  getRequest,
-  postRequest,
-  patchRequest,
-  deleteRequest,
-  FETCHING,
-  SUCCESS,
-  ERROR
-};
+export { getRequest, postRequest, patchRequest, deleteRequest };

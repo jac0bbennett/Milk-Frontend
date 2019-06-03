@@ -10,7 +10,7 @@ const AppList = props => {
 
   useEffect(() => {
     props.page.handlePageChange("Your Apps", "apps");
-
+    props.loadbar.progressTo(15);
     const req = async () => {
       const resp = await getRequest("/api/panel/apps");
       if (resp.error) {

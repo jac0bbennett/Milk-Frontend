@@ -2,7 +2,7 @@ import React from "react";
 
 const TextInput = props => {
   return (
-    <div className="geninpdiv">
+    <div className="geninpdiv" style={props.style}>
       <input
         name={props.name}
         className="gentxtinp"
