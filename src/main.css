@@ -208,6 +208,11 @@ hr {
   border-radius: 5px;
 }
 
+.smallcontainer {
+  width: 300px;
+  margin: auto;
+}
+
 .coloredbar {
   background: #424242;
   color: #fff;
@@ -727,7 +732,7 @@ textarea {
   }
 
   #nav li {
-    height: 100%;
+    height: 40px;
     width: auto;
     padding-left: 30px;
     padding-right: 30px;
@@ -808,11 +813,19 @@ textarea {
     padding-left: 15px;
     padding-right: 15px;
   }
+
+  #wrapper {
+    margin-bottom: 300px;
+  }
+
   #fieldoptions {
     width: 98%;
   }
   .hidesmallscreen {
     display: none;
+  }
+  .smallcontainer {
+    width: 90%;
   }
 }
 
