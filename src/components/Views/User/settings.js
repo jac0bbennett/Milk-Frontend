@@ -9,6 +9,7 @@ const UserSettings = props => {
   const [pseudo, setPseudo] = useState("");
   const [curKey, setCurKey] = useState("");
   const [newKey, setNewKey] = useState("");
+  const [confirmKey, setConfirmKey] = useState("");
   const [isLoaded, setIsLoaded] = useState("");
   const [settingsMsg, setSettingsMsg] = useState("");
   const [changeKeyMsg, setChangeKeyMsg] = useState("");
@@ -52,6 +53,10 @@ const UserSettings = props => {
         setNewKey(event.target.value);
         setChangeKeyMsg("");
         break;
+      case "confirmKey":
+        setConfirmKey(event.target.value);
+        setChangeKeyMsg("");
+        break;
       default:
         break;
     }
@@ -84,7 +89,8 @@ const UserSettings = props => {
 
     const resp = await patchRequest("/api/panel/settings", {
       curKey: curKey,
-      newKey: newKey
+      newKey: newKey,
+      confirmKey: confirmKey
     });
 
     if (resp.error) {
@@ -95,6 +101,7 @@ const UserSettings = props => {
       setChangeKeyMsg("Updated!");
       setCurKey("");
       setNewKey("");
+      setConfirmKey("");
     }
   };
 
@@ -150,6 +157,14 @@ const UserSettings = props => {
               type="password"
               label="New Key"
               value={newKey}
+              onChange={handleChange}
+              required={true}
+            />
+            <TextInput
+              name="confirmKey"
+              type="password"
+              label="Confirm New Key"
+              value={confirmKey}
               onChange={handleChange}
               required={true}
             />
