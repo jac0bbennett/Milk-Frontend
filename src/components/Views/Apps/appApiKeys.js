@@ -85,19 +85,6 @@ const AppApiKeys = props => {
                 style={{
                   padding: "5px"
                 }}
-              >
-                <i
-                  style={{ paddingRight: "20px", paddingLeft: "20px" }}
-                  className="material-icons"
-                >
-                  add
-                </i>
-              </button>
-              <button
-                className="flatbut"
-                style={{
-                  padding: "5px"
-                }}
                 onClick={() =>
                   props.page.handleShowModal("editapikeyform", { key: key })
                 }
