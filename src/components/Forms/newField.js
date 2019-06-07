@@ -90,6 +90,7 @@ const NewFieldForm = props => {
         <option value="text_long">Long Text</option>
         <option value="number_int">Integer</option>
         <option value="number_float">Decimal</option>
+        <option value="boolean">Boolean</option>
       </DropDownInput>
       <br />
       <br />

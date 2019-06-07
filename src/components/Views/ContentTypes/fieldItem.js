@@ -26,6 +26,8 @@ const decodeFieldType = fieldtype => {
       return "Integer";
     case "number_float":
       return "Decimal";
+    case "boolean":
+      return "Boolean";
     default:
       return "Field";
   }
@@ -41,6 +43,8 @@ const getIcon = fieldtype => {
       return "exposure_plus_1";
     case "number_float":
       return "filter_5";
+    case "boolean":
+      return "hdr_strong";
     default:
       return "text_fields";
   }

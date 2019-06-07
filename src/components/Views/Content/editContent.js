@@ -6,6 +6,7 @@ import history from "../../../utils/history";
 import ShortTextField from "./Fields/shortTextField";
 import LongTextField from "./Fields/longTextField";
 import NumberField from "./Fields/numberField";
+import BooleanField from "./Fields/booleanField";
 import Timestamp from "react-timestamp";
 
 const EditContent = props => {
@@ -304,6 +305,8 @@ const EditContent = props => {
         return <NumberField {...passProps} />;
       case "number_float":
         return <NumberField {...passProps} />;
+      case "boolean":
+        return <BooleanField {...passProps} />;
       default:
         return <ShortTextField {...passProps} />;
     }
