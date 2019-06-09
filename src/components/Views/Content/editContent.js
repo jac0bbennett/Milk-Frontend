@@ -228,12 +228,9 @@ const EditContent = props => {
 
   const unpublishCallback = data => {
     setContentData(data);
-    setIsPublishing(false);
   };
 
   const handleUnpublish = () => {
-    setIsPublishing(true);
-
     const url =
       "/api/panel/apps/" +
       props.session.state.selApp +
