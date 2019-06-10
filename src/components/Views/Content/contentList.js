@@ -258,7 +258,7 @@ const ContentList = props => {
               <div className="loadingicon" style={{ marginBottom: "30px" }} />
             ) : null}
           </center>
-          {contents.length >= 20 ? (
+          {contents.length >= 20 && !loadedAll ? (
             <BottomScrollListener
               offset={500}
               onBottom={() => setNextPage(nextPage + 1)}
