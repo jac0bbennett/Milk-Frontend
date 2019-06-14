@@ -715,6 +715,7 @@ textarea {
   .fab {
     right: 20px;
     z-index: 1050;
+    bottom: 20px;
   }
 
   #top {
@@ -815,7 +816,7 @@ textarea {
   }
 
   #wrapper {
-    margin-bottom: 300px;
+    margin-bottom: 150px;
   }
 
   #fieldoptions {
