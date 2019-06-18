@@ -33,8 +33,10 @@ const ShortTextField = props => {
       const reqMsg = req.error;
       setMsg(reqMsg);
       props.drafting(false);
+      props.disablePublish(true);
     } else {
       props.drafting(false);
+      props.disablePublish(false);
       props.updateEditedTime(req.edited);
       if (props.name === "title") {
         props.updateTitle(newVal);

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 
 const FieldMsg = props => {
-  const [classes, setClasses] = useState(
-    props.msg && props.msg.includes("Saved") ? "greentext" : ""
-  );
+  const [classes, setClasses] = useState(props.msg);
 
   useEffect(() => {
-    setClasses(props.msg && props.msg.includes("Saved") ? "greentext" : "");
+    if (props.msg.includes("Saved")) setClasses("greentext");
+    else if (props.msg === "saving...") setClasses("");
+    else setClasses("redtext");
   }, [props.msg]);
 
   return (

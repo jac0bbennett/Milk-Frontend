@@ -21,6 +21,7 @@ const EditContent = props => {
   const [isPublishing, setIsPublishing] = useState(false);
   const [isDrafting, setIsDrafting] = useState(false);
   const [isDraftDiscarded, setIsDraftDiscarded] = useState(false);
+  const [publishDisabled, setPublishDisabled] = useState(false);
 
   const handleUpdateTitle = useCallback(
     (newTitle = "") => {
@@ -106,6 +107,7 @@ const EditContent = props => {
       const newTitle =
         getTitleShortText.length > 0 &&
         contentData.content.title &&
+        contentData.content.title.draft &&
         contentData.content.title.draft.replace(/\s/g, "").length
           ? contentData.content.title.draft || "Untitled"
           : "Untitled";
@@ -153,29 +155,31 @@ const EditContent = props => {
   const handlePublish = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
-    setMsg("publishing...");
+    if (!isDrafting && !isPublishing && !publishDisabled) {
+      props.loadbar.progressTo(15);
+      setMsg("publishing...");
 
-    setIsPublishing(true);
+      setIsPublishing(true);
 
-    const req = await postRequest(
-      "/api/panel/apps/" +
-        props.session.state.selApp +
-        "/content/" +
-        props.match.params.contentuuid,
-      { action: "publish" }
-    );
+      const req = await postRequest(
+        "/api/panel/apps/" +
+          props.session.state.selApp +
+          "/content/" +
+          props.match.params.contentuuid,
+        { action: "publish" }
+      );
 
-    if (req.error) {
-      const reqMsg = req.error;
-      setMsg(reqMsg);
-      setIsPublishing(false);
-      props.loadbar.setToError(true);
-    } else {
-      setMsg("");
-      setContentData(req.data);
-      setIsPublishing(false);
-      props.loadbar.progressTo(100);
+      if (req.error) {
+        const reqMsg = req.error;
+        setMsg(reqMsg);
+        setIsPublishing(false);
+        props.loadbar.setToError(true);
+      } else {
+        setMsg("");
+        setContentData(req.data);
+        setIsPublishing(false);
+        props.loadbar.progressTo(100);
+      }
     }
   };
 
@@ -290,6 +294,7 @@ const EditContent = props => {
       drafting: handleDrafting,
       contentStatus: contentStatus,
       isDraftDiscarded: isDraftDiscarded,
+      disablePublish: setPublishDisabled,
       session: props.session
     };
 
@@ -332,7 +337,7 @@ const EditContent = props => {
                 onClick={handlePublish}
                 className="raisedbut"
                 style={{ marginLeft: "10px" }}
-                disabled={isPublishing || isDrafting}
+                disabled={isPublishing || isDrafting || publishDisabled}
               >
                 Publish
               </button>

@@ -8,14 +8,17 @@ import { patchRequest } from "../../utils/requests";
 const EditFieldForm = props => {
   const [form, setForm] = useState({
     name: props.page.state.modalData.field.name,
-    slug: props.page.state.modalData.field.slug
+    slug: props.page.state.modalData.field.slug,
+    options: props.page.state.modalData.field.options || {}
   });
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
+    const field = props.page.state.modalData.field;
     setForm({
-      name: props.page.state.modalData.field.name,
-      slug: props.page.state.modalData.field.slug
+      name: field.name,
+      slug: field.slug,
+      options: field.options || {}
     });
     setMsg("");
   }, [props.page.state.modalData.field]);
@@ -29,6 +32,7 @@ const EditFieldForm = props => {
     const fieldid = props.page.state.modalData.field.id;
     const fieldname = form.name;
     const fieldslug = form.slug;
+    const fieldoptions = JSON.stringify(form.options);
 
     const req = await patchRequest(
       "/api/panel/apps/" +
@@ -37,7 +41,7 @@ const EditFieldForm = props => {
         props.page.state.modalData.typeSlug +
         "/fields/" +
         fieldid,
-      { fieldname, fieldslug }
+      { fieldname, fieldslug, fieldoptions }
     );
 
     if (req.error) {
@@ -75,7 +79,16 @@ const EditFieldForm = props => {
   const handleChange = event => {
     let formCopy = { ...form };
     const target = event.target.name;
-    formCopy[target] = event.target.value;
+    if (!event.target.name.startsWith("options_")) {
+      formCopy[target] = event.target.value;
+    } else {
+      const targetName = event.target.name.split("options_")[1];
+      if (targetName === "unique") {
+        formCopy.options.unique = !formCopy.options.unique;
+      } else {
+        formCopy.options[targetName] = event.target.value;
+      }
+    }
     setForm(formCopy);
   };
 
@@ -100,9 +113,22 @@ const EditFieldForm = props => {
         required={true}
       />
       <br />
+      {props.page.state.modalData.field.fieldType === "text_short" ? (
+        <div>
+          Unique
+          <input
+            type="checkbox"
+            name="options_unique"
+            value="True"
+            onChange={handleChange}
+            checked={form.options.unique === true}
+          />
+          <br />
+        </div>
+      ) : null}
       <br />
       <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
-      <SubmitButton>Submit</SubmitButton>
+      <SubmitButton>Save</SubmitButton>
       <br />
       <br />
       <FormMsg msg={msg} />

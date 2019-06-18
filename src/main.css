@@ -387,6 +387,10 @@ option {
   background: inherit;
 }
 
+input[type="checkbox"] {
+  vertical-align: middle;
+}
+
 .raisedbut {
   height: 36px;
   padding-left: 16px;
