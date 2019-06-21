@@ -27,7 +27,8 @@ const Nav = props => {
   ];
 
   const noUserNavs = [
-    { to: "/panel/signin", label: "Sign In", navId: "signIn", appDep: false }
+    { to: "/panel/signin", label: "Sign In", navId: "signIn", appDep: false },
+    { to: "/panel/signup", label: "Sign Up", navId: "signUp", appDep: false }
   ];
 
   if (userId !== 0) {

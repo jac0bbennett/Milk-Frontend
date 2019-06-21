@@ -3,6 +3,7 @@ import TopBar from "./components/UI/TopBar/topBar";
 import { Switch, Route } from "react-router-dom";
 import LoadingBar from "./components/UI/LoadingBar/loadingBar";
 import SignIn from "./components/Views/Auth/signIn";
+import SignUp from "./components/Views/Auth/signUp";
 import SignOut from "./components/Views/Auth/signOut";
 import AppList from "./components/Views/Apps/appList";
 import AppApiKeys from "./components/Views/Apps/appApiKeys";
@@ -136,6 +137,18 @@ const App = () => {
                   path="/panel/signin"
                   render={props => (
                     <SignIn
+                      {...props}
+                      loadbar={loadbar}
+                      page={page}
+                      session={session}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/panel/signup"
+                  render={props => (
+                    <SignUp
                       {...props}
                       loadbar={loadbar}
                       page={page}
