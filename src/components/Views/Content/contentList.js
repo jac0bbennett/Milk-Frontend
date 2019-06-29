@@ -217,7 +217,7 @@ const ContentList = props => {
                 >
                   <option value="dateDescending">Last edited</option>
                   <option value="dateAscending">Oldest edited</option>
-                  <option value="contenttype">Content Type</option>
+                  <option value="contentType">Content Type</option>
                 </DropDownInput>
               </span>
               <span className="contentstatus" style={{ marginLeft: "20px" }}>
