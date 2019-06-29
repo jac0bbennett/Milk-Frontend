@@ -125,6 +125,10 @@ const ContentList = props => {
       );
     } else {
       setTypeFilter("");
+      if (sortOrder === "contentType") {
+        const fakeEvent = { target: { value: "" } };
+        handleSortOrder(fakeEvent);
+      }
       history.push(window.location.pathname + "?sort=" + sortOrder);
     }
     document.activeElement.blur();
@@ -217,7 +221,9 @@ const ContentList = props => {
                 >
                   <option value="dateDescending">Last edited</option>
                   <option value="dateAscending">Oldest edited</option>
-                  <option value="contentType">Content Type</option>
+                  {typeFilter === "" ? (
+                    <option value="contentType">Content Type</option>
+                  ) : null}
                 </DropDownInput>
               </span>
               <span className="contentstatus" style={{ marginLeft: "20px" }}>
