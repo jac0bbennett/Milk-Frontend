@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import { postRequest } from "../../../utils/requests";
 import SignUpForm from "../../Forms/signUp.js";
 import history from "../../../utils/history";
@@ -11,7 +11,14 @@ const SignUp = props => {
     key: "",
     confirmKey: ""
   });
+  const [captcha, setCaptcha] = useState("");
   const [msg, setMsg] = useState("");
+
+  useEffect(() => {
+    props.loadbar.progressTo(15);
+    props.page.handlePageChange("Sign Up", "signUp");
+    props.loadbar.progressTo(100);
+  }, [props.loadbar, props.page]);
 
   const handleSignUp = async () => {
     props.loadbar.progressTo(15);
@@ -28,7 +35,8 @@ const SignUp = props => {
       name: formName,
       email: formEmail,
       key: formKey,
-      confirmKey: formConfirmKey
+      confirmKey: formConfirmKey,
+      captcha: captcha
     });
 
     if (req.error) {
@@ -36,44 +44,10 @@ const SignUp = props => {
       setMsg(reqMsg);
       props.loadbar.setToError(true);
     } else {
-      setSignUp({ type: "authenticated", userId: req.userId });
+      props.loadbar.progressTo(100);
+      history.push("/panel/signin");
     }
   };
-
-  const signUpReducer = (state, action) => {
-    switch (action.type) {
-      case "initPage":
-        props.loadbar.progressTo(15);
-        props.page.handlePageChange("Sign Up", "signUp");
-        props.loadbar.progressTo(100);
-        return state;
-      case "signUp":
-        handleSignUp();
-        return state;
-      case "completed":
-        return { completed: true, userId: action.userId };
-      case "completeSignIn":
-        props.loadbar.progressTo(100);
-        history.push("/panel/signin");
-        return state;
-      default:
-        return state;
-    }
-  };
-
-  const [signUp, setSignUp] = useReducer(signUpReducer, {
-    completed: false
-  });
-
-  useEffect(() => {
-    setSignUp({ type: "initPage" });
-  }, []);
-
-  useEffect(() => {
-    if (signUp.completed) {
-      setSignUp({ type: "completeSignUp" });
-    }
-  }, [signUp]);
 
   const handleChange = event => {
     let formCopy = { ...form };
@@ -84,13 +58,18 @@ const SignUp = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    setSignUp({ type: "signUp" });
+    handleSignUp();
+  };
+
+  const handleCaptcha = resp => {
+    setCaptcha(resp);
   };
 
   return (
     <SignUpForm
       handleChange={handleChange}
       handleSubmit={handleSubmit}
+      handleCaptcha={handleCaptcha}
       form={form}
       msg={msg}
     />

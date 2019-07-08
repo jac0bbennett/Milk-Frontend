@@ -2,8 +2,13 @@ import React from "react";
 import TextInput from "../UI/Inputs/txtInput";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
+import Recaptcha from "react-recaptcha";
 
 const SignUpForm = props => {
+  const verifyCaptcha = resp => {
+    props.handleCaptcha(resp);
+  };
+
   return (
     <form id="signin" onSubmit={props.handleSubmit}>
       <h1>Sign Up</h1>
@@ -52,7 +57,10 @@ const SignUpForm = props => {
         autoComplete="new-password"
         value={props.form.confirmKey}
       />
-      <br />
+      <Recaptcha
+        sitekey="6LdmgKwUAAAAAHtAd7q4tR4BwjYYhf_Vk7MYndPb"
+        verifyCallback={verifyCaptcha}
+      />
       <br />
       <FormMsg msg={props.msg} />
       <SubmitButton>Sign Up</SubmitButton>
