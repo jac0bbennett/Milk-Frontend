@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import TimeAgoStamp from "../../UI/Misc/timeAgoStamp";
+import Timestamp from "react-timestamp";
 
 const ContentItem = props => {
   const getStatus = () => {
@@ -44,10 +44,9 @@ const ContentItem = props => {
       <span
         className="softtext floatright"
         title={new Date(props.content.editedAt)}
+        style={{ fontSize: "11pt" }}
       >
-        <TimeAgoStamp style={{ fontSize: "11pt" }}>
-          {props.content.editedAt}
-        </TimeAgoStamp>
+        <Timestamp date={props.content.editedAt} relative autoUpdate />
       </span>
     </div>
   );

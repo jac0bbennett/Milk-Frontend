@@ -8,7 +8,7 @@ import FormMsg from "../../UI/Misc/formMsg";
 import FAB from "../../UI/Buttons/fab";
 import FieldList from "./fieldList";
 import history from "../../../utils/history";
-import TimeAgoStamp from "../../UI/Misc/timeAgoStamp";
+import Timestamp from "react-timestamp";
 import arrayMove from "array-move";
 
 const EditContentType = props => {
@@ -137,9 +137,9 @@ const EditContentType = props => {
       <MiniHeader header={props.session.state.selAppName} />
       {isLoaded ? (
         <div className="gencontainer">
-          <TimeAgoStamp className="softtext floatright">
-            {typeData.editedAt}
-          </TimeAgoStamp>
+          <span className="softtext floatright">
+            <Timestamp date={typeData.editedAt} relative autoUpdate />
+          </span>
           <h2>Edit Type</h2>
           <form onSubmit={handleSubmit} autoComplete="off">
             <TextInput
