@@ -137,7 +137,10 @@ const EditContentType = props => {
       <MiniHeader header={props.session.state.selAppName} />
       {isLoaded ? (
         <div className="gencontainer">
-          <span className="softtext floatright">
+          <span
+            className="softtext floatright"
+            title={new Date(typeData.editedAt)}
+          >
             <Timestamp date={typeData.editedAt} relative autoUpdate />
           </span>
           <h2>Edit Type</h2>
