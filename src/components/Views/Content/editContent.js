@@ -26,11 +26,12 @@ const EditContent = props => {
   const handleUpdateTitle = useCallback(
     (newTitle = "") => {
       setPageTitle(newTitle);
-      props.page.handlePageChange(newTitle, "content");
 
       if (newTitle === "") {
         newTitle = "Untitled";
       }
+
+      props.page.handlePageChange(newTitle, "content");
     },
     [props.page]
   );
@@ -209,7 +210,6 @@ const EditContent = props => {
     setContentData(data);
     setIsPublishing(false);
     setIsDraftDiscarded(true);
-    handleUpdateTitle();
   };
 
   const handleDiscardDraft = () => {
@@ -223,7 +223,7 @@ const EditContent = props => {
 
     props.page.handleShowModal("confirmactionform", {
       discardUrl: url,
-      action: "discarddraft",
+      action: "discardDraft",
       callback: discardCallback,
       titleText: "Are you sure you want to discard this draft?",
       extraText: "This draft cannot be resurrected!"
