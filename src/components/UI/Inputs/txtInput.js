@@ -5,7 +5,7 @@ const TextInput = props => {
     <div className="geninpdiv" style={props.style}>
       <input
         name={props.name}
-        className="gentxtinp"
+        className={!props.wide ? "gentxtinp" : "gentxtinp wide"}
         onChange={props.onChange}
         type={props.type}
         value={props.value}

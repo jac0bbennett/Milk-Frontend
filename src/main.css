@@ -333,6 +333,10 @@ hr {
   border-bottom: 2px solid #3c81c8;
 }
 
+.gentxtinp.wide {
+  width: 600px;
+}
+
 .gendropinp {
   margin-top: 12px;
   font-size: 14pt;
@@ -769,6 +773,10 @@ textarea {
   }
 
   .gentxtinp {
+    width: 100%;
+  }
+
+  .gentxtinp.wide {
     width: 100%;
   }
 

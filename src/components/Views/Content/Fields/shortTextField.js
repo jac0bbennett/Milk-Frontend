@@ -111,6 +111,7 @@ const ShortTextField = props => {
         required={false}
         autoComplete="off"
         disabled={props.disabled}
+        wide={true}
       />
       <span
         title="Characters"
