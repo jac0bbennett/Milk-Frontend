@@ -64,10 +64,12 @@ const ShortTextField = props => {
       setChangeCount(0);
     }
 
-    if (newValue.length > 256) {
+    if (newValue.length > 500) {
       setMsg(props.label + " too long!");
+      props.disablePublish(true);
     } else {
       setMsg("saving...");
+      props.disablePublish(false);
       props.drafting(true);
       setTypingTimeout(
         setTimeout(function() {
@@ -115,7 +117,7 @@ const ShortTextField = props => {
         className="softtext"
         style={{ fontSize: "11pt", marginRight: "15px" }}
       >
-        {charCount} / 256
+        {charCount} / 500
       </span>
       <FieldMsg msg={msg} />
     </div>

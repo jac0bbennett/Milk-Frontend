@@ -36,8 +36,10 @@ const LongTextField = props => {
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
+      props.disablePublish(true);
       props.drafting(false);
     } else {
+      props.disablePublish(false);
       props.drafting(false);
       props.updateEditedTime(req.edited);
       if (props.name === "title") {
