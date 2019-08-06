@@ -38,7 +38,7 @@ const ShortTextField = props => {
       props.drafting(false);
       props.disablePublish(false);
       props.updateEditedTime(req.edited);
-      if (props.name === "title") {
+      if (props.slug === "title") {
         props.updateTitle(newVal);
       }
       setSaved(true);
@@ -103,7 +103,7 @@ const ShortTextField = props => {
     <div style={{ marginBottom: "10px" }}>
       <TextInput
         dataId={props.dataId}
-        name={props.name}
+        name={props.slug}
         type="text"
         label={props.label}
         value={content}

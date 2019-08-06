@@ -285,6 +285,7 @@ const EditContent = props => {
       contentUuid: props.match.params.contentuuid,
       dataId: field.id,
       key: field.slug,
+      slug: field.slug,
       fieldType: field.fieldType,
       label: field.name,
       value: getFieldValue(field.slug),
