@@ -33,6 +33,7 @@ const NewTypeForm = props => {
       props.loadbar.progressTo(100);
       props.page.handleCloseModal();
       props.page.handleSetRefresh();
+      setChangedSlug(false);
     }
   };
 
