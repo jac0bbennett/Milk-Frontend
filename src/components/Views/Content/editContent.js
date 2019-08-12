@@ -207,9 +207,13 @@ const EditContent = props => {
   };
 
   const discardCallback = data => {
-    setContentData(data);
-    setIsPublishing(false);
-    setIsDraftDiscarded(true);
+    if (data) {
+      setContentData(data);
+      setIsPublishing(false);
+      setIsDraftDiscarded(true);
+    } else {
+      setIsPublishing(false);
+    }
   };
 
   const handleDiscardDraft = () => {

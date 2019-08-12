@@ -30,6 +30,11 @@ const ConfirmActionForm = props => {
     }
   };
 
+  const handleCancel = () => {
+    props.page.state.modalData.callback(null);
+    props.page.handleCloseModal();
+  };
+
   return (
     <div style={{ width: "100%" }}>
       <h3>{props.page.state.modalData.titleText}</h3>
@@ -38,7 +43,7 @@ const ConfirmActionForm = props => {
       </div>
       <br />
       <br />
-      <button onClick={props.page.handleCloseModal} className="flatbut">
+      <button onClick={handleCancel} className="flatbut">
         Cancel
       </button>
       {!isActing ? (
