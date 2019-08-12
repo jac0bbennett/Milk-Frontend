@@ -344,7 +344,7 @@ const EditContent = props => {
                 style={{ marginLeft: "10px" }}
                 disabled={isPublishing || isDrafting || publishDisabled}
               >
-                Publish
+                {contentStatus === "draft" ? "Publish" : "Update"}
               </button>
             </span>
           </div>
