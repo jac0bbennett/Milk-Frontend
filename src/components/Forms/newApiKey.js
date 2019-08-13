@@ -3,9 +3,10 @@ import TextInput from "../UI/Inputs/txtInput";
 import { postRequest } from "../../utils/requests";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
+import DropDownInput from "../UI/Inputs/dropInput";
 
 const NewApiKeyForm = props => {
-  const [form, setForm] = useState({ name: "" });
+  const [form, setForm] = useState({ name: "", access: "" });
   const [msg, setMsg] = useState("");
 
   const handleSubmit = async event => {
@@ -15,10 +16,11 @@ const NewApiKeyForm = props => {
     setMsg("creating...");
 
     const keyname = form.name;
+    const keyaccess = form.access;
 
     const req = await postRequest(
       "/api/panel/apps/" + props.session.state.selApp + "/apikeys",
-      { keyname }
+      { keyname, keyaccess }
     );
 
     if (req.error) {
@@ -36,7 +38,7 @@ const NewApiKeyForm = props => {
 
   const handleChange = event => {
     let formCopy = { ...form };
-    formCopy.name = event.target.value;
+    formCopy[event.target.name] = event.target.value;
     setForm(formCopy);
     setMsg("");
   };
@@ -52,6 +54,16 @@ const NewApiKeyForm = props => {
         onChange={handleChange}
         required={true}
       />
+      <DropDownInput
+        name="access"
+        label="Access"
+        onChange={handleChange}
+        value={form.access}
+        required={true}
+      >
+        <option value="published">Published Content</option>
+        <option value="all">All Content</option>
+      </DropDownInput>
       <br />
       <br />
       <FormMsg msg={msg} />
