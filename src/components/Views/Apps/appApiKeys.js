@@ -98,9 +98,9 @@ const AppApiKeys = props => {
               </button>
             </span>
             <h2>{key.name}</h2>
-            <h3 className="softtext" style={{ display: "inline-block" }}>
+            <h3 className="cmsappuuid" style={{ display: "inline-block" }}>
               {key.key}
-            </h3>
+            </h3>{" "}
             <span className="floatright softtext" style={{ marginTop: "20px" }}>
               {key.access === "published" ? "Only Published" : "All Content"}
             </span>
