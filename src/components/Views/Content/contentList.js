@@ -219,8 +219,11 @@ const ContentList = props => {
                   required={true}
                   style={{ display: "inline-block", width: "150px" }}
                 >
-                  <option value="dateDescending">Last edited</option>
-                  <option value="dateAscending">Oldest edited</option>
+                  <option value="dateDescending">Last Edited</option>
+                  <option value="dateAscending">Oldest Edited</option>
+                  <option value="pubDateDescending">Last Published</option>
+                  <option value="pubDateAscending">Oldest Published</option>
+                  <option value="title">Title Alphabetical</option>
                   {typeFilter === "" ? (
                     <option value="contentType">Content Type</option>
                   ) : null}
