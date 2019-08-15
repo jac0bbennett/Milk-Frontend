@@ -30,7 +30,9 @@ const ShortTextField = props => {
     );
 
     if (req.error) {
-      const reqMsg = req.error;
+      const reqMsg = !req.otherField
+        ? req.error
+        : req.error + " | Conflicting: " + req.otherField;
       setMsg(reqMsg);
       props.drafting(false);
       props.disablePublish(true);
