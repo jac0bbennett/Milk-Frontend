@@ -31,8 +31,8 @@ sessionCont.bindLoadbar(loadbarCont);
 
 const App = () => {
   return (
-    <Provider inject={[sessionCont, loadbarCont, pageCont]}>
-      <Subscribe to={[SessionContainer, LoadbarContainer, PageContainer]}>
+    <Provider>
+      <Subscribe to={[sessionCont, loadbarCont, pageCont]}>
         {(session, loadbar, page) => (
           <React.Fragment>
             <div id="overlay" className={page.state.showModal ? "is-show" : ""}>
