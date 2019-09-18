@@ -134,7 +134,7 @@ const LongTextField = props => {
     return (
       <span
         className="softtext"
-        style={{ fontSize: "11pt", marginRight: "15px" }}
+        style={{ fontSize: "9pt", marginRight: "15px" }}
       >
         <span title="Characters">{content.length} / 50000</span> (
         <span title="Words">

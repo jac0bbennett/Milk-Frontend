@@ -118,7 +118,7 @@ const ShortTextField = props => {
       <span
         title="Characters"
         className="softtext"
-        style={{ fontSize: "11pt", marginRight: "15px" }}
+        style={{ fontSize: "9pt", marginRight: "15px" }}
       >
         {charCount} / 500
       </span>
