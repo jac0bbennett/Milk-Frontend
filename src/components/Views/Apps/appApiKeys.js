@@ -98,12 +98,21 @@ const AppApiKeys = props => {
               </button>
             </span>
             <h2>{key.name}</h2>
-            <h3 className="cmsappuuid" style={{ display: "inline-block" }}>
-              {key.key}
-            </h3>{" "}
-            <span className="floatright softtext" style={{ marginTop: "20px" }}>
-              {key.access === "published" ? "Only Published" : "All Content"}
-            </span>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between"
+              }}
+            >
+              <h3 className="cmsappuuid">{key.key}</h3>
+              <span
+                className="floatright softtext"
+                style={{ marginTop: "20px" }}
+              >
+                {key.access === "published" ? "Only Published" : "All Content"}
+              </span>
+            </div>
           </div>
         ))
       ) : isLoaded ? (
