@@ -32,11 +32,15 @@ const ContentList = props => {
         if (paramSortOrder) {
           setSortOrder(paramSortOrder);
           filter.sortOrder = paramSortOrder;
+        } else {
+          setSortOrder("dateDescending");
         }
 
         if (paramTypeFilter) {
           setTypeFilter(paramTypeFilter);
           filter.contentType = paramTypeFilter;
+        } else {
+          setTypeFilter("");
         }
 
         return filter;
