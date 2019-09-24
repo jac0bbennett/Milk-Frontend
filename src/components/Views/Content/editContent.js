@@ -356,17 +356,16 @@ const EditContent = props => {
             <DeleteButton style={{ float: "right" }} onClick={handleDelete}>
               Delete
             </DeleteButton>
-
-            {contentStatus === "draft" ||
-            contentStatus === "publishedChange" ? (
-              <button className="flatbut" onClick={handleDiscardDraft}>
-                Discard Draft
-              </button>
-            ) : null}
             {contentStatus === "published" ||
             contentStatus === "publishedChange" ? (
               <button className="flatbut bluetext" onClick={handleUnpublish}>
                 Unpublish
+              </button>
+            ) : null}
+            {contentStatus === "draft" ||
+            contentStatus === "publishedChange" ? (
+              <button className="flatbut" onClick={handleDiscardDraft}>
+                Discard Draft
               </button>
             ) : null}
           </div>
