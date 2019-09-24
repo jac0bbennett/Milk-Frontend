@@ -353,9 +353,6 @@ const EditContent = props => {
           <br />
           {fields.map(field => FieldInput(field))}
           <div className="gencontainerfooter">
-            <DeleteButton style={{ float: "right" }} onClick={handleDelete}>
-              Delete
-            </DeleteButton>
             {contentStatus === "published" ||
             contentStatus === "publishedChange" ? (
               <button className="flatbut bluetext" onClick={handleUnpublish}>
@@ -368,6 +365,9 @@ const EditContent = props => {
                 Discard Draft
               </button>
             ) : null}
+            <DeleteButton style={{ marginLeft: "auto" }} onClick={handleDelete}>
+              Delete
+            </DeleteButton>
           </div>
         </div>
       ) : (
