@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { deleteRequest } from "../../utils/requests";
 import DeleteButton from "../UI/Buttons/deleteButton";
 
 const ConfirmDeleteForm = props => {
   const [msg, setMsg] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    setMsg("");
+  }, [props.page.state.modalData]);
 
   const handleDelete = async () => {
     props.loadbar.progressTo(15);
