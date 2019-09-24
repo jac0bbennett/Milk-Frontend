@@ -491,7 +491,7 @@ input[type="checkbox"] {
   padding-left: 16px;
   padding-right: 16px;
   text-align: center;
-  background: #fff;
+  background: inherit;
   outline: none;
   border: none;
   color: #757575;
