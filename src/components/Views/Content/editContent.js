@@ -235,7 +235,9 @@ const EditContent = props => {
   };
 
   const unpublishCallback = data => {
-    setContentData(data);
+    if (data) {
+      setContentData(data);
+    }
   };
 
   const handleUnpublish = () => {
