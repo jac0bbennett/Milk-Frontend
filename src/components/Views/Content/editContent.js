@@ -8,6 +8,7 @@ import LongTextField from "./Fields/longTextField";
 import NumberField from "./Fields/numberField";
 import BooleanField from "./Fields/booleanField";
 import Moment from "react-moment";
+import moment from "moment";
 
 const EditContent = props => {
   const [contentData, setContentData] = useState({});
@@ -333,7 +334,13 @@ const EditContent = props => {
             </span>
             <h1>{pageTitle}</h1>
             <span className="softtext">
-              <Moment format="MMM Do YYYY, h:ma">{contentData.editedAt}</Moment>
+              {moment().diff(contentData.editedAt, "months") >= 10 ? (
+                <Moment format="MMM Do YYYY, h:ma">
+                  {contentData.editedAt}
+                </Moment>
+              ) : (
+                <Moment format="MMM Do, h:ma">{contentData.editedAt}</Moment>
+              )}
             </span>
             <span
               className="floatright"
