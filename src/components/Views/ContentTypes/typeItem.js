@@ -44,7 +44,7 @@ const TypeItem = props => {
             add
           </i>
         </button>
-        <Link to={props.url}>
+        <Link to={props.url} className="not-text-link">
           <button
             className="flatbut"
             style={{

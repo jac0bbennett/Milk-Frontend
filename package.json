@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "history": "^4.9.0",
     "react-router": "^5.0.0",
     "unstated": "^2.1.1",
@@ -19,15 +19,16 @@
     "array-move": "^2.1.0",
     "eslint": "^5.16.0",
     "eslint-plugin-react": "^7.13.0",
+    "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-bottom-scroll-listener": "^2.1.2",
     "react-dom": "^16.8.6",
     "react-markdown": "^4.0.8",
+    "react-moment": "^0.9.2",
     "react-recaptcha": "^2.3.10",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^3.0.1",
     "react-sortable-hoc": "^1.9.1",
-    "react-timestamp": "^5.1.0",
     "s-ago": "^2.0.1"
   },
   "browserslist": {

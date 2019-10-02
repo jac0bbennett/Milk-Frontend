@@ -8,7 +8,7 @@ import FormMsg from "../../UI/Misc/formMsg";
 import FAB from "../../UI/Buttons/fab";
 import FieldList from "./fieldList";
 import history from "../../../utils/history";
-import Timestamp from "react-timestamp";
+import Moment from "react-moment";
 import arrayMove from "array-move";
 
 const EditContentType = props => {
@@ -141,7 +141,7 @@ const EditContentType = props => {
             className="softtext floatright"
             title={new Date(typeData.editedAt)}
           >
-            <Timestamp date={typeData.editedAt} relative autoUpdate />
+            <Moment fromNow>{typeData.editedAt}</Moment>
           </span>
           <h2>Edit Type</h2>
           <form onSubmit={handleSubmit} autoComplete="off">

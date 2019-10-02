@@ -7,7 +7,7 @@ import ShortTextField from "./Fields/shortTextField";
 import LongTextField from "./Fields/longTextField";
 import NumberField from "./Fields/numberField";
 import BooleanField from "./Fields/booleanField";
-import Timestamp from "react-timestamp";
+import Moment from "react-moment";
 
 const EditContent = props => {
   const [contentData, setContentData] = useState({});
@@ -333,7 +333,7 @@ const EditContent = props => {
             </span>
             <h1>{pageTitle}</h1>
             <span className="softtext">
-              <Timestamp date={contentData.editedAt} />
+              <Moment format="MMM Do YYYY, h:ma">{contentData.editedAt}</Moment>
             </span>
             <span
               className="floatright"

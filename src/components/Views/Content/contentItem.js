@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Timestamp from "react-timestamp";
+import Moment from "react-moment";
 
 const ContentItem = props => {
   const getStatus = () => {
@@ -46,7 +46,7 @@ const ContentItem = props => {
         title={new Date(props.content.editedAt)}
         style={{ fontSize: "11pt" }}
       >
-        <Timestamp date={props.content.editedAt} relative autoUpdate />
+        <Moment fromNow>{props.content.editedAt}</Moment>
       </span>
     </div>
   );
