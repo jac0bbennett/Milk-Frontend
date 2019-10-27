@@ -335,11 +335,11 @@ const EditContent = props => {
             <h1>{pageTitle}</h1>
             <span className="softtext">
               {moment().diff(contentData.editedAt, "months") >= 10 ? (
-                <Moment format="MMM Do YYYY, h:ma">
+                <Moment format="MMM Do YYYY, h:mma">
                   {contentData.editedAt}
                 </Moment>
               ) : (
-                <Moment format="MMM Do, h:ma">{contentData.editedAt}</Moment>
+                <Moment format="MMM Do, h:mma">{contentData.editedAt}</Moment>
               )}
             </span>
             <span
