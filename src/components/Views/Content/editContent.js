@@ -7,6 +7,7 @@ import ShortTextField from "./Fields/shortTextField";
 import LongTextField from "./Fields/longTextField";
 import NumberField from "./Fields/numberField";
 import BooleanField from "./Fields/booleanField";
+import DropdownField from "./Fields/dropdownField";
 import Moment from "react-moment";
 import moment from "moment";
 
@@ -294,6 +295,7 @@ const EditContent = props => {
       key: field.slug,
       slug: field.slug,
       fieldType: field.fieldType,
+      fieldOptions: field.options,
       label: field.name,
       value: getFieldValue(field.slug),
       updateTitle: handleUpdateTitle,
@@ -317,6 +319,8 @@ const EditContent = props => {
         return <NumberField {...passProps} />;
       case "boolean":
         return <BooleanField {...passProps} />;
+      case "dropdown":
+        return <DropdownField {...passProps} />;
       default:
         return <ShortTextField {...passProps} />;
     }

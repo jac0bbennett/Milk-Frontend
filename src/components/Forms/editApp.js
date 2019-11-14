@@ -12,7 +12,7 @@ const EditAppForm = props => {
 
   useEffect(() => {
     setForm({ name: props.page.state.modalData.name });
-  }, [props.page.state.modalData.name]);
+  }, [props.page.state.modalData.name, props.page.state.showModal]);
 
   const handleSubmit = async event => {
     event.preventDefault();

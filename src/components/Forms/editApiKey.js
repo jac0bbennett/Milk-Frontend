@@ -18,7 +18,7 @@ const EditApiKeyForm = props => {
       key: props.page.state.modalData.key.key
     });
     setMsg("");
-  }, [props.page.state.modalData.key]);
+  }, [props.page.state.modalData.key, props.page.state.showModal]);
 
   const handleSubmit = async event => {
     event.preventDefault();

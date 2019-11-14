@@ -1,20 +1,6 @@
 import React from "react";
-import { SortableElement, SortableHandle } from "react-sortable-hoc";
-
-const DragHandle = SortableHandle(() => (
-  <div
-    style={{
-      paddingRight: "15px",
-      fontSize: "18pt",
-      cursor: "row-resize",
-      borderRight: "1px solid #fff",
-      marginRight: "15px"
-    }}
-    className="material-icons"
-  >
-    drag_handle
-  </div>
-));
+import { SortableElement } from "react-sortable-hoc";
+import DragHandle from "../../UI/Misc/dragHandle";
 
 const decodeFieldType = fieldtype => {
   switch (fieldtype) {
@@ -22,6 +8,8 @@ const decodeFieldType = fieldtype => {
       return "Short Text";
     case "text_long":
       return "Long Text";
+    case "dropdown":
+      return "Dropdown";
     case "number_int":
       return "Integer";
     case "number_float":
@@ -39,6 +27,8 @@ const getIcon = fieldtype => {
       return "text_fields";
     case "text_long":
       return "format_align_left";
+    case "dropdown":
+      return "menu_open";
     case "number_int":
       return "exposure_plus_1";
     case "number_float":

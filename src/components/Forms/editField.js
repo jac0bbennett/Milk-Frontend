@@ -14,14 +14,14 @@ const EditFieldForm = props => {
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
-    const field = props.page.state.modalData.field;
+    const field = { ...props.page.state.modalData.field };
     setForm({
       name: field.name,
       slug: field.slug,
-      options: field.options || {}
+      options: { ...field.options } || {}
     });
     setMsg("");
-  }, [props.page.state.modalData.field]);
+  }, [props.page.state.modalData.field, props.page.state.showModal]);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -113,6 +113,7 @@ const EditFieldForm = props => {
         required={true}
       />
       <br />
+
       {props.page.state.modalData.field.fieldType === "text_short" ? (
         <div>
           Unique
@@ -125,6 +126,19 @@ const EditFieldForm = props => {
           />
           <br />
         </div>
+      ) : props.page.state.modalData.field.fieldType === "dropdown" ? (
+        <React.Fragment>
+          <button
+            className="flatbut"
+            onClick={() => {
+              props.page.handleShowModal("editdropdownoptionsform");
+            }}
+          >
+            Edit Values
+          </button>
+          <br />
+          <br />
+        </React.Fragment>
       ) : null}
       <br />
       <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
