@@ -64,19 +64,19 @@ const EditDropdownOptionsForm = props => {
     let formCopy = { ...form };
     const newValue = formCopy.newValue.trim();
 
-    if (!formCopy.options.values.includes(newValue)) {
-      if (newValue !== "") {
-        if (formCopy.options.values) {
+    if (newValue !== "") {
+      if (formCopy.options.values) {
+        if (!formCopy.options.values.includes(newValue)) {
           formCopy.options.values.unshift(newValue);
         } else {
-          formCopy.options.values = [newValue];
+          setValuesMsg("Value already in list!");
         }
-        formCopy.newValue = "";
       } else {
-        setValuesMsg("Value can't be blank!");
+        formCopy.options.values = [newValue];
       }
+      formCopy.newValue = "";
     } else {
-      setValuesMsg("Value already in list!");
+      setValuesMsg("Value can't be blank!");
     }
 
     setForm(formCopy);
