@@ -6,6 +6,7 @@ const Cloak = props => {
     visibility: "visible"
   };
   const style = props.isShow ? showStyle : {};
+
   return (
     <div id="divcloak" style={style} onClick={props.page.handleCloseModal} />
   );

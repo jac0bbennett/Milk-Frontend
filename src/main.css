@@ -106,6 +106,9 @@ body {
 form a {
   text-decoration: none;
   color: #3c81c8;
+}
+
+form a {
   border-bottom: 1px solid #3c81c8;
 }
 
@@ -216,14 +219,11 @@ hr {
 .coloredbar {
   background: #424242;
   color: #fff;
-  margin-right: -15px;
-  margin-left: -15px;
-  margin-top: -5px;
   padding-top: 10px;
   padding-bottom: 10px;
-  padding-left: 15px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  width: 100%;
 }
 
 .notInCont {
@@ -320,13 +320,17 @@ hr {
   overflow-y: scroll;
 }
 
-.gentxtinp:focus ~ .floating-label {
+.gentxtinp:focus ~ .floating-label,
+.gendropinp:focus ~ .floating-label {
   color: #3c81c8;
 }
 
 .gentxtinp:focus ~ .floating-label,
 .gentxtinp:not(:focus):not([value=""]) ~ .floating-label,
-.gentxtinp:disabled ~ .floating-label {
+.gentxtinp:disabled:not([value=""]) ~ .floating-label,
+.gendropinp:focus ~ .floating-label,
+.gendropinp:not(:focus):valid ~ .floating-label,
+.gendropinp:disabled ~ .floating-label {
   top: 2px;
   left: 0px;
   font-size: 12px;
@@ -360,15 +364,6 @@ hr {
   border: none;
   border-bottom: 2px solid #000;
   background: inherit;
-}
-
-.gendropinp:focus ~ .floating-label,
-.gendropinp:not(:focus):valid ~ .floating-label {
-  top: 2px;
-  left: 0px;
-  font-size: 12px;
-  opacity: 1;
-  color: #3c81c8;
 }
 
 .gentxtinp:not(:focus):valid ~ .floating-label,
@@ -468,14 +463,24 @@ input[type="checkbox"] {
   position: absolute;
 }
 
+.modalBack {
+  margin-top: -25px;
+  margin-left: -25px;
+}
+
+.flatbut.modalBack {
+  padding-left: 5px;
+}
+
 .cmsappitem {
+  display: flex;
+  justify-content: right;
   background: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   min-height: 100px;
   padding: 15px;
-  padding-top: 5px;
   margin-bottom: 15px;
-  border-radius: 2px;
+  border-radius: 5px;
   transition: 100ms ease;
 }
 
@@ -485,17 +490,23 @@ input[type="checkbox"] {
 }
 
 .selappdiv {
-  border-left: 4px #4c8fd5 solid;
+  border-left: 5px #4c8fd5 solid;
 }
 
 .secondaryitemcont {
+  display: flex;
   background: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   min-height: 50px;
   padding: 15px;
-  padding-top: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
   margin-bottom: 15px;
   border-radius: 5px;
+}
+
+.secondaryitemcont a {
+  border-bottom: none;
 }
 
 .flatbut {
@@ -672,7 +683,7 @@ textarea {
 }
 
 .fieldattr {
-  margin-left: 50px;
+  margin-left: 70px;
 }
 
 .fieldattr span {
@@ -769,6 +780,10 @@ textarea {
     height: 38px;
   }
 
+  #nav li:hover {
+    background: none;
+  }
+
   #wrapper {
     padding-top: 90px;
     margin-right: 10px;
@@ -790,11 +805,19 @@ textarea {
     font-size: 18pt;
   }
 
+  .flatbut.modalBack {
+    padding-left: 10px;
+  }
+
   .gentxtinp {
     width: 100%;
   }
 
   .gentxtinp.wide {
+    width: 100%;
+  }
+
+  .gendropinp {
     width: 100%;
   }
 
@@ -839,10 +862,10 @@ textarea {
   }
 
   #modal {
-    max-width: 90%;
-    width: 90%;
-    padding-left: 15px;
-    padding-right: 15px;
+    max-width: 80%;
+    width: 80%;
+    padding-left: 7%;
+    padding-right: 7%;
   }
 
   #wrapper {

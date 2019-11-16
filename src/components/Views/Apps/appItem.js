@@ -4,27 +4,44 @@ import SelectButton from "../../UI/Buttons/selectButton";
 const AppItem = props => {
   return (
     <div className={getClassNames(props.app.uuid, props.session.state.selApp)}>
-      <SelectButton
-        selectItem={() => {
-          props.session.handleSelectApp(props.app.uuid);
-        }}
-        sel={props.session.state.selApp === props.app.uuid}
-      />
-      <h2>{props.app.name}</h2>
-      <span className="cmsappuuid">{props.app.uuid}</span>{" "}
-      <button
-        className="flatbut cmsappmanage"
+      <div
         style={{
-          float: "right",
-          padding: "5px",
-          marginBottom: "5px"
-        }}
-        onClick={() => {
-          props.page.handleShowModal("editappform", props.app);
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-around"
         }}
       >
-        <i className="material-icons">more_horiz</i>
-      </button>
+        <h2 style={{ margin: "0px" }}>{props.app.name}</h2>
+        <span className="cmsappuuid">{props.app.uuid}</span>
+      </div>
+      <div
+        style={{
+          marginLeft: "auto",
+          display: "flex",
+          flexDirection: "column"
+        }}
+      >
+        <SelectButton
+          selectItem={() => {
+            props.session.handleSelectApp(props.app.uuid);
+          }}
+          sel={props.session.state.selApp === props.app.uuid}
+          style={{ marginBottom: "auto" }}
+        />
+        <button
+          className="flatbut cmsappmanage"
+          style={{
+            padding: "5px",
+            marginLeft: "auto",
+            marginTop: "auto"
+          }}
+          onClick={() => {
+            props.page.handleShowModal("editappform", props.app);
+          }}
+        >
+          <i className="material-icons">more_horiz</i>
+        </button>
+      </div>
     </div>
   );
 };

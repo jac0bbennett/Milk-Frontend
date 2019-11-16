@@ -219,8 +219,6 @@ const EditContent = props => {
   };
 
   const handleDiscardDraft = () => {
-    setIsPublishing(true);
-
     const url =
       "/api/panel/apps/" +
       props.session.state.selApp +
@@ -331,7 +329,17 @@ const EditContent = props => {
       <MiniHeader header={props.session.state.selAppName} />
       {isLoaded ? (
         <div className="gencontainer" style={{ marginBottom: "300px" }}>
-          <div className="coloredbar" style={{ paddingBottom: "20px" }}>
+          <div
+            className="coloredbar"
+            style={{
+              paddingBottom: "20px",
+              marginTop: "-5px",
+              marginLeft: "-15px",
+              marginRight: "-15px",
+              paddingLeft: "25px",
+              paddingRight: "5px"
+            }}
+          >
             <span className="softtext">{contentData.typeName}</span>
             <span className="floatright" style={{ marginRight: "20px" }}>
               <span className="contentstatus">{getStatus()}</span>

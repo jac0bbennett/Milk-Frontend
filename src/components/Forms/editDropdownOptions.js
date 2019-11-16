@@ -111,8 +111,7 @@ const EditDropdownOptionsForm = props => {
   return (
     <React.Fragment>
       <button
-        className="flatbut"
-        style={{ marginTop: "-25px", marginLeft: "-15px", paddingLeft: "0px" }}
+        className="flatbut modalBack"
         onClick={() => {
           props.page.handleShowModal("editfieldform");
         }}

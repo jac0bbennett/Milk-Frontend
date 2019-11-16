@@ -26,6 +26,13 @@ class PageContainer extends Container {
 
   handleCloseModal = () => {
     this.setState({ showModal: false });
+
+    if (
+      "callbackOnClose" in this.state.modalData &&
+      this.state.modalData.callbackOnClose
+    ) {
+      this.state.modalData.callback(null);
+    }
     //document.body.style.overflowY = "scroll";
   };
 

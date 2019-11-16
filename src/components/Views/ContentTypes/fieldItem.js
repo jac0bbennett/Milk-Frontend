@@ -41,8 +41,15 @@ const getIcon = fieldtype => {
 };
 
 const FieldItem = SortableElement(props => (
-  <div className="secondaryitemcont">
-    <div className="coloredbar">
+  <div
+    className="secondaryitemcont"
+    style={{
+      flexDirection: "column",
+      padding: "0px",
+      paddingBottom: "15px"
+    }}
+  >
+    <div className="coloredbar" style={{ height: "25px" }}>
       <DragHandle />
       <i
         style={{ paddingRight: "15px", fontSize: "18pt" }}

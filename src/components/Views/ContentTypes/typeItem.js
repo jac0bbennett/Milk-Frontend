@@ -28,8 +28,45 @@ const TypeItem = props => {
   };
 
   return (
-    <div className={"secondaryitemcont"}>
-      <span className="floatright">
+    <div
+      className="secondaryitemcont"
+      style={{ paddingTop: "0px", paddingBottom: "0px" }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          marginRight: "auto",
+          justifyContent: "space-around"
+        }}
+      >
+        <h2
+          style={{
+            marginRight: "20px",
+            color: "#000"
+          }}
+        >
+          {props.type.name}
+        </h2>
+        <h3
+          className="softtext"
+          style={{
+            marginTop: "-5px"
+          }}
+        >
+          {props.type.slug}
+        </h3>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          marginLeft: "auto",
+          alignItems: "center",
+          flexWrap: "wrap",
+          justifyContent: "flex-end"
+        }}
+      >
         <button
           className="flatbut"
           onClick={handleCreate}
@@ -59,9 +96,7 @@ const TypeItem = props => {
             </i>
           </button>
         </Link>
-      </span>
-      <h2>{props.type.name}</h2>
-      <h3 className="softtext">{props.type.slug}</h3>
+      </div>
     </div>
   );
 };

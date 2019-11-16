@@ -98,6 +98,7 @@ const ShortTextField = props => {
   useEffect(() => {
     if (props.isDraftDiscarded) {
       setContent(props.value);
+      setMsg("");
     }
   }, [props.isDraftDiscarded, props.value]);
 

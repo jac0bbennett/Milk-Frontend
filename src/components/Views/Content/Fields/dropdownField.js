@@ -57,6 +57,7 @@ const DropdownField = props => {
   useEffect(() => {
     if (props.isDraftDiscarded) {
       setContent(props.value);
+      setMsg("");
     }
   }, [props.isDraftDiscarded, props.value]);
 
@@ -68,7 +69,7 @@ const DropdownField = props => {
         label={props.label}
         value={content}
         onChange={handleChange}
-        required={false}
+        required={true}
         autoComplete="off"
         disabled={props.disabled}
       >

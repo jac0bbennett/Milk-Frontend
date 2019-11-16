@@ -8,14 +8,14 @@ const SelectButton = props => {
           props.selectItem();
         }}
         className="cmsappselect flatbut"
-        style={{ float: "right" }}
+        style={props.style}
       >
         Select
       </button>
     );
   } else {
     return (
-      <button className="cmsappselect flatbut" style={{ float: "right" }}>
+      <button className="cmsappselect flatbut" style={props.style}>
         <span style={{ color: "#3C81C8" }}>
           <span className="icolab">Selected</span>
           <i className="material-icons" style={{ fontSize: "12pt" }}>

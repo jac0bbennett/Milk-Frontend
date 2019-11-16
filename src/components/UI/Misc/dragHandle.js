@@ -8,6 +8,7 @@ const DragHandle = SortableHandle(() => (
       fontSize: "18pt",
       cursor: "row-resize",
       borderRight: "1px solid #fff",
+      marginLeft: "15px",
       marginRight: "15px"
     }}
     className="material-icons"
