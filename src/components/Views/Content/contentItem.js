@@ -22,38 +22,35 @@ const ContentItem = props => {
   };
 
   return (
-    <div className="secondaryitemcont">
-      <div>
+    <div className="secondaryitemcont" style={{ flexDirection: "column" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <span
           className="softtext"
           style={{ fontSize: "11pt", color: "#808080" }}
         >
           {props.content.typeName}
         </span>
-        <Link to={props.url}>
-          <h2>
-            {props.content.content.title &&
-            props.content.content.title.draft &&
-            props.content.content.title.draft.replace(/\s/g, "").length
-              ? props.content.content.title.draft || "Untitled"
-              : "Untitled"}
-          </h2>
-        </Link>
-        <span className="softtext" style={{ fontSize: "11pt", cursor: "text" }}>
-          {props.content.uuid}
-        </span>
+        <span className="contentstatus">{getStatus()}</span>
       </div>
+      <Link to={props.url}>
+        <h2>
+          {props.content.content.title &&
+          props.content.content.title.draft &&
+          props.content.content.title.draft.replace(/\s/g, "").length
+            ? props.content.content.title.draft || "Untitled"
+            : "Untitled"}
+        </h2>
+      </Link>
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          marginLeft: "auto"
+          flexDirection: "row",
+          justifyContent: "space-between"
         }}
       >
-        <div className="contentstatus" style={{ textAlign: "right" }}>
-          {getStatus()}
-        </div>
-
+        <span className="softtext" style={{ fontSize: "11pt", cursor: "text" }}>
+          {props.content.uuid}
+        </span>
         <div
           className="softtext"
           title={new Date(props.content.editedAt)}
