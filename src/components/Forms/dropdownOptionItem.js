@@ -4,13 +4,16 @@ import DragHandle from "../UI/Misc/dragHandle";
 
 const DropdownOptionItem = SortableElement(props => (
   <div className="coloredbar notInCont">
-    <DragHandle />
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <DragHandle />
+    </div>
     <span>{props.value}</span>
     <button
       className="flatbut darkflatbutton"
       onClick={() => {
         props.deleteValue(props.i);
       }}
+      style={{ marginLeft: "auto", marginRight: "5px" }}
     >
       <i className="material-icons" style={{ fontSize: "12pt" }}>
         clear

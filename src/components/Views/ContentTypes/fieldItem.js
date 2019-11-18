@@ -49,8 +49,10 @@ const FieldItem = SortableElement(props => (
       paddingBottom: "15px"
     }}
   >
-    <div className="coloredbar" style={{ height: "25px" }}>
-      <DragHandle />
+    <div className="coloredbar">
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <DragHandle />
+      </div>
       <i
         style={{ paddingRight: "15px", fontSize: "18pt" }}
         className="material-icons"
@@ -69,6 +71,7 @@ const FieldItem = SortableElement(props => (
             typeSlug: props.typeSlug
           });
         }}
+        style={{ marginLeft: "auto", marginRight: "5px" }}
       >
         <i className="material-icons">more_horiz</i>
       </button>

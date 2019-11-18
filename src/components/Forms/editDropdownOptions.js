@@ -65,16 +65,20 @@ const EditDropdownOptionsForm = props => {
     const newValue = formCopy.newValue.trim();
 
     if (newValue !== "") {
-      if (formCopy.options.values) {
-        if (!formCopy.options.values.includes(newValue)) {
-          formCopy.options.values.unshift(newValue);
+      if (newValue.length <= 80) {
+        if (formCopy.options.values) {
+          if (!formCopy.options.values.includes(newValue)) {
+            formCopy.options.values = [newValue, ...formCopy.options.values];
+          } else {
+            setValuesMsg("Value already in list!");
+          }
         } else {
-          setValuesMsg("Value already in list!");
+          formCopy.options.values = [newValue];
         }
+        formCopy.newValue = "";
       } else {
-        formCopy.options.values = [newValue];
+        setValuesMsg("Value must be < 80 characters!");
       }
-      formCopy.newValue = "";
     } else {
       setValuesMsg("Value can't be blank!");
     }
