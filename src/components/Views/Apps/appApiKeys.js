@@ -78,8 +78,19 @@ const AppApiKeys = props => {
       <br />
       {keys.length > 0 ? (
         keys.map(key => (
-          <div key={key.key} className="secondaryitemcont">
-            <span className="floatright">
+          <div
+            key={key.key}
+            className="secondaryitemcont"
+            style={{ flexDirection: "column" }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between"
+              }}
+            >
+              <h2>{key.name}</h2>
               <button
                 className="flatbut"
                 style={{
@@ -96,20 +107,18 @@ const AppApiKeys = props => {
                   create
                 </i>
               </button>
-            </span>
-            <h2>{key.name}</h2>
+            </div>
+
             <div
               style={{
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "space-between"
+                justifyContent: "space-between",
+                alignItems: "center"
               }}
             >
               <h3 className="cmsappuuid">{key.key}</h3>
-              <span
-                className="floatright softtext"
-                style={{ marginTop: "20px" }}
-              >
+              <span className="softtext">
                 {key.access === "published" ? "Only Published" : "All Content"}
               </span>
             </div>
