@@ -132,3 +132,8 @@
 #root.darkmode a h2 {
   color: #539ad1;
 }
+
+option {
+  color: #fff;
+  background: #000;
+}
