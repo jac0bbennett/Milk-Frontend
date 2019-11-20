@@ -107,9 +107,9 @@ const UserSettings = props => {
     }
   };
 
-  const handleThemeChange = event => {
-    props.session.handleSetTheme(event.target.value);
-    setTheme(event.target.value);
+  const handleThemeChange = value => {
+    props.session.handleSetTheme(value);
+    setTheme(value);
   };
 
   return (
@@ -183,31 +183,34 @@ const UserSettings = props => {
           <br />
           <hr />
           <h3>Theme</h3>
-
-          <input
-            id="theme_light"
-            name="theme_light"
-            type="radio"
-            value="light"
-            checked={theme === "light" || theme === null}
-            onChange={handleThemeChange}
-          />
-          <label htmlFor="theme_light">
-            <i> Light</i>
-          </label>
-          <br />
-
-          <input
-            id="theme_dark"
-            name="theme_dark"
-            type="radio"
-            value="dark"
-            checked={theme === "dark"}
-            onChange={handleThemeChange}
-          />
-          <label htmlFor="theme_dark">
-            <i> Dark</i>
-          </label>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              fontSize: "12pt"
+            }}
+          >
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => handleThemeChange("light")}
+            >
+              <i className="material-icons">
+                {theme === "light" || theme === null
+                  ? "check_box"
+                  : "check_box_outline_blank"}
+              </i>
+              <i className="icolab"> Light</i>
+            </div>
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => handleThemeChange("dark")}
+            >
+              <i className="material-icons">
+                {theme === "dark" ? "check_box" : "check_box_outline_blank"}
+              </i>
+              <i className="icolab"> Dark</i>
+            </div>
+          </div>
           <br />
         </div>
       ) : null}

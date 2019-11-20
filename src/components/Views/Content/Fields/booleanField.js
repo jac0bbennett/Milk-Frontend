@@ -38,8 +38,8 @@ const BooleanField = props => {
     }
   };
 
-  const handleChange = event => {
-    const newValue = event.target.value;
+  const handleChange = newValue => {
+    console.log(newValue);
     setContent(newValue);
     setSaved(false);
 
@@ -62,31 +62,20 @@ const BooleanField = props => {
   }, [props.isDraftDiscarded, props.value]);
 
   return (
-    <div style={{ marginBottom: "10px" }}>
-      <h4 style={{ marginBottom: "5px" }}>{props.label}</h4>
-      <input
-        type="radio"
-        name={props.dataId}
-        label={props.label}
-        value="True"
-        onChange={handleChange}
-        required={false}
-        disabled={props.disabled}
-        checked={content === "True"}
-      />
-      True
-      <input
-        type="radio"
-        name={props.dataId}
-        label={props.label}
-        value="False"
-        onChange={handleChange}
-        required={false}
-        disabled={props.disabled}
-        style={{ marginLeft: "10px" }}
-        checked={content === "False"}
-      />
-      False <br />
+    <div style={{ marginBottom: "10px", marginTop: "25px" }}>
+      <div
+        style={{ cursor: "pointer" }}
+        onClick={() => handleChange(content === "True" ? "False" : "True")}
+      >
+        <span className="icolab" style={{ fontSize: "14pt" }}>
+          {props.label}{" "}
+        </span>
+        <i className="material-icons">
+          {content === "True" ? "check_box" : "check_box_outline_blank"}
+        </i>
+      </div>
+      <br />
+
       <FieldMsg msg={msg} />
     </div>
   );
