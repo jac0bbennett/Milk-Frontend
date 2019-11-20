@@ -101,7 +101,7 @@
 }
 
 #root.darkmode .yellowtext {
-  color: #ea9005;
+  color: #eab505;
 }
 
 #root.darkmode .bluetext {
@@ -123,4 +123,12 @@
 
 #root.darkmode hr {
   border-top-color: #999999;
+}
+
+#root.darkmode .miniheader {
+  color: #539ad1;
+}
+
+#root.darkmode a h2 {
+  color: #539ad1;
 }

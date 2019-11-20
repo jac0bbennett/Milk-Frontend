@@ -335,39 +335,55 @@ const EditContent = props => {
               paddingBottom: "20px",
               marginTop: "-5px",
               marginLeft: "-15px",
-              marginRight: "-15px",
               paddingLeft: "25px",
-              paddingRight: "5px"
+              paddingRight: "5px",
+              alignItems: "flex-start",
+              flexDirection: "column"
             }}
           >
-            <span className="softtext">{contentData.typeName}</span>
-            <span className="floatright" style={{ marginRight: "20px" }}>
-              <span className="contentstatus">{getStatus()}</span>
-            </span>
-            <h1>{pageTitle}</h1>
-            <span className="softtext">
-              {moment().diff(contentData.editedAt, "months") >= 10 ? (
-                <Moment format="MMM Do YYYY, h:mma">
-                  {contentData.editedAt}
-                </Moment>
-              ) : (
-                <Moment format="MMM Do, h:mma">{contentData.editedAt}</Moment>
-              )}
-            </span>
-            <span
-              className="floatright"
-              style={{ marginTop: "-10px", marginRight: "15px" }}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%"
+              }}
             >
-              <span style={{ fontSize: "11pt" }}>{msg}</span>
-              <button
-                onClick={handlePublish}
-                className="raisedbut"
-                style={{ marginLeft: "10px" }}
-                disabled={isPublishing || isDrafting || publishDisabled}
-              >
-                {contentStatus === "draft" ? "Publish" : "Update"}
-              </button>
-            </span>
+              <span className="softtext">{contentData.typeName}</span>
+              <span className="contentstatus" style={{ marginRight: "15px" }}>
+                {getStatus()}
+              </span>
+            </div>
+            <h1>{pageTitle}</h1>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%"
+              }}
+            >
+              <span className="softtext">
+                {moment().diff(contentData.editedAt, "months") >= 10 ? (
+                  <Moment format="MMM Do YYYY, h:mma">
+                    {contentData.editedAt}
+                  </Moment>
+                ) : (
+                  <Moment format="MMM Do, h:mma">{contentData.editedAt}</Moment>
+                )}
+              </span>
+              <span style={{ marginTop: "-10px", marginRight: "15px" }}>
+                <span style={{ fontSize: "11pt" }}>{msg}</span>
+                <button
+                  onClick={handlePublish}
+                  className="raisedbut"
+                  style={{ marginLeft: "10px" }}
+                  disabled={isPublishing || isDrafting || publishDisabled}
+                >
+                  {contentStatus === "draft" ? "Publish" : "Update"}
+                </button>
+              </span>
+            </div>
           </div>
           <br />
           {fields.map(field => FieldInput(field))}

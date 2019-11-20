@@ -29,7 +29,7 @@ const UserSettings = props => {
         setName(resp.data.user.name);
         setPseudo(resp.data.user.pseudonym);
         setIsLoaded(true);
-        props.session.handleSession(userId, selApp, null);
+        props.session.handleSession(userId, selApp);
         props.loadbar.progressTo(100);
       }
     };
