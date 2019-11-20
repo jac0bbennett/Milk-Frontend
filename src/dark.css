@@ -133,7 +133,7 @@
   color: #539ad1;
 }
 
-option {
+#root.darkmode option {
   color: #fff;
   background: #000;
 }
