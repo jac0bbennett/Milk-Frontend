@@ -1,0 +1,126 @@
+#root.darkmode #top {
+  background: rgba(29, 29, 29, 0.9);
+}
+
+#root.darkmode #top-branding {
+  color: #eeeeee;
+}
+
+#root.darkmode #pagetitle {
+  color: #eeeeee;
+}
+
+#root.darkmode #nav li {
+  color: #e0e0e0;
+}
+
+#root.darkmode #nav li:hover {
+  background: rgba(126, 126, 126, 0.1);
+  color: #e0e0e0;
+}
+
+#root.darkmode #nav li.currenttab {
+  color: #e0e0e0;
+}
+
+#root.darkmode .cmsappitem {
+  background: #161616;
+}
+
+#root.darkmode .cmsappuuid {
+  color: #949494;
+}
+
+#root.darkmode h1,
+#root.darkmode h2,
+#root.darkmode h3,
+#root.darkmode h4,
+#root.darkmode h5 {
+  color: #fff;
+}
+
+#root.darkmode .flatbut {
+  color: #b4b4b4;
+}
+
+#root.darkmode .flatbut:hover {
+  background: #292929;
+  color: #dadada;
+}
+
+#root.darkmode .flatbut:focus {
+  background: inherit;
+}
+
+#root.darkmode #divcloak {
+  background: #000000;
+}
+
+#root.darkmode #modal {
+  background: #161616;
+}
+
+#root.darkmode select {
+  color: #fff;
+}
+
+#root.darkmode input {
+  background: inherit;
+  color: #fff;
+}
+
+#root.darkmode .gentxtinp,
+#root.darkmode .gendropinp {
+  border-bottom: 2px solid #c7c7c7;
+}
+
+#root.darkmode .gentxtinp ~ .floating-label,
+#root.darkmode .gendropinp ~ .floating-label {
+  color: #d1d1d1;
+}
+
+#root.darkmode .gentxtinp:not(:focus):valid ~ .floating-label,
+#root.darkmode .gendropinp:not(:focus):valid ~ .floating-label {
+  color: #d1d1d1;
+}
+
+#root.darkmode .gencontainer {
+  background: #161616;
+}
+
+#root.darkmode .secondaryitemcont {
+  background: #161616;
+}
+
+#root.darkmode .softtext {
+  color: #9c9c9c;
+}
+
+#root.darkmode .greentext {
+  color: #3ab956;
+}
+
+#root.darkmode .yellowtext {
+  color: #ea9005;
+}
+
+#root.darkmode .bluetext {
+  color: #4c8fd5;
+}
+
+#root.darkmode .redtext {
+  color: #e53935;
+}
+
+#root.darkmode .redtext:hover {
+  color: #e53935;
+}
+
+#root.darkmode textarea {
+  background: inherit;
+  color: #fff;
+}
+
+#root.darkmode hr {
+  border-top-color: #999999;
+}

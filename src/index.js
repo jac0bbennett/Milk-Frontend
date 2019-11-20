@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./main.css";
+import "./dark.css";
 import App from "./App";
 import { Router } from "react-router-dom";
 import history from "./utils/history";

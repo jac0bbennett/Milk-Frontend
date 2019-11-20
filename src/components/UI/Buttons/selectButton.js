@@ -16,7 +16,7 @@ const SelectButton = props => {
   } else {
     return (
       <button className="cmsappselect flatbut" style={props.style}>
-        <span style={{ color: "#3C81C8" }}>
+        <span className="bluetext">
           <span className="icolab">Selected</span>
           <i className="material-icons" style={{ fontSize: "12pt" }}>
             check

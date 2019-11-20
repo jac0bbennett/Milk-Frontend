@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TopBar from "./components/UI/TopBar/topBar";
 import { Switch, Route } from "react-router-dom";
 import LoadingBar from "./components/UI/LoadingBar/loadingBar";
@@ -30,6 +30,12 @@ const pageCont = new PageContainer();
 sessionCont.bindLoadbar(loadbarCont);
 
 const App = () => {
+  useEffect(() => {
+    if (localStorage.getItem("theme") === "dark") {
+      sessionCont.handleSetTheme("dark");
+    }
+  }, []);
+
   return (
     <Provider>
       <Subscribe to={[sessionCont, loadbarCont, pageCont]}>

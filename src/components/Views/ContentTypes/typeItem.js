@@ -42,8 +42,7 @@ const TypeItem = props => {
       >
         <h2
           style={{
-            marginRight: "20px",
-            color: "#000"
+            marginRight: "20px"
           }}
         >
           {props.type.name}

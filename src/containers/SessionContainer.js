@@ -49,6 +49,26 @@ class SessionContainer extends Container {
     }
   };
 
+  handleSetTheme = theme => {
+    if (theme === "dark") {
+      document.body.style.background = "#242424";
+      document.body.style.color = "#ffffff";
+
+      document.getElementById("root").classList.add("darkmode");
+
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.style.background = null;
+      document.body.style.color = null;
+
+      document.getElementById("root").classList.remove("darkmode");
+
+      localStorage.setItem("theme", "light");
+    }
+
+    this.setState({ theme });
+  };
+
   bindLoadbar = loadbar => {
     this.loadbar = loadbar;
   };

@@ -14,6 +14,8 @@ const UserSettings = props => {
   const [settingsMsg, setSettingsMsg] = useState("");
   const [changeKeyMsg, setChangeKeyMsg] = useState("");
 
+  const [theme, setTheme] = useState(localStorage.getItem("theme"));
+
   useEffect(() => {
     props.page.handlePageChange("Settings", "settings");
     const req = async () => {
@@ -27,7 +29,7 @@ const UserSettings = props => {
         setName(resp.data.user.name);
         setPseudo(resp.data.user.pseudonym);
         setIsLoaded(true);
-        props.session.handleSession(userId, selApp);
+        props.session.handleSession(userId, selApp, null);
         props.loadbar.progressTo(100);
       }
     };
@@ -105,6 +107,11 @@ const UserSettings = props => {
     }
   };
 
+  const handleThemeChange = event => {
+    props.session.handleSetTheme(event.target.value);
+    setTheme(event.target.value);
+  };
+
   return (
     <React.Fragment>
       {isLoaded ? (
@@ -117,7 +124,6 @@ const UserSettings = props => {
             Sign out
           </Link>
           <h1>Settings</h1>
-
           <form onSubmit={handleUpdateSettings} autoComplete="off">
             <TextInput
               name="name"
@@ -174,6 +180,34 @@ const UserSettings = props => {
               <SubmitButton>Change</SubmitButton>
             </span>
           </form>
+          <br />
+          <hr />
+          <h3>Theme</h3>
+
+          <input
+            id="theme_light"
+            name="theme_light"
+            type="radio"
+            value="light"
+            checked={theme === "light" || theme === "null"}
+            onChange={handleThemeChange}
+          />
+          <label htmlFor="theme_light">
+            <i> Light</i>
+          </label>
+          <br />
+
+          <input
+            id="theme_dark"
+            name="theme_dark"
+            type="radio"
+            value="dark"
+            checked={theme === "dark"}
+            onChange={handleThemeChange}
+          />
+          <label htmlFor="theme_dark">
+            <i> Dark</i>
+          </label>
           <br />
         </div>
       ) : null}

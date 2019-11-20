@@ -21,7 +21,7 @@ const AppList = props => {
         setApps(resp.data.apps);
         setAppCount(resp.meta.appCount);
         setIsLoaded(true);
-        props.session.handleSession(userId, selApp);
+        props.session.handleSession(userId, selApp, undefined);
         props.loadbar.progressTo(100);
       }
     };
