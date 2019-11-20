@@ -189,7 +189,7 @@ const UserSettings = props => {
             name="theme_light"
             type="radio"
             value="light"
-            checked={theme === "light" || theme === "null"}
+            checked={theme === "light" || theme === null}
             onChange={handleThemeChange}
           />
           <label htmlFor="theme_light">
