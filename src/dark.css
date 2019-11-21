@@ -89,7 +89,11 @@
 }
 
 #root.darkmode .secondaryitemcont {
-  background: #161616;
+  background: #1f1f1f;
+}
+
+#root.darkmode .coloredbar {
+  background: #353535;
 }
 
 #root.darkmode .softtext {
