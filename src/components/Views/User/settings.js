@@ -196,8 +196,8 @@ const UserSettings = props => {
             >
               <i className="material-icons">
                 {theme === "light" || theme === null
-                  ? "check_box"
-                  : "check_box_outline_blank"}
+                  ? "radio_button_checked"
+                  : "radio_button_unchecked"}
               </i>
               <i className="icolab"> Light</i>
             </div>
@@ -206,7 +206,9 @@ const UserSettings = props => {
               onClick={() => handleThemeChange("dark")}
             >
               <i className="material-icons">
-                {theme === "dark" ? "check_box" : "check_box_outline_blank"}
+                {theme === "dark"
+                  ? "radio_button_checked"
+                  : "radio_button_unchecked"}
               </i>
               <i className="icolab"> Dark</i>
             </div>
