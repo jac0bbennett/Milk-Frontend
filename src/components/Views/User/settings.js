@@ -123,7 +123,15 @@ const UserSettings = props => {
           >
             Sign out
           </Link>
-          <h1>Settings</h1>
+          <h1>
+            <i className="material-icons" style={{ fontSize: "24pt" }}>
+              account_circle
+            </i>
+            <span className="icolab" style={{ fontSize: "18pt" }}>
+              {" "}
+              Settings
+            </span>
+          </h1>
           <form onSubmit={handleUpdateSettings} autoComplete="off">
             <TextInput
               name="name"
