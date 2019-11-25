@@ -230,7 +230,8 @@ const EditContent = props => {
       action: "discardDraft",
       callback: discardCallback,
       titleText: "Are you sure you want to discard this draft?",
-      extraText: "This draft cannot be resurrected!"
+      extraText: "This draft cannot be resurrected!",
+      msgText: "discarding..."
     });
   };
 
@@ -252,7 +253,8 @@ const EditContent = props => {
       action: "unpublish",
       callback: unpublishCallback,
       titleText: "Are you sure you want to unpublish this?",
-      extraText: "It will no longer be available through the API!"
+      extraText: "It will no longer be available through the API!",
+      msgText: "unpublishing..."
     });
   };
 

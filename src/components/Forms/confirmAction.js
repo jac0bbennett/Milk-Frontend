@@ -6,9 +6,9 @@ const ConfirmActionForm = props => {
   const [msg, setMsg] = useState("");
   const [isActing, setIsActing] = useState(false);
 
-  const handleDiscard = async () => {
+  const handleAction = async () => {
     props.loadbar.progressTo(15);
-    setMsg("discarding...");
+    setMsg(props.page.state.modalData.msgText || "submitting...");
 
     setIsActing(true);
 
@@ -47,7 +47,7 @@ const ConfirmActionForm = props => {
         Cancel
       </button>
       {!isActing ? (
-        <DeleteButton style={{ float: "right" }} onClick={handleDiscard}>
+        <DeleteButton style={{ float: "right" }} onClick={handleAction}>
           Confirm
         </DeleteButton>
       ) : null}
