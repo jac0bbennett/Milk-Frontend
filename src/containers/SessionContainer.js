@@ -34,7 +34,7 @@ class SessionContainer extends Container {
     }
     history.push("/panel/signin");
     this.handleSession(0, "0");
-    this.handleSetTheme("light");
+    this.handleSetTheme(null);
   };
 
   handleSelectApp = async selApp => {
