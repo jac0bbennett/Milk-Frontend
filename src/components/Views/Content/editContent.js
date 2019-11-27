@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { getRequest, postRequest } from "../../../utils/requests";
-import { MiniHeader } from "../../UI/Misc/miniHeader";
 import DeleteButton from "../../UI/Buttons/deleteButton";
 import history from "../../../utils/history";
 import ShortTextField from "./Fields/shortTextField";
@@ -328,7 +327,6 @@ const EditContent = props => {
 
   return (
     <React.Fragment>
-      <MiniHeader header={props.session.state.selAppName} />
       {isLoaded ? (
         <div className="gencontainer" style={{ marginBottom: "300px" }}>
           <div

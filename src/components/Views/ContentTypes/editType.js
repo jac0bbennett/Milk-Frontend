@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TextInput from "../../UI/Inputs/txtInput";
 import { getRequest, patchRequest } from "../../../utils/requests";
-import { MiniHeader } from "../../UI/Misc/miniHeader";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import DeleteButton from "../../UI/Buttons/deleteButton";
 import FormMsg from "../../UI/Misc/formMsg";
@@ -134,7 +133,6 @@ const EditContentType = props => {
       >
         <i className="material-icons">add</i>
       </FAB>
-      <MiniHeader header={props.session.state.selAppName} />
       {isLoaded ? (
         <div className="gencontainer">
           <span

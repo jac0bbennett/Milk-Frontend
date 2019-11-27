@@ -190,7 +190,7 @@ const ContentList = props => {
   return (
     <div>
       <div className="flexspacebetween">
-        <MiniHeader header={props.session.state.selAppName} />
+        <MiniHeader header="Content" />
         {isLoaded ? (
           <React.Fragment>
             <span className="pageData">

@@ -69,7 +69,7 @@ const ContentTypeList = props => {
 
   return (
     <div>
-      <MiniHeader header={props.session.state.selAppName} />
+      <MiniHeader header="Content Types" />
       {isLoaded ? (
         <span className="pageData">
           <span className="floatright contentstatus">{typeCount} / 25</span>

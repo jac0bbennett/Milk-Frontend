@@ -4,32 +4,9 @@ import NavLink from "./navLink";
 const Nav = props => {
   const selApp = props.session.state.selApp;
   const userId = props.session.state.userId;
-  const navs = [
-    { to: "/panel/apps", label: "apps", navId: "apps", appDep: false },
-    {
-      to: "/panel/apps/" + selApp + "/types",
-      label: "content types",
-      navId: "types",
-      appDep: true
-    },
-    {
-      to: "/panel/apps/" + selApp + "/content",
-      label: "content",
-      navId: "contents",
-      appDep: true
-    },
-    {
-      to: "/panel/settings",
-      label: "settings",
-      navId: "settings",
-      appDep: false
-    }
-  ];
 
-  const noUserNavs = [
-    { to: "/panel/signin", label: "Sign In", navId: "signIn", appDep: false },
-    { to: "/panel/signup", label: "Sign Up", navId: "signUp", appDep: false }
-  ];
+  const navs = props.navs;
+  const noUserNavs = props.noUserNavs;
 
   if (userId !== 0) {
     return (
