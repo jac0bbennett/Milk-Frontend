@@ -72,11 +72,9 @@ const BooleanField = props => {
         </span>
         <i className="material-icons">
           {content === "True" ? "check_box" : "check_box_outline_blank"}
-        </i>
+        </i>{" "}
+        <FieldMsg msg={msg} />
       </div>
-      <br />
-
-      <FieldMsg msg={msg} />
     </div>
   );
 };
