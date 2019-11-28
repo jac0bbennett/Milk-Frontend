@@ -83,11 +83,7 @@ const EditFieldForm = props => {
       formCopy[target] = event.target.value;
     } else {
       const targetName = event.target.name.split("options_")[1];
-      if (targetName === "unique") {
-        formCopy.options.unique = !formCopy.options.unique;
-      } else {
-        formCopy.options[targetName] = event.target.value;
-      }
+      formCopy.options[targetName] = event.target.value;
     }
     setForm(formCopy);
   };
@@ -116,14 +112,19 @@ const EditFieldForm = props => {
 
       {props.page.state.modalData.field.fieldType === "text_short" ? (
         <div>
-          Unique
-          <input
-            type="checkbox"
-            name="options_unique"
-            value="True"
-            onChange={handleChange}
-            checked={form.options.unique === true}
-          />
+          <div
+            style={{ cursor: "pointer" }}
+            onClick={() =>
+              handleChange({
+                target: { name: "options_unique", value: !form.options.unique }
+              })
+            }
+          >
+            <span className="icolab">Unique </span>
+            <i className="material-icons">
+              {form.options.unique ? "check_box" : "check_box_outline_blank"}
+            </i>
+          </div>
           <br />
         </div>
       ) : props.page.state.modalData.field.fieldType === "dropdown" ? (
