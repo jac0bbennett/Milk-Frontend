@@ -132,6 +132,11 @@ const LongTextField = props => {
   };
 
   const ContentCount = () => {
+    const contentLength = content
+      .replace(/# |- |[0-9]. /g, "")
+      .trim()
+      .split(/\s+/).length;
+
     return (
       <span
         className="softtext"
@@ -139,10 +144,7 @@ const LongTextField = props => {
       >
         <span title="Characters">{content.length} / 50000</span> (
         <span title="Words">
-          {/\S/.test(content) && !content.startsWith(" ")
-            ? content.replace(/# |- |[0-9]. /g, "").split(/\s+/).length
-            : content.replace(/# |- |[0-9]. /g, "").split(/\s+/).length - 1}
-          )
+          {/\S/.test(content) ? contentLength : contentLength - 1})
         </span>
       </span>
     );
