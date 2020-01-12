@@ -828,7 +828,7 @@ textarea {
   }
 }
 
-@media all and (max-width: 750px) {
+@media all and (max-width: 846px) {
   #top {
     height: 75px;
     display: block;
