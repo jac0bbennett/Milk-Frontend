@@ -1,156 +1,161 @@
-#root.darkmode #top {
+body.darkmode {
+  background: #242424;
+  color: #ffffff;
+}
+
+body.darkmode #top {
   background: rgba(22, 22, 22, 0.9);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.363), 0 1px 2px rgba(0, 0, 0, 0.39);
 }
 
-#root.darkmode #top-branding {
+body.darkmode #top-branding {
   color: #eeeeee;
 }
 
-#root.darkmode #pagetitle {
+body.darkmode #pagetitle {
   color: #eeeeee;
 }
 
-#root.darkmode #nav li {
+body.darkmode #nav li {
   color: #e0e0e0;
 }
 
-#root.darkmode #nav li:hover {
+body.darkmode #nav li:hover {
   background: rgba(126, 126, 126, 0.1);
   color: #e0e0e0;
 }
 
-#root.darkmode #nav li.currenttab {
+body.darkmode #nav li.currenttab {
   color: #e0e0e0;
 }
 
-#root.darkmode .cmsappitem {
+body.darkmode .cmsappitem {
   background: #181818;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.363), 0 1px 2px rgba(0, 0, 0, 0.39);
 }
 
-#root.darkmode .cmsappuuid {
+body.darkmode .cmsappuuid {
   color: #949494;
 }
 
-#root.darkmode h1,
-#root.darkmode h2,
-#root.darkmode h3,
-#root.darkmode h4,
-#root.darkmode h5 {
+body.darkmode h1,
+body.darkmode h2,
+body.darkmode h3,
+body.darkmode h4,
+body.darkmode h5 {
   color: #fff;
 }
 
-#root.darkmode .raisedbut {
+body.darkmode .raisedbut {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.363), 0 1px 2px rgba(0, 0, 0, 0.39);
 }
 
-#root.darkmode .flatbut {
+body.darkmode .flatbut {
   color: #b4b4b4;
 }
 
-#root.darkmode .flatbut:hover {
+body.darkmode .flatbut:hover {
   background: #292929;
   color: #dadada;
 }
 
-#root.darkmode .flatbut:focus {
+body.darkmode .flatbut:focus {
   background: inherit;
 }
 
-#root.darkmode #divcloak {
+body.darkmode #divcloak {
   background: #000000;
 }
 
-#root.darkmode #modal {
+body.darkmode #modal {
   background: #161616;
 }
 
-#root.darkmode #signin {
+body.darkmode #signin {
   background: #161616;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.363), 0 1px 2px rgba(0, 0, 0, 0.39);
 }
 
-#root.darkmode select {
+body.darkmode select {
   color: #fff;
 }
 
-#root.darkmode input {
+body.darkmode input {
   background: inherit;
   color: #fff;
 }
 
-#root.darkmode .gentxtinp,
-#root.darkmode .gendropinp {
+body.darkmode .gentxtinp,
+body.darkmode .gendropinp {
   border-bottom: 2px solid #c7c7c7;
 }
 
-#root.darkmode .gentxtinp ~ .floating-label,
-#root.darkmode .gendropinp ~ .floating-label {
+body.darkmode .gentxtinp ~ .floating-label,
+body.darkmode .gendropinp ~ .floating-label {
   color: #d1d1d1;
 }
 
-#root.darkmode .gentxtinp:not(:focus):valid ~ .floating-label,
-#root.darkmode .gendropinp:not(:focus):valid ~ .floating-label {
+body.darkmode .gentxtinp:not(:focus):valid ~ .floating-label,
+body.darkmode .gendropinp:not(:focus):valid ~ .floating-label {
   color: #d1d1d1;
 }
 
-#root.darkmode .gencontainer {
+body.darkmode .gencontainer {
   background: #181818;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.363), 0 1px 2px rgba(0, 0, 0, 0.39);
 }
 
-#root.darkmode .secondaryitemcont {
+body.darkmode .secondaryitemcont {
   background: #181818;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.363), 0 1px 2px rgba(0, 0, 0, 0.39);
 }
 
-#root.darkmode .coloredbar {
+body.darkmode .coloredbar {
   background: #353535;
 }
 
-#root.darkmode .softtext {
+body.darkmode .softtext {
   color: #9c9c9c;
 }
 
-#root.darkmode .greentext {
+body.darkmode .greentext {
   color: #3ab956;
 }
 
-#root.darkmode .yellowtext {
+body.darkmode .yellowtext {
   color: #eab505;
 }
 
-#root.darkmode .bluetext {
+body.darkmode .bluetext {
   color: #4c8fd5;
 }
 
-#root.darkmode .redtext {
+body.darkmode .redtext {
   color: #e53935;
 }
 
-#root.darkmode .redtext:hover {
+body.darkmode .redtext:hover {
   color: #e53935;
 }
 
-#root.darkmode textarea {
+body.darkmode textarea {
   background: inherit;
   color: #fff;
 }
 
-#root.darkmode hr {
+body.darkmode hr {
   border-top-color: #999999;
 }
 
-#root.darkmode .miniheader {
+body.darkmode .miniheader {
   color: #539ad1;
 }
 
-#root.darkmode a h2 {
+body.darkmode a h2 {
   color: #539ad1;
 }
 
-#root.darkmode option {
+body.darkmode option {
   color: #fff;
   background: #000;
 }
