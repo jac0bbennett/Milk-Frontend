@@ -32,9 +32,9 @@ class SessionContainer extends Container {
       console.log("signout");
       this.loadbar.progressTo(100);
     }
-    history.push("/panel/signin");
     this.handleSession(0, "0");
     this.handleSetTheme(null);
+    history.push("/panel/signin");
   };
 
   handleSelectApp = async selApp => {
@@ -55,10 +55,12 @@ class SessionContainer extends Container {
       document.body.classList.add("darkmode");
 
       localStorage.setItem("theme", "dark");
-    } else {
+    } else if (theme === "light") {
       document.body.classList.remove("darkmode");
 
       localStorage.setItem("theme", "light");
+    } else {
+      localStorage.removeItem("theme");
     }
 
     this.setState({ theme });

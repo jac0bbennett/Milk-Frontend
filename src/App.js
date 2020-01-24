@@ -33,7 +33,7 @@ const App = () => {
   useEffect(() => {
     if (
       localStorage.getItem("theme") === "dark" ||
-      (localStorage.getItem("theme") === null &&
+      (!localStorage.getItem("theme") &&
         window.matchMedia &&
         window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
