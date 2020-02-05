@@ -18,16 +18,20 @@ const retError = err => {
   return { error: "" + err };
 };
 
+const handleReq = req => {
+  if (req.data.error) {
+    if (req.data.type === "no_login") {
+      history.push("/panel/signout");
+    }
+    console.log(req.data.error);
+  }
+  return req.data;
+};
+
 const getRequest = async url => {
   try {
     const req = await api.get(baseApiUrl + url);
-    if (req.data.error) {
-      if (req.data.type === "no_login") {
-        history.push("/panel/signout");
-      }
-      console.log(req.data.error);
-    }
-    return req.data;
+    return handleReq(req);
   } catch (err) {
     return retError(err);
   }
@@ -36,13 +40,7 @@ const getRequest = async url => {
 const postRequest = async (url, params) => {
   try {
     const req = await api.post(baseApiUrl + url, params);
-    if (req.data.error) {
-      if (req.data.type === "no_login") {
-        history.push("/panel/signout");
-      }
-      console.log(req.data.error);
-    }
-    return req.data;
+    return handleReq(req);
   } catch (err) {
     return retError(err);
   }
@@ -51,13 +49,7 @@ const postRequest = async (url, params) => {
 const patchRequest = async (url, params) => {
   try {
     const req = await api.patch(baseApiUrl + url, params);
-    if (req.data.error) {
-      if (req.data.type === "no_login") {
-        history.push("/panel/signout");
-      }
-      console.log(req.data.error);
-    }
-    return req.data;
+    return handleReq(req);
   } catch (err) {
     return retError(err);
   }
@@ -66,13 +58,7 @@ const patchRequest = async (url, params) => {
 const deleteRequest = async url => {
   try {
     const req = await api.delete(baseApiUrl + url);
-    if (req.data.error) {
-      if (req.data.type === "no_login") {
-        history.push("/panel/signout");
-      }
-      console.log(req.data.error);
-    }
-    return req.data;
+    return handleReq(req);
   } catch (err) {
     return retError(err);
   }
