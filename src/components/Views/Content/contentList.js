@@ -70,7 +70,7 @@ const ContentList = props => {
         if (nextPage > 1 && resp.data.contents.length === 0) {
           setLoadedAll(true);
         }
-        setContentsCount(resp.meta.contentCount);
+        setContentsCount(resp.data.contentCount);
         props.session.handleSession(userId, selApp, selAppName);
       }
     }

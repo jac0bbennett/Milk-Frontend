@@ -19,7 +19,7 @@ const AppList = props => {
         const userId = resp.meta.userId;
         const selApp = resp.meta.appUUID;
         setApps(resp.data.apps);
-        setAppCount(resp.meta.appCount);
+        setAppCount(resp.data.appCount);
         setIsLoaded(true);
         props.session.handleSession(userId, selApp, undefined);
         props.loadbar.progressTo(100);
