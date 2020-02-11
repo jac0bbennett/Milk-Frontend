@@ -9,7 +9,7 @@ import EditFieldForm from "../../Forms/editField";
 import NewContentForm from "../../Forms/newContent";
 import ConfirmDeleteForm from "../../Forms/confirmDelete";
 import ConfirmActionForm from "../../Forms/confirmAction";
-import EditDropdownOptionsForm from "../../Forms/editDropdownOptions";
+import EditFieldOptionValuesForm from "../../Forms/editOptionValues";
 
 const Content = props => {
   switch (props.page.state.modalComp) {
@@ -33,8 +33,8 @@ const Content = props => {
       return <ConfirmDeleteForm {...props} />;
     case "confirmactionform":
       return <ConfirmActionForm {...props} />;
-    case "editdropdownoptionsform":
-      return <EditDropdownOptionsForm {...props} />;
+    case "editfieldoptionvaluesform":
+      return <EditFieldOptionValuesForm {...props} />;
     default:
       return <h2>Form</h2>;
   }

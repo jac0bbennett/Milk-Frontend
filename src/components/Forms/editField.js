@@ -127,12 +127,13 @@ const EditFieldForm = props => {
           </div>
           <br />
         </div>
-      ) : props.page.state.modalData.field.fieldType === "dropdown" ? (
+      ) : props.page.state.modalData.field.fieldType === "dropdown" ||
+        props.page.state.modalData.field.fieldType === "list" ? (
         <React.Fragment>
           <button
             className="flatbut"
             onClick={() => {
-              props.page.handleShowModal("editdropdownoptionsform");
+              props.page.handleShowModal("editfieldoptionvaluesform");
             }}
           >
             Edit Values

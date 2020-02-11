@@ -3,10 +3,10 @@ import TextInput from "../UI/Inputs/txtInput";
 import FormMsg from "../UI/Misc/formMsg";
 import { patchRequest } from "../../utils/requests";
 import SubmitButton from "../UI/Buttons/submitButton";
-import DropdownOptions from "../Forms/dropdownOptions";
+import FieldOptionValues from "../Forms/fieldOptionValues";
 import arrayMove from "array-move";
 
-const EditDropdownOptionsForm = props => {
+const EditFieldOptionValuesForm = props => {
   const [form, setForm] = useState({
     name: "",
     slug: "",
@@ -65,7 +65,7 @@ const EditDropdownOptionsForm = props => {
     const newValue = formCopy.newValue.trim();
 
     if (newValue !== "") {
-      if (formCopy.options.values.length <= 50) {
+      if (!formCopy.options.values || formCopy.options.values.length <= 50) {
         if (newValue.length <= 80) {
           if (formCopy.options.values) {
             if (!formCopy.options.values.includes(newValue)) {
@@ -142,7 +142,7 @@ const EditDropdownOptionsForm = props => {
       <br />
       <br />
       {form.options.values && form.options.values.length > 0 ? (
-        <DropdownOptions
+        <FieldOptionValues
           values={form.options.values}
           page={props.page}
           fieldSlug={form.slug}
@@ -175,4 +175,4 @@ const EditDropdownOptionsForm = props => {
   );
 };
 
-export default EditDropdownOptionsForm;
+export default EditFieldOptionValuesForm;

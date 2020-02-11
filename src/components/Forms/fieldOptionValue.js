@@ -2,7 +2,7 @@ import React from "react";
 import { SortableElement } from "react-sortable-hoc";
 import DragHandle from "../UI/Misc/dragHandle";
 
-const DropdownOptionItem = SortableElement(props => (
+const FieldOptionValue = SortableElement(props => (
   <div className="coloredbar notInCont">
     <div style={{ display: "flex", alignItems: "center" }}>
       <DragHandle />
@@ -22,4 +22,4 @@ const DropdownOptionItem = SortableElement(props => (
   </div>
 ));
 
-export default DropdownOptionItem;
+export default FieldOptionValue;
