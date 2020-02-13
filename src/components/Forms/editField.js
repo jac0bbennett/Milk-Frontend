@@ -126,6 +126,20 @@ const EditFieldForm = props => {
             </i>
           </div>
           <br />
+          <div
+            style={{ cursor: "pointer" }}
+            onClick={() =>
+              handleChange({
+                target: { name: "options_title", value: !form.options.title }
+              })
+            }
+          >
+            <span className="icolab">Content Title </span>
+            <i className="material-icons">
+              {form.options.title ? "check_box" : "check_box_outline_blank"}
+            </i>
+          </div>
+          <br />
         </div>
       ) : props.page.state.modalData.field.fieldType === "dropdown" ||
         props.page.state.modalData.field.fieldType === "list" ? (

@@ -77,6 +77,20 @@ const FieldItem = SortableElement(props => (
       </button>
     </div>
     <div className="fieldattr" style={{ marginTop: "10px" }}>
+      <div
+        style={{
+          marginLeft: "-45px",
+          marginRight: "35px",
+          fontWeight: "bold",
+          color: "#3C81C8",
+          width: "10px",
+          display: "inline-block",
+          cursor: "default"
+        }}
+        title="Content Title"
+      >
+        {props.field.options["title"] ? "T" : null}
+      </div>
       <span>{decodeFieldType(props.field.fieldType)}</span>
       <span className="softtext">{props.field.slug}</span>
     </div>
