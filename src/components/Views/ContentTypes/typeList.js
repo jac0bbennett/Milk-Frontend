@@ -23,7 +23,7 @@ const ContentTypeList = props => {
         const selApp = resp.meta.appUUID;
         const selAppName = resp.meta.appName;
         setTypes(resp.data.types);
-        setTypeCount(resp.meta.typeCount);
+        setTypeCount(resp.data.typeCount);
         setIsLoaded(true);
         props.session.handleSession(userId, selApp, selAppName);
         props.loadbar.progressTo(100);

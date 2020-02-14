@@ -88,7 +88,7 @@ const FieldItem = SortableElement(props => (
         }}
         title="Content Title"
       >
-        {props.field.options["title"] ? "T" : null}
+        {props.field.options && props.field.options["title"] ? "T" : null}
       </div>
       <span>{decodeFieldType(props.field.fieldType)}</span>
       <span className="softtext">{props.field.slug}</span>
