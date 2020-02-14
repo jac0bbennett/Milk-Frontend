@@ -82,7 +82,6 @@ const FieldItem = SortableElement(props => (
           marginLeft: "-45px",
           marginRight: "35px",
           fontWeight: "bold",
-          color: "#3C81C8",
           width: "10px",
           display: "inline-block",
           cursor: "default"
