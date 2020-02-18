@@ -91,8 +91,10 @@ const LongTextField = props => {
 
     if (newValue.length > 50000) {
       setMsg(props.label + " too long!");
+      props.disablePublish(true);
     } else {
       setMsg("saving...");
+      props.disablePublish(false);
       props.drafting(true);
       setTypingTimeout(
         setTimeout(function() {

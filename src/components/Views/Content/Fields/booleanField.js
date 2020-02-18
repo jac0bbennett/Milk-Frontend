@@ -39,7 +39,6 @@ const BooleanField = props => {
   };
 
   const handleChange = newValue => {
-    console.log(newValue);
     setContent(newValue);
     setSaved(false);
 
