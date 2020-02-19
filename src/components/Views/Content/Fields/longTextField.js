@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { patchRequest } from "../../../../utils/requests";
 import FieldMsg from "./fieldMsg";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown from "react-markdown/with-html";
 
 const LongTextField = props => {
   const [content, setContent] = useState(props.value);
@@ -178,7 +178,11 @@ const LongTextField = props => {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <ReactMarkdown className="minimarkdownprev" source={content} />
+          <ReactMarkdown
+            className="minimarkdownprev"
+            source={content}
+            escapeHtml={false}
+          />
           <ContentCount />
         </React.Fragment>
       )}
