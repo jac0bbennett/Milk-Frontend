@@ -22,7 +22,7 @@ const AppApiKeys = props => {
         const selApp = resp.meta.appUUID;
         const selAppName = resp.meta.appName;
         setKeys(resp.data.keys);
-        setKeyCount(resp.meta.keyCount);
+        setKeyCount(resp.data.keyCount);
         setIsLoaded(true);
         props.session.handleSession(userId, selApp, selAppName);
         props.loadbar.progressTo(100);
@@ -114,7 +114,8 @@ const AppApiKeys = props => {
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "space-between",
-                alignItems: "center"
+                alignItems: "center",
+                flexWrap: "wrap"
               }}
             >
               <h3 className="cmsappuuid">{key.key}</h3>
