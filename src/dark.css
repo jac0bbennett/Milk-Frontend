@@ -4,7 +4,7 @@ body.darkmode {
 }
 
 body.darkmode #top {
-  background: rgba(22, 22, 22, 0.9);
+  background: rgba(22, 22, 22, 0.95);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.363), 0 1px 2px rgba(0, 0, 0, 0.39);
 }
 
