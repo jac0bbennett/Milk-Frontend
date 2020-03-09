@@ -8,7 +8,7 @@ const ListFieldItem = SortableElement(props => (
     style={{ width: "auto", marginRight: "10px", marginTop: "15px" }}
   >
     <div style={{ display: "flex", alignItems: "center" }}>
-      <DragHandle cursor="grab" />
+      <DragHandle cursor="grab" handle="drag_indicator" />
     </div>
     <span>{props.value}</span>
     <button

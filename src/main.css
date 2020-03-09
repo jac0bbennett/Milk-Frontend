@@ -580,11 +580,11 @@ input[type="checkbox"] {
 }
 
 .redtext {
-  color: #e53935;
+  color: #fd4845;
 }
 
 .redtext:hover {
-  color: #e53935;
+  color: #fd4845;
 }
 
 #fieldoptions {

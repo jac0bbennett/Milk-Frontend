@@ -131,11 +131,11 @@ body.darkmode .bluetext {
 }
 
 body.darkmode .redtext {
-  color: #e53935;
+  color: #fd4845;
 }
 
 body.darkmode .redtext:hover {
-  color: #e53935;
+  color: #fd4845;
 }
 
 body.darkmode textarea {

@@ -51,13 +51,27 @@ const ListField = props => {
 
     const newValue = content.replace(/\s+/g, " ").trim();
 
-    const newList = [...list, newValue];
-    setList(newList);
+    const allowedValues = props.fieldOptions.values;
 
-    setContent("");
-    setCharCount(0);
+    if (allowedValues && allowedValues.includes(newValue)) {
+      const newList = [...list, newValue];
+      setList(newList);
 
-    updateDraft(newList);
+      setContent("");
+      setCharCount(0);
+
+      updateDraft(newList);
+    } else {
+      let allowedValueMsg = "";
+      for (let v = 0; v < allowedValues.length; v++) {
+        if (v + 1 == allowedValues.length) {
+          allowedValueMsg = allowedValueMsg + allowedValues[v];
+        } else {
+          allowedValueMsg = allowedValueMsg + allowedValues[v] + ", ";
+        }
+      }
+      setMsg("Allowed values: " + allowedValueMsg);
+    }
   };
 
   const handleDeleteValue = index => {
@@ -84,6 +98,7 @@ const ListField = props => {
     const newValue = event.target.value;
     setContent(newValue);
     setSaved(false);
+    setMsg("");
 
     setCharCount(newValue.length);
 
@@ -102,6 +117,7 @@ const ListField = props => {
     if (props.isDraftDiscarded) {
       setContent("");
       setMsg("");
+      setList(props.value);
     }
   }, [props.isDraftDiscarded]);
 

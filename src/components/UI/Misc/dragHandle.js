@@ -12,7 +12,7 @@ const DragHandle = SortableHandle(props => (
     }}
     className="material-icons"
   >
-    drag_handle
+    {props.handle || "drag_handle"}
   </div>
 ));
 
