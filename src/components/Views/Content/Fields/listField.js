@@ -64,7 +64,7 @@ const ListField = props => {
     } else {
       let allowedValueMsg = "";
       for (let v = 0; v < allowedValues.length; v++) {
-        if (v + 1 == allowedValues.length) {
+        if (v + 1 === allowedValues.length) {
           allowedValueMsg = allowedValueMsg + allowedValues[v];
         } else {
           allowedValueMsg = allowedValueMsg + allowedValues[v] + ", ";
@@ -119,7 +119,7 @@ const ListField = props => {
       setMsg("");
       setList(props.value);
     }
-  }, [props.isDraftDiscarded]);
+  }, [props.isDraftDiscarded, props.value]);
 
   return (
     <div style={{ marginBottom: "10px" }}>
