@@ -10,6 +10,8 @@ const decodeFieldType = fieldtype => {
       return "Long Text";
     case "dropdown":
       return "Dropdown";
+    case "list":
+      return "List";
     case "number_int":
       return "Integer";
     case "number_float":
@@ -29,6 +31,8 @@ const getIcon = fieldtype => {
       return "format_align_left";
     case "dropdown":
       return "menu_open";
+    case "list":
+      return "list";
     case "number_int":
       return "exposure_plus_1";
     case "number_float":

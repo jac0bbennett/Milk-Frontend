@@ -1,15 +1,14 @@
 import React from "react";
 import { SortableHandle } from "react-sortable-hoc";
 
-const DragHandle = SortableHandle(() => (
+const DragHandle = SortableHandle(props => (
   <div
     style={{
       paddingRight: "15px",
       fontSize: "18pt",
-      cursor: "row-resize",
-      borderRight: "1px solid #fff",
+      cursor: props.cursor || "row-resize",
       marginLeft: "15px",
-      marginRight: "15px"
+      marginRight: "5px"
     }}
     className="material-icons"
   >
