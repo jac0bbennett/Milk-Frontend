@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import TextInput from "../../../UI/Inputs/txtInput";
 import { patchRequest } from "../../../../utils/requests";
 import FieldMsg from "./fieldMsg";
@@ -12,13 +12,43 @@ const ListField = props => {
   const [saved, setSaved] = useState(false);
   const [msg, setMsg] = useState("");
 
+  const unallowedValue = useCallback(
+    (allowedValues = props.fieldOptions.values) => {
+      let allowedValuesMsg = "";
+      for (let v = 0; v < allowedValues.length; v++) {
+        if (v + 1 === allowedValues.length) {
+          allowedValuesMsg = allowedValuesMsg + allowedValues[v];
+        } else {
+          allowedValuesMsg = allowedValuesMsg + allowedValues[v] + ", ";
+        }
+
+        setMsg("Allowed values: " + allowedValuesMsg);
+      }
+    },
+    [props.fieldOptions.values]
+  );
+
+  useEffect(() => {
+    for (let v = 0; v < list.length; v++) {
+      if (
+        props.fieldOptions.values &&
+        !props.fieldOptions.values.includes(list[v])
+      ) {
+        unallowedValue();
+        break;
+      }
+    }
+  }, [list, props.fieldOptions.values, unallowedValue]);
+
   useEffect(() => {
     if (saved) {
-      setMsg("Saved to draft");
+      if (!msg.startsWith("Allowed ")) {
+        setMsg("Saved to draft");
+      }
     }
   }, [saved]);
 
-  const updateDraft = async newList => {
+  const updateDraft = async newValue => {
     const fieldcontentid = props.dataId;
 
     props.drafting(true);
@@ -28,7 +58,7 @@ const ListField = props => {
         props.session.state.selApp +
         "/content/" +
         props.contentUuid,
-      { [fieldcontentid]: newList }
+      { [fieldcontentid]: newValue }
     );
 
     if (req.error) {
@@ -53,24 +83,20 @@ const ListField = props => {
 
     const allowedValues = props.fieldOptions.values;
 
-    if (allowedValues && allowedValues.includes(newValue)) {
+    if (
+      allowedValues &&
+      allowedValues.length > 0 &&
+      !allowedValues.includes(newValue)
+    ) {
+      unallowedValue();
+    } else {
       const newList = [...list, newValue];
       setList(newList);
 
       setContent("");
       setCharCount(0);
 
-      updateDraft(newList);
-    } else {
-      let allowedValueMsg = "";
-      for (let v = 0; v < allowedValues.length; v++) {
-        if (v + 1 === allowedValues.length) {
-          allowedValueMsg = allowedValueMsg + allowedValues[v];
-        } else {
-          allowedValueMsg = allowedValueMsg + allowedValues[v] + ", ";
-        }
-      }
-      setMsg("Allowed values: " + allowedValueMsg);
+      updateDraft(newValue);
     }
   };
 
@@ -98,7 +124,6 @@ const ListField = props => {
     const newValue = event.target.value;
     setContent(newValue);
     setSaved(false);
-    setMsg("");
 
     setCharCount(newValue.length);
 
