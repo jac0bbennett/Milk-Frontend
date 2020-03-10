@@ -162,6 +162,7 @@ const UserSettings = props => {
               name="curKey"
               type="password"
               label="Current Key"
+              autoComplete="current-password"
               value={curKey}
               onChange={handleChange}
               required={true}
@@ -170,6 +171,7 @@ const UserSettings = props => {
               name="newKey"
               type="password"
               label="New Key"
+              autoComplete="new-password"
               value={newKey}
               onChange={handleChange}
               required={true}
@@ -178,6 +180,7 @@ const UserSettings = props => {
               name="confirmKey"
               type="password"
               label="Confirm New Key"
+              autoComplete="new-password"
               value={confirmKey}
               onChange={handleChange}
               required={true}
