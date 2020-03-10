@@ -46,7 +46,7 @@ const ListField = props => {
         setMsg("Saved to draft");
       }
     }
-  }, [saved]);
+  }, [saved, msg]);
 
   const updateDraft = async newValue => {
     const fieldcontentid = props.dataId;
