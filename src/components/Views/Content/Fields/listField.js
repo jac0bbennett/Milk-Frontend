@@ -133,7 +133,7 @@ const ListField = props => {
     if (props.contentStatus === "published" && saved) {
       setMsg("");
     }
-  }, [props.contentStatus]);
+  }, [props.contentStatus, saved]);
 
   useEffect(() => {
     if (props.isDraftDiscarded) {
