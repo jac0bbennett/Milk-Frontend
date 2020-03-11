@@ -21,7 +21,6 @@ const ListField = props => {
         } else {
           allowedValuesMsg = allowedValuesMsg + allowedValues[v] + ", ";
         }
-
         setMsg("Allowed values: " + allowedValuesMsg);
       }
     },
@@ -42,11 +41,9 @@ const ListField = props => {
 
   useEffect(() => {
     if (saved) {
-      if (!msg.startsWith("Allowed ")) {
-        setMsg("Saved to draft");
-      }
+      setMsg("Saved to draft");
     }
-  }, [saved, msg]);
+  }, [saved]);
 
   const updateDraft = async newValue => {
     const fieldcontentid = props.dataId;
@@ -133,7 +130,7 @@ const ListField = props => {
   };
 
   useEffect(() => {
-    if (props.contentStatus === "published") {
+    if (props.contentStatus === "published" && saved) {
       setMsg("");
     }
   }, [props.contentStatus]);
