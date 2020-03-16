@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import TextInput from "../UI/Inputs/txtInput";
-import FormMsg from "../UI/Misc/formMsg";
-import { patchRequest } from "../../utils/requests";
-import SubmitButton from "../UI/Buttons/submitButton";
-import FieldOptionValues from "../Forms/fieldOptionValues";
+import TextInput from "../../UI/Inputs/txtInput";
+import FormMsg from "../../UI/Misc/formMsg";
+import { patchRequest } from "../../../utils/requests";
+import SubmitButton from "../../UI/Buttons/submitButton";
+import FieldOptionValues from "./fieldOptionValues";
 import arrayMove from "array-move";
 
 const EditFieldOptionValuesForm = props => {

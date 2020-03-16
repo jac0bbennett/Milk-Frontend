@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import TextInput from "../UI/Inputs/txtInput";
-import { postRequest } from "../../utils/requests";
-import FormMsg from "../UI/Misc/formMsg";
-import SubmitButton from "../UI/Buttons/submitButton";
-import DropDownInput from "../UI/Inputs/dropInput";
+import TextInput from "../../UI/Inputs/txtInput";
+import { postRequest } from "../../../utils/requests";
+import FormMsg from "../../UI/Misc/formMsg";
+import SubmitButton from "../../UI/Buttons/submitButton";
+import DropDownInput from "../../UI/Inputs/dropInput";
 
 const NewApiKeyForm = props => {
   const [form, setForm] = useState({ name: "", access: "" });

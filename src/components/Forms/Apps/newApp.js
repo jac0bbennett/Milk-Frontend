@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import TextInput from "../UI/Inputs/txtInput";
-import { postRequest } from "../../utils/requests";
-import FormMsg from "../UI/Misc/formMsg";
-import SubmitButton from "../UI/Buttons/submitButton";
+import TextInput from "../../UI/Inputs/txtInput";
+import { postRequest } from "../../../utils/requests";
+import FormMsg from "../../UI/Misc/formMsg";
+import SubmitButton from "../../UI/Buttons/submitButton";
 
 const NewAppForm = props => {
   const [form, setForm] = useState({ name: "" });

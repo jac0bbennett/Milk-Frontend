@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import TextInput from "../UI/Inputs/txtInput";
-import FormMsg from "../UI/Misc/formMsg";
-import SubmitButton from "../UI/Buttons/submitButton";
-import DeleteButton from "../UI/Buttons/deleteButton";
-import { patchRequest } from "../../utils/requests";
+import TextInput from "../../UI/Inputs/txtInput";
+import FormMsg from "../../UI/Misc/formMsg";
+import SubmitButton from "../../UI/Buttons/submitButton";
+import DeleteButton from "../../UI/Buttons/deleteButton";
+import { patchRequest } from "../../../utils/requests";
 
 const EditApiKeyForm = props => {
   const [form, setForm] = useState({

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import DropDownInput from "../UI/Inputs/dropInput";
-import { postRequest } from "../../utils/requests";
-import FormMsg from "../UI/Misc/formMsg";
-import SubmitButton from "../UI/Buttons/submitButton";
+import DropDownInput from "../../UI/Inputs/dropInput";
+import { postRequest } from "../../../utils/requests";
+import FormMsg from "../../UI/Misc/formMsg";
+import SubmitButton from "../../UI/Buttons/submitButton";
 import { Link } from "react-router-dom";
-import history from "../../utils/history";
+import history from "../../../utils/history";
 
 const NewContentForm = props => {
   const [form, setForm] = useState({ type: "" });

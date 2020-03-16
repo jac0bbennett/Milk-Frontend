@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import TextInput from "../UI/Inputs/txtInput";
-import FormMsg from "../UI/Misc/formMsg";
-import SubmitButton from "../UI/Buttons/submitButton";
-import DeleteButton from "../UI/Buttons/deleteButton";
-import { patchRequest } from "../../utils/requests";
+import TextInput from "../../UI/Inputs/txtInput";
+import FormMsg from "../../UI/Misc/formMsg";
+import SubmitButton from "../../UI/Buttons/submitButton";
+import DeleteButton from "../../UI/Buttons/deleteButton";
+import { patchRequest } from "../../../utils/requests";
+import ShortTextOptions from "./shortTextOptions";
 
 const EditFieldForm = props => {
   const [form, setForm] = useState({
@@ -111,36 +112,10 @@ const EditFieldForm = props => {
       <br />
 
       {props.page.state.modalData.field.fieldType === "text_short" ? (
-        <div>
-          <div
-            style={{ cursor: "pointer" }}
-            onClick={() =>
-              handleChange({
-                target: { name: "options_unique", value: !form.options.unique }
-              })
-            }
-          >
-            <span className="icolab">Unique </span>
-            <i className="material-icons">
-              {form.options.unique ? "check_box" : "check_box_outline_blank"}
-            </i>
-          </div>
-          <br />
-          <div
-            style={{ cursor: "pointer" }}
-            onClick={() =>
-              handleChange({
-                target: { name: "options_title", value: !form.options.title }
-              })
-            }
-          >
-            <span className="icolab">Content Title </span>
-            <i className="material-icons">
-              {form.options.title ? "check_box" : "check_box_outline_blank"}
-            </i>
-          </div>
-          <br />
-        </div>
+        <ShortTextOptions
+          handleChange={handleChange}
+          form={form}
+        ></ShortTextOptions>
       ) : props.page.state.modalData.field.fieldType === "dropdown" ||
         props.page.state.modalData.field.fieldType === "list" ? (
         <React.Fragment>

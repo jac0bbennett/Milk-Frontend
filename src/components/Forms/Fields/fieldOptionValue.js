@@ -1,6 +1,6 @@
 import React from "react";
 import { SortableElement } from "react-sortable-hoc";
-import DragHandle from "../UI/Misc/dragHandle";
+import DragHandle from "../../UI/Misc/dragHandle";
 
 const FieldOptionValue = SortableElement(props => (
   <div className="coloredbar notInCont">

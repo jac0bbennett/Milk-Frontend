@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import TextInput from "../UI/Inputs/txtInput";
-import { patchRequest } from "../../utils/requests";
-import FormMsg from "../UI/Misc/formMsg";
-import SubmitButton from "../UI/Buttons/submitButton";
-import DeleteButton from "../UI/Buttons/deleteButton";
+import TextInput from "../../UI/Inputs/txtInput";
+import { patchRequest } from "../../../utils/requests";
+import FormMsg from "../../UI/Misc/formMsg";
+import SubmitButton from "../../UI/Buttons/submitButton";
+import DeleteButton from "../../UI/Buttons/deleteButton";
 import { Link } from "react-router-dom";
 
 const EditAppForm = props => {
