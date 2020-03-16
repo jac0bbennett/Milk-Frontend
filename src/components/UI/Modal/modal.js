@@ -1,15 +1,15 @@
 import React from "react";
-import EditAppForm from "../../Forms/editApp";
-import NewAppForm from "../../Forms/newApp";
-import NewApiKeyForm from "../../Forms/newApiKey";
-import EditApiKeyForm from "../../Forms/editApiKey";
-import NewTypeForm from "../../Forms/newType";
-import NewFieldForm from "../../Forms/newField";
-import EditFieldForm from "../../Forms/editField";
-import NewContentForm from "../../Forms/newContent";
+import EditAppForm from "../../Forms/Apps/editApp";
+import NewAppForm from "../../Forms/Apps/newApp";
+import NewApiKeyForm from "../../Forms/Apps/newApiKey";
+import EditApiKeyForm from "../../Forms/Apps/editApiKey";
+import NewTypeForm from "../../Forms/ContentTypes/newType";
+import NewFieldForm from "../../Forms/Fields/newField";
+import EditFieldForm from "../../Forms/Fields/editField";
+import NewContentForm from "../../Forms/Content/newContent";
 import ConfirmDeleteForm from "../../Forms/confirmDelete";
 import ConfirmActionForm from "../../Forms/confirmAction";
-import EditFieldOptionValuesForm from "../../Forms/editOptionValues";
+import EditFieldOptionValuesForm from "../../Forms/Fields/editOptionValues";
 
 const Content = props => {
   switch (props.page.state.modalComp) {
