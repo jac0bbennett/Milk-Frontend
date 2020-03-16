@@ -299,6 +299,7 @@ const EditContent = props => {
       label: field.name,
       value: getFieldValue(field.slug),
       updateTitle: handleUpdateTitle,
+      pageTitle: pageTitle,
       updateEditedTime: handleUpdateEditedTime,
       disabled: isPublishing,
       drafting: handleDrafting,

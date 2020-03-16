@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import TextInput from "../../../UI/Inputs/txtInput";
 import { patchRequest } from "../../../../utils/requests";
 import FieldMsg from "./fieldMsg";
@@ -8,9 +8,104 @@ const ShortTextField = props => {
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(0);
   const [changeCount, setChangeCount] = useState(0);
-  const [charCount, setCharCount] = useState(props.value.length);
   const [saved, setSaved] = useState(false);
   const [msg, setMsg] = useState("");
+
+  const genSlug = title => {
+    const maxLength = 75;
+
+    const slug = title
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-zA-Z0-9_-]/g, "");
+
+    if (slug.length > maxLength) {
+      const truncSlug = slug.substr(0, maxLength);
+
+      return truncSlug.substr(0, truncSlug.lastIndexOf("-"));
+    } else {
+      return slug;
+    }
+  };
+
+  const checkSlugChanged = () => {
+    if (props.fieldOptions && props.fieldOptions.autoSlug) {
+      if (genSlug(props.pageTitle) === props.value) {
+        return false;
+      } else if (
+        (!props.value || props.value === "") &&
+        props.contentStatus === "draft"
+      ) {
+        return false;
+      } else if (
+        (!props.value || props.value === "") &&
+        props.contentStatus !== "draft"
+      ) {
+        return true;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  };
+  const [slugChanged, setSlugChanged] = useState(checkSlugChanged());
+
+  const { drafting, disablePublish, updateEditedTime, updateTitle } = props;
+
+  const autoSave = useCallback(
+    async newVal => {
+      const fieldcontentid = props.dataId;
+
+      const req = await patchRequest(
+        "/api/panel/apps/" +
+          props.session.state.selApp +
+          "/content/" +
+          props.contentUuid,
+        { [fieldcontentid]: newVal }
+      );
+
+      if (req.error) {
+        const reqMsg = !req.otherField
+          ? req.error
+          : req.error + " | Conflicting: " + req.otherField;
+        setMsg(reqMsg);
+        drafting(false);
+        disablePublish(true);
+      } else {
+        drafting(false);
+        disablePublish(false);
+        updateEditedTime(req.edited);
+        if (props.fieldOptions && props.fieldOptions.title) {
+          updateTitle(newVal);
+        }
+        setSaved(true);
+      }
+    },
+    [
+      props.dataId,
+      props.session.state.selApp,
+      props.contentUuid,
+      props.fieldOptions,
+      drafting,
+      disablePublish,
+      updateEditedTime,
+      updateTitle
+    ]
+  );
+
+  useEffect(() => {
+    if (!slugChanged) {
+      const newSlug = genSlug(props.pageTitle);
+      if (newSlug !== content || !content || content === "") {
+        setSaved(false);
+        setMsg("saving...");
+        setContent(newSlug);
+        autoSave(newSlug);
+      }
+    }
+  }, [props.fieldOptions, props.pageTitle, slugChanged, content, autoSave]);
 
   useEffect(() => {
     if (!isTyping && saved) {
@@ -18,46 +113,17 @@ const ShortTextField = props => {
     }
   }, [isTyping, saved]);
 
-  const autoSave = async newVal => {
-    const fieldcontentid = props.dataId;
-
-    const req = await patchRequest(
-      "/api/panel/apps/" +
-        props.session.state.selApp +
-        "/content/" +
-        props.contentUuid,
-      { [fieldcontentid]: newVal }
-    );
-
-    if (req.error) {
-      const reqMsg = !req.otherField
-        ? req.error
-        : req.error + " | Conflicting: " + req.otherField;
-      setMsg(reqMsg);
-      props.drafting(false);
-      props.disablePublish(true);
-    } else {
-      props.drafting(false);
-      props.disablePublish(false);
-      props.updateEditedTime(req.edited);
-      if (props.slug === "title") {
-        props.updateTitle(newVal);
-      }
-      setSaved(true);
-    }
-  };
-
   const handleChange = event => {
     const newValue = event.target.value;
     setContent(newValue);
     setIsTyping(true);
     setSaved(false);
+    setSlugChanged(true);
 
     if (typingTimeout) {
       clearTimeout(typingTimeout);
     }
 
-    setCharCount(newValue.length);
     setChangeCount(changeCount + 1);
 
     if (changeCount > 20) {
@@ -68,11 +134,11 @@ const ShortTextField = props => {
 
     if (newValue.length > 500) {
       setMsg(props.label + " too long!");
-      props.disablePublish(true);
+      disablePublish(true);
     } else {
       setMsg("saving...");
-      props.disablePublish(false);
-      props.drafting(true);
+      disablePublish(false);
+      drafting(true);
       setTypingTimeout(
         setTimeout(function() {
           setIsTyping(false);
@@ -121,7 +187,7 @@ const ShortTextField = props => {
         className="softtext"
         style={{ fontSize: "9pt", marginRight: "15px" }}
       >
-        {charCount} / 500
+        {content.length} / 500
       </span>
       <FieldMsg msg={msg} />
     </div>

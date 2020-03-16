@@ -83,8 +83,8 @@ const FieldItem = SortableElement(props => (
     <div className="fieldattr" style={{ marginTop: "10px" }}>
       <div
         style={{
-          marginLeft: "-45px",
-          marginRight: "35px",
+          marginLeft: "-37px",
+          marginRight: "30px",
           fontWeight: "bold",
           width: "10px",
           display: "inline-block",
