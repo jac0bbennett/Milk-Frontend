@@ -16,9 +16,9 @@ const ShortTextField = props => {
 
     const slug = title
       .toLowerCase()
+      .replace(/[^a-zA-Z0-9_ ]/g, "")
       .trim()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-zA-Z0-9_-]/g, "");
+      .replace(/\s+/g, "-");
 
     if (slug.length > maxLength) {
       const truncSlug = slug.substr(0, maxLength);
@@ -33,15 +33,9 @@ const ShortTextField = props => {
     if (props.fieldOptions && props.fieldOptions.autoSlug) {
       if (genSlug(props.pageTitle) === props.value) {
         return false;
-      } else if (
-        (!props.value || props.value === "") &&
-        props.contentStatus === "draft"
-      ) {
+      } else if (!props.value && props.contentStatus === "draft") {
         return false;
-      } else if (
-        (!props.value || props.value === "") &&
-        props.contentStatus !== "draft"
-      ) {
+      } else if (!props.value && props.contentStatus !== "draft") {
         return true;
       } else {
         return true;
@@ -98,7 +92,7 @@ const ShortTextField = props => {
   useEffect(() => {
     if (!slugChanged) {
       const newSlug = genSlug(props.pageTitle);
-      if (newSlug !== content || !content || content === "") {
+      if (newSlug !== content || (!content && props.pageTitle)) {
         setSaved(false);
         setMsg("saving...");
         setContent(newSlug);

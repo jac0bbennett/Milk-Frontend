@@ -29,11 +29,9 @@ const EditContent = props => {
     (newTitle = "") => {
       setPageTitle(newTitle);
 
-      if (newTitle === "") {
-        newTitle = "Untitled";
-      }
+      console.log(newTitle);
 
-      props.page.handlePageChange(newTitle, "content");
+      props.page.handlePageChange(newTitle || "Untitled", "content");
     },
     [props.page]
   );
@@ -112,8 +110,8 @@ const EditContent = props => {
         contentData.content.title &&
         contentData.content.title.draft &&
         contentData.content.title.draft.replace(/\s/g, "").length
-          ? contentData.content.title.draft || "Untitled"
-          : "Untitled";
+          ? contentData.content.title.draft || ""
+          : "";
 
       handleUpdateTitle(newTitle);
     } else if (contentLoaded || typeLoaded) {
@@ -358,7 +356,7 @@ const EditContent = props => {
                 {getStatus()}
               </span>
             </div>
-            <h1>{pageTitle}</h1>
+            <h1>{pageTitle || "Untitled"}</h1>
             <div
               style={{
                 display: "flex",
