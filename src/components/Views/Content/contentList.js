@@ -5,6 +5,7 @@ import { MiniHeader } from "../../UI/Misc/miniHeader";
 import ContentItem from "./contentItem";
 import BottomScrollListener from "react-bottom-scroll-listener";
 import DropDownInput from "../../UI/Inputs/dropInput";
+import TextInput from "../../UI/Inputs/txtInput";
 import history from "../../../utils/history";
 
 const ContentList = props => {
@@ -16,6 +17,8 @@ const ContentList = props => {
   const [nextPage, setNextPage] = useState(1);
   const [loadedAll, setLoadedAll] = useState(false);
   const [contentsCount, setContentsCount] = useState(0);
+  const [showSearch, setShowSearch] = useState(false);
+  const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [sortOrder, setSortOrder] = useState("dateDescending");
 
@@ -24,10 +27,19 @@ const ContentList = props => {
       const getFilter = () => {
         const params = new URLSearchParams(props.location.search);
 
+        const paramSearch = params.get("search");
         const paramTypeFilter = params.get("contentType");
         const paramSortOrder = params.get("sort");
 
         let filter = {};
+
+        if (paramSearch) {
+          setSearch(paramSearch);
+          setShowSearch(true);
+          filter.search = paramSearch;
+        } else {
+          setSearch("");
+        }
 
         if (paramSortOrder) {
           setSortOrder(paramSortOrder);
@@ -116,42 +128,49 @@ const ContentList = props => {
     }
   }, [contentsLoaded, typesLoaded, props.loadbar]);
 
+  const updateUrlParam = (param, value) => {
+    let params = new URLSearchParams(props.location.search);
+
+    if (value) {
+      params.set(param, value);
+    } else {
+      params.delete(param);
+    }
+    history.push(window.location.pathname + "?" + params.toString());
+  };
+
+  const handleSearchChange = event => {
+    const query = event.target.value;
+    setSearch(query);
+  };
+
+  const handleSearch = event => {
+    event.preventDefault();
+
+    updateUrlParam("search", search);
+  };
+
   const handleFilterType = event => {
     const typeslug = event.target.value;
     if (typeslug !== "0") {
       setTypeFilter(typeslug);
-      history.push(
-        window.location.pathname +
-          "?contentType=" +
-          typeslug +
-          "&sort=" +
-          sortOrder
-      );
+      updateUrlParam("contentType", typeslug);
     } else {
       setTypeFilter("");
       if (sortOrder === "contentType") {
         const fakeEvent = { target: { value: "" } };
         handleSortOrder(fakeEvent);
       }
-      history.push(window.location.pathname + "?sort=" + sortOrder);
+      updateUrlParam("contentType", null);
     }
+
     document.activeElement.blur();
   };
 
   const handleSortOrder = event => {
     const order = event.target.value;
     setSortOrder(order);
-    if (typeFilter !== "") {
-      history.push(
-        window.location.pathname +
-          "?contentType=" +
-          typeFilter +
-          "&sort=" +
-          order
-      );
-    } else {
-      history.push(window.location.pathname + "?sort=" + order);
-    }
+    updateUrlParam("sort", order);
     document.activeElement.blur();
   };
 
@@ -194,6 +213,26 @@ const ContentList = props => {
         {isLoaded ? (
           <React.Fragment>
             <span className="pageData">
+              <button
+                className="flatbut darkflatbutton"
+                style={{
+                  marginRight: "10px",
+                  paddingLeft: "8px",
+                  paddingRight: "8px"
+                }}
+                onClick={() => {
+                  setShowSearch(!showSearch);
+                  updateUrlParam("search", null);
+                }}
+              >
+                <i
+                  className={
+                    !showSearch ? "material-icons" : "material-icons bluetext"
+                  }
+                >
+                  search
+                </i>
+              </button>
               <span className="hidesmallscreen">
                 <DropDownInput
                   name="contenttype"
@@ -249,6 +288,19 @@ const ContentList = props => {
           <i className="material-icons">add</i>
         </FAB>
       ) : null}
+      {isLoaded && showSearch ? (
+        <form onSubmit={handleSearch} className="contentsearch">
+          <TextInput
+            name="search"
+            type="text"
+            label="Search"
+            value={search}
+            onChange={handleSearchChange}
+            required={false}
+          />
+        </form>
+      ) : null}
+
       {contents.length > 0 ? (
         <React.Fragment>
           {contents.map(content => (
@@ -280,14 +332,14 @@ const ContentList = props => {
           ) : null}
         </React.Fragment>
       ) : isLoaded ? (
-        typeFilter === "" ? (
+        typeFilter === "" && search === "" ? (
           <NoAppMsg />
         ) : (
           <div id="midmsg">
             <span style={{ fontSize: "14pt" }} className="softtext">
               <br />
               <br />
-              No content matching that filter.
+              No content matching your filter.
             </span>
           </div>
         )

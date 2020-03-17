@@ -692,6 +692,12 @@ textarea {
   margin-top: -15px;
 }
 
+.contentsearch {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .loadingicon {
   width: 20px;
   height: 20px;
@@ -813,6 +819,12 @@ textarea {
 
   .gendropinp {
     width: 100%;
+  }
+
+  .contentsearch {
+    width: 95%;
+    margin: auto;
+    display: block;
   }
 
   #pagetitle {
