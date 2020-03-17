@@ -832,8 +832,12 @@ textarea {
     top: -5px;
     right: 30px;
   }
+  .miniheader {
+    margin-top: 0px;
+    margin-bottom: 10px;
+  }
   .pageData {
-    margin-top: 5px;
+    margin-top: 0px;
   }
   .applist {
     margin-top: 0px;
