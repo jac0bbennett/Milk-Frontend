@@ -147,6 +147,8 @@ const ContentList = props => {
   const handleSearch = event => {
     event.preventDefault();
 
+    document.activeElement.blur();
+
     updateUrlParam("search", search);
   };
 
