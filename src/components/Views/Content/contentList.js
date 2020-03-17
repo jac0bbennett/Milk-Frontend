@@ -39,6 +39,7 @@ const ContentList = props => {
           filter.search = paramSearch;
         } else {
           setSearch("");
+          setShowSearch(false);
         }
 
         if (paramSortOrder) {
