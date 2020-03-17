@@ -95,6 +95,15 @@ body.darkmode .gendropinp ~ .floating-label {
   color: #d1d1d1;
 }
 
+body.darkmode .gentxtinp:focus ~ .floating-label,
+body.darkmode .gendropinp:focus ~ .floating-label {
+  color: #3c81c8;
+}
+
+body.darkmode .gentxtinp:focus {
+  border-bottom: 2px solid #3c81c8;
+}
+
 body.darkmode .gentxtinp:not(:focus):valid ~ .floating-label,
 body.darkmode .gendropinp:not(:focus):valid ~ .floating-label {
   color: #d1d1d1;
