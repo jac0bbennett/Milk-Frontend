@@ -693,9 +693,17 @@ textarea {
 }
 
 .contentsearch {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  display: inline-block;
+  margin-right: 20px;
+  width: 300px;
+}
+
+.mobilecontentsearch {
+  display: none;
+}
+
+.showsearch {
+  display: none;
 }
 
 .loadingicon {
@@ -821,12 +829,6 @@ textarea {
     width: 100%;
   }
 
-  .contentsearch {
-    width: 95%;
-    margin: auto;
-    display: block;
-  }
-
   #pagetitle {
     font-size: 14pt;
     top: -5px;
@@ -886,6 +888,20 @@ textarea {
 
   #fieldoptions {
     width: 98%;
+  }
+  .showsearch {
+    display: inline;
+  }
+  .mobilecontentsearch {
+    display: block;
+  }
+  .contentsearch {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .contentsearch .geninpdiv {
+    width: 95%;
   }
   .hidesmallscreen {
     display: none;

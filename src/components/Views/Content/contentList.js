@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import FAB from "../../UI/Buttons/fab";
 import { getRequest } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
@@ -21,6 +21,7 @@ const ContentList = props => {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [sortOrder, setSortOrder] = useState("dateDescending");
+  const searchBox = useRef(null);
 
   const getContents = useCallback(async () => {
     if (!loadedAll) {
@@ -36,7 +37,7 @@ const ContentList = props => {
         if (paramSearch) {
           setSearch(paramSearch);
           setShowSearch(true);
-          filter.search = paramSearch;
+          filter.search = paramSearch.replace(/\s+/g, " ").trim();
         } else {
           setSearch("");
           setShowSearch(false);
@@ -129,6 +130,12 @@ const ContentList = props => {
     }
   }, [contentsLoaded, typesLoaded, props.loadbar]);
 
+  useEffect(() => {
+    if (showSearch) {
+      searchBox.current.focus();
+    }
+  }, [showSearch]);
+
   const updateUrlParam = (param, value) => {
     let params = new URLSearchParams(props.location.search);
 
@@ -217,7 +224,7 @@ const ContentList = props => {
           <React.Fragment>
             <span className="pageData">
               <button
-                className="flatbut darkflatbutton"
+                className="flatbut darkflatbutton showsearch"
                 style={{
                   marginRight: "10px",
                   paddingLeft: "8px",
@@ -237,6 +244,16 @@ const ContentList = props => {
                 </i>
               </button>
               <span className="hidesmallscreen">
+                <form onSubmit={handleSearch} className="contentsearch">
+                  <TextInput
+                    name="search"
+                    type="text"
+                    label="Search"
+                    value={search}
+                    onChange={handleSearchChange}
+                    required={false}
+                  />
+                </form>
                 <DropDownInput
                   name="contenttype"
                   label="Filter Type"
@@ -256,7 +273,6 @@ const ContentList = props => {
                     </option>
                   ))}
                 </DropDownInput>
-
                 <DropDownInput
                   name="sort"
                   label="Sort"
@@ -292,7 +308,10 @@ const ContentList = props => {
         </FAB>
       ) : null}
       {isLoaded && showSearch ? (
-        <form onSubmit={handleSearch} className="contentsearch">
+        <form
+          onSubmit={handleSearch}
+          className="contentsearch mobilecontentsearch"
+        >
           <TextInput
             name="search"
             type="text"
@@ -300,6 +319,7 @@ const ContentList = props => {
             value={search}
             onChange={handleSearchChange}
             required={false}
+            setRef={searchBox}
           />
         </form>
       ) : null}

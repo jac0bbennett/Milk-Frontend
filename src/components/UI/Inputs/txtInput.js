@@ -12,6 +12,7 @@ const TextInput = props => {
         autoComplete={props.autoComplete}
         required={props.required}
         disabled={props.disabled}
+        ref={props.setRef}
       />
       <span className="floating-label">{props.label}</span>
     </div>
