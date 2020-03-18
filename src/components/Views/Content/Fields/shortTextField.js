@@ -92,7 +92,12 @@ const ShortTextField = props => {
   useEffect(() => {
     if (!slugChanged) {
       const newSlug = genSlug(props.pageTitle);
-      if (newSlug !== content || (!content && props.pageTitle)) {
+      if (
+        newSlug !== content ||
+        (!content &&
+          props.pageTitle &&
+          !props.pageTitle.match(/[^a-zA-Z0-9_ ]/g))
+      ) {
         setSaved(false);
         setMsg("saving...");
         setContent(newSlug);
