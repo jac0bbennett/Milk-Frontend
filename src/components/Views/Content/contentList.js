@@ -66,7 +66,7 @@ const ContentList = props => {
           "/content?page=" +
           nextPage +
           "&q=" +
-          JSON.stringify(getFilter())
+          escape(JSON.stringify(getFilter()))
       );
       if (resp.error) {
         props.loadbar.setToError(true);
@@ -150,6 +150,10 @@ const ContentList = props => {
   const handleSearchChange = event => {
     const query = event.target.value;
     setSearch(query);
+
+    if (query === "") {
+      updateUrlParam("search", null);
+    }
   };
 
   const handleSearch = event => {
@@ -355,14 +359,15 @@ const ContentList = props => {
           ) : null}
         </React.Fragment>
       ) : isLoaded ? (
-        typeFilter === "" && search === "" ? (
+        !typeFilter && !search ? (
           <NoAppMsg />
         ) : (
           <div id="midmsg">
             <span style={{ fontSize: "14pt" }} className="softtext">
               <br />
               <br />
-              No content matching your filter.
+              No content {typeFilter ? " of type " + typeFilter : null}{" "}
+              {search ? ' matching "' + search + '"' : null}
             </span>
           </div>
         )
