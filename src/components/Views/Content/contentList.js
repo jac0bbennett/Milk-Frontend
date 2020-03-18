@@ -256,6 +256,7 @@ const ContentList = props => {
                     value={search}
                     onChange={handleSearchChange}
                     required={false}
+                    onBlur={handleSearch}
                   />
                 </form>
                 <DropDownInput

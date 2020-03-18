@@ -13,6 +13,7 @@ const TextInput = props => {
         required={props.required}
         disabled={props.disabled}
         ref={props.setRef}
+        onBlur={props.onBlur}
       />
       <span className="floating-label">{props.label}</span>
     </div>
