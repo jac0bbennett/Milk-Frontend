@@ -68,7 +68,7 @@ const AppApiKeys = props => {
 
   return (
     <div>
-      <MiniHeader header={props.session.state.selAppName} />
+      <MiniHeader header="API Keys" />
       <span className="pageData" style={{ marginBottom: "15px" }}>
         <span className="floatright contentstatus">{keyCount} / 10</span>
       </span>
