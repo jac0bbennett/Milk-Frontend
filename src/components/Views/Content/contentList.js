@@ -361,15 +361,24 @@ const ContentList = props => {
           ) : null}
         </React.Fragment>
       ) : isLoaded ? (
-        !typeFilter && !search ? (
+        !search && !typeFilter && contentsLoaded ? (
           <NoAppMsg />
         ) : (
           <div id="midmsg">
             <span style={{ fontSize: "14pt" }} className="softtext">
               <br />
               <br />
-              No content {typeFilter ? " of type " + typeFilter : null}{" "}
-              {search ? ' matching "' + curParams.get("search") + '"' : null}
+              No content
+              {(curParams
+              ? curParams.get("contentType")
+              : null)
+                ? " of type " + curParams.get("contentType")
+                : null}
+              {(curParams
+              ? curParams.get("search")
+              : null)
+                ? ' matching "' + curParams.get("search") + '"'
+                : null}
             </span>
           </div>
         )
