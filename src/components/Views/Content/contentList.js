@@ -19,15 +19,15 @@ const ContentList = props => {
   const [contentsCount, setContentsCount] = useState(0);
   const [showSearch, setShowSearch] = useState(false);
   const [search, setSearch] = useState("");
+  const [curParams, setCurParams] = useState();
   const [typeFilter, setTypeFilter] = useState("");
   const [sortOrder, setSortOrder] = useState("dateDescending");
   const searchBox = useRef(null);
 
   const getContents = useCallback(async () => {
     if (!loadedAll) {
+      const params = new URLSearchParams(props.location.search);
       const getFilter = () => {
-        const params = new URLSearchParams(props.location.search);
-
         const paramSearch = params.get("search");
         const paramTypeFilter = params.get("contentType");
         const paramSortOrder = params.get("sort");
@@ -87,6 +87,7 @@ const ContentList = props => {
         setContentsCount(resp.data.contentCount);
         props.session.handleSession(userId, selApp, selAppName);
       }
+      setCurParams(params);
     }
   }, [
     props.loadbar,
@@ -131,10 +132,10 @@ const ContentList = props => {
   }, [contentsLoaded, typesLoaded, props.loadbar]);
 
   useEffect(() => {
-    if (showSearch) {
+    if (isLoaded && showSearch) {
       searchBox.current.focus();
     }
-  }, [showSearch]);
+  }, [isLoaded, showSearch]);
 
   const updateUrlParam = (param, value) => {
     let params = new URLSearchParams(props.location.search);
@@ -368,7 +369,7 @@ const ContentList = props => {
               <br />
               <br />
               No content {typeFilter ? " of type " + typeFilter : null}{" "}
-              {search ? ' matching "' + search + '"' : null}
+              {search ? ' matching "' + curParams.get("search") + '"' : null}
             </span>
           </div>
         )
