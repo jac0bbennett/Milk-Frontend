@@ -29,8 +29,6 @@ const EditContent = props => {
     (newTitle = "") => {
       setPageTitle(newTitle);
 
-      console.log(newTitle);
-
       props.page.handlePageChange(newTitle || "Untitled", "content");
     },
     [props.page]
