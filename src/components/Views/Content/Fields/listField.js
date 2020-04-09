@@ -115,6 +115,8 @@ const ListField = props => {
     listCopy = rearange;
 
     setList(listCopy);
+
+    updateDraft(listCopy);
   };
 
   const handleChange = event => {
