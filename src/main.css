@@ -402,6 +402,10 @@ option {
   background: inherit;
 }
 
+input {
+  background: inherit;
+}
+
 input[type="checkbox"] {
   vertical-align: middle;
 }
