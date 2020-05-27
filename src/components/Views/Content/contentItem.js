@@ -35,11 +35,11 @@ const ContentItem = props => {
       <Link to={props.url}>
         <h2>
           {props.content.title &&
-          props.content.content[props.content.title] &&
-          props.content.content[props.content.title].draft &&
-          props.content.content[props.content.title].draft.replace(/\s/g, "")
+          props.content.fields[props.content.title] &&
+          props.content.fields[props.content.title].draft &&
+          props.content.fields[props.content.title].draft.replace(/\s/g, "")
             .length
-            ? props.content.content[props.content.title].draft || "Untitled"
+            ? props.content.fields[props.content.title].draft || "Untitled"
             : "Untitled"}
         </h2>
       </Link>

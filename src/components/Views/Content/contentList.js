@@ -369,14 +369,10 @@ const ContentList = props => {
               <br />
               <br />
               No content
-              {(curParams
-              ? curParams.get("contentType")
-              : null)
+              {(curParams ? curParams.get("contentType") : null)
                 ? " of type " + curParams.get("contentType")
                 : null}
-              {(curParams
-              ? curParams.get("search")
-              : null)
+              {(curParams ? curParams.get("search") : null)
                 ? ' matching "' + curParams.get("search") + '"'
                 : null}
             </span>

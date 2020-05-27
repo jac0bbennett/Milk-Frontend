@@ -105,10 +105,10 @@ const EditContent = props => {
 
       const newTitle =
         getTitleShortText.length > 0 &&
-        contentData.content.title &&
-        contentData.content.title.draft &&
-        contentData.content.title.draft.replace(/\s/g, "").length
-          ? contentData.content.title.draft || ""
+        contentData.fields.title &&
+        contentData.fields.title.draft &&
+        contentData.fields.title.draft.replace(/\s/g, "").length
+          ? contentData.fields.title.draft || ""
           : "";
 
       handleUpdateTitle(newTitle);
@@ -119,7 +119,7 @@ const EditContent = props => {
     contentLoaded,
     typeLoaded,
     props.loadbar,
-    contentData.content,
+    contentData.fields,
     handleUpdateTitle,
     fields
   ]);
@@ -255,8 +255,8 @@ const EditContent = props => {
   };
 
   const getFieldValue = fieldSlug => {
-    return contentData.content[fieldSlug]
-      ? contentData.content[fieldSlug].draft || ""
+    return contentData.fields[fieldSlug]
+      ? contentData.fields[fieldSlug].draft || ""
       : "";
   };
 
