@@ -627,7 +627,7 @@ textarea {
   width: 100%;
   outline-color: #3c81c8;
   font-size: 12pt;
-  font-family: monospace;
+  font-family: consolas;
   padding: 10px;
   border-radius: 3px;
   color: #414141;
