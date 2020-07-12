@@ -74,7 +74,7 @@ const NewFieldForm = props => {
       <TextInput
         name="slug"
         type="text"
-        label="Slug"
+        label="API ID"
         value={form.slug}
         onChange={handleChange}
         required={true}
