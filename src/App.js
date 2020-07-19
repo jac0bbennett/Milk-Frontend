@@ -31,16 +31,7 @@ sessionCont.bindLoadbar(loadbarCont);
 
 const App = () => {
   useEffect(() => {
-    if (
-      localStorage.getItem("theme") === "dark" ||
-      (!localStorage.getItem("theme") &&
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      sessionCont.handleSetTheme("dark");
-    } else if (localStorage.getItem("theme") === "light") {
-      sessionCont.handleSetTheme("light");
-    }
+    sessionCont.handleGetDefaultTheme();
   }, []);
 
   return (

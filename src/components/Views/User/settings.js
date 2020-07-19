@@ -6,13 +6,13 @@ import SubmitButton from "../../UI/Buttons/submitButton";
 
 const UserSettings = props => {
   const [name, setName] = useState("");
-  const [pseudo, setPseudo] = useState("");
-  const [curKey, setCurKey] = useState("");
-  const [newKey, setNewKey] = useState("");
-  const [confirmKey, setConfirmKey] = useState("");
+  const [username, setUsername] = useState("");
+  const [curPass, setCurPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
   const [isLoaded, setIsLoaded] = useState("");
   const [settingsMsg, setSettingsMsg] = useState("");
-  const [changeKeyMsg, setChangeKeyMsg] = useState("");
+  const [changePassMsg, setChangePassMsg] = useState("");
 
   const [theme, setTheme] = useState(localStorage.getItem("theme"));
 
@@ -27,7 +27,7 @@ const UserSettings = props => {
         const userId = resp.meta.userId;
         const selApp = resp.meta.appUUID;
         setName(resp.data.user.name);
-        setPseudo(resp.data.user.pseudonym);
+        setUsername(resp.data.user.username);
         setIsLoaded(true);
         props.session.handleSession(userId, selApp);
         props.loadbar.progressTo(100);
@@ -43,21 +43,21 @@ const UserSettings = props => {
         setName(event.target.value);
         setSettingsMsg("");
         break;
-      case "pseudo":
-        setPseudo(event.target.value);
+      case "username":
+        setUsername(event.target.value);
         setSettingsMsg("");
         break;
-      case "curKey":
-        setCurKey(event.target.value);
-        setChangeKeyMsg("");
+      case "curPass":
+        setCurPass(event.target.value);
+        setChangePassMsg("");
         break;
-      case "newKey":
-        setNewKey(event.target.value);
-        setChangeKeyMsg("");
+      case "newPass":
+        setNewPass(event.target.value);
+        setChangePassMsg("");
         break;
-      case "confirmKey":
-        setConfirmKey(event.target.value);
-        setChangeKeyMsg("");
+      case "confirmPass":
+        setConfirmPass(event.target.value);
+        setChangePassMsg("");
         break;
       default:
         break;
@@ -71,7 +71,7 @@ const UserSettings = props => {
 
     const resp = await patchRequest("/api/panel/settings", {
       name: name,
-      pseudo: pseudo
+      username: username
     });
 
     if (resp.error) {
@@ -83,27 +83,27 @@ const UserSettings = props => {
     }
   };
 
-  const handleChangeKey = async event => {
+  const handleChangePass = async event => {
     event.preventDefault();
     document.activeElement.blur();
 
-    setChangeKeyMsg("updating...");
+    setChangePassMsg("updating...");
 
     const resp = await patchRequest("/api/panel/settings", {
-      curKey: curKey,
-      newKey: newKey,
-      confirmKey: confirmKey
+      curPass: curPass,
+      newPass: newPass,
+      confirmPass: confirmPass
     });
 
     if (resp.error) {
       props.loadbar.setToError(true);
-      setChangeKeyMsg(resp.error);
+      setChangePassMsg(resp.error);
     } else {
       props.loadbar.progressTo(100);
-      setChangeKeyMsg("Updated!");
-      setCurKey("");
-      setNewKey("");
-      setConfirmKey("");
+      setChangePassMsg("Updated!");
+      setCurPass("");
+      setNewPass("");
+      setConfirmPass("");
     }
   };
 
@@ -142,10 +142,10 @@ const UserSettings = props => {
               required={true}
             />
             <TextInput
-              name="pseudo"
+              name="username"
               type="text"
-              label="Pseudonym"
-              value={pseudo}
+              label="Username"
+              value={username}
               onChange={handleChange}
               required={true}
             />
@@ -156,38 +156,38 @@ const UserSettings = props => {
           </form>
           <br />
           <hr />
-          <h3>Change Key</h3>
-          <form onSubmit={handleChangeKey} autoComplete="off">
+          <h3>Change Password</h3>
+          <form onSubmit={handleChangePass} autoComplete="off">
             <TextInput
-              name="curKey"
+              name="curPass"
               type="password"
-              label="Current Key"
+              label="Current Password"
               autoComplete="current-password"
-              value={curKey}
+              value={curPass}
               onChange={handleChange}
               required={true}
             />
             <TextInput
-              name="newKey"
+              name="newPass"
               type="password"
-              label="New Key"
+              label="New Password"
               autoComplete="new-password"
-              value={newKey}
+              value={newPass}
               onChange={handleChange}
               required={true}
             />
             <TextInput
-              name="confirmKey"
+              name="confirmPass"
               type="password"
-              label="Confirm New Key"
+              label="Confirm New Pass"
               autoComplete="new-password"
-              value={confirmKey}
+              value={confirmPass}
               onChange={handleChange}
               required={true}
             />
             <br />
             <span className="floatright">
-              <span>{changeKeyMsg}</span>
+              <span>{changePassMsg}</span>
               <SubmitButton>Change</SubmitButton>
             </span>
           </form>

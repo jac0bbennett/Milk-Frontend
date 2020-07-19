@@ -3,7 +3,7 @@ import { postRequest } from "../../../utils/requests";
 import SignInForm from "../../Forms/signIn.js";
 
 const SignIn = props => {
-  const [form, setForm] = useState({ pseudo: "", key: "" });
+  const [form, setForm] = useState({ username: "", password: "" });
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
@@ -16,12 +16,12 @@ const SignIn = props => {
     props.loadbar.progressTo(15);
     setMsg("signing in...");
 
-    const formPseudo = form.pseudo;
-    const formKey = form.key;
+    const formUsername = form.username;
+    const formPass = form.password;
 
     const req = await postRequest("/api/panel/signin", {
-      pseudo: formPseudo,
-      key: formKey
+      username: formUsername,
+      password: formPass
     });
 
     if (req.error) {

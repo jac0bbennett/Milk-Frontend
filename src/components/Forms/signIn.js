@@ -8,22 +8,22 @@ const SignInForm = props => {
     <form id="signin" onSubmit={props.handleSubmit}>
       <h1>Sign In</h1>
       <TextInput
-        name="pseudo"
+        name="username"
         onChange={e => props.handleChange(e)}
         type="text"
-        label="Pseudonym"
+        label="Username"
         autoComplete={"username"}
         required={true}
-        value={props.form.pseudo}
+        value={props.form.username}
       />
       <TextInput
-        name="key"
+        name="password"
         onChange={e => props.handleChange(e)}
         type="password"
-        label="Key"
+        label="Password"
         required={true}
         autoComplete={"current-password"}
-        value={props.form.key}
+        value={props.form.password}
       />
       <br />
       <br />

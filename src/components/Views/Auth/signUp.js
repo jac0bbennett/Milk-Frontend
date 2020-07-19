@@ -5,11 +5,11 @@ import history from "../../../utils/history";
 
 const SignUp = props => {
   const [form, setForm] = useState({
-    pseudo: "",
+    username: "",
     name: "",
     email: "",
-    key: "",
-    confirmKey: ""
+    password: "",
+    confirmPass: ""
   });
   const [captcha, setCaptcha] = useState("");
   const [msg, setMsg] = useState("");
@@ -24,18 +24,18 @@ const SignUp = props => {
     props.loadbar.progressTo(15);
     setMsg("submitting...");
 
-    const formPseudo = form.pseudo;
+    const formUsername = form.username;
     const formName = form.name;
     const formEmail = form.email;
-    const formKey = form.key;
-    const formConfirmKey = form.confirmKey;
+    const formPass = form.pass;
+    const formConfirmPass = form.confirmPass;
 
     const req = await postRequest("/api/panel/signup", {
-      pseudo: formPseudo,
+      username: formUsername,
       name: formName,
       email: formEmail,
-      key: formKey,
-      confirmKey: formConfirmKey,
+      password: formPass,
+      confirmPass: formConfirmPass,
       captcha: captcha
     });
 

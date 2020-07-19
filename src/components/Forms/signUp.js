@@ -13,13 +13,13 @@ const SignUpForm = props => {
     <form id="signin" onSubmit={props.handleSubmit}>
       <h1>Sign Up</h1>
       <TextInput
-        name="pseudo"
+        name="username"
         onChange={e => props.handleChange(e)}
         type="text"
-        label="Pseudonym"
+        label="Username"
         autoComplete="username"
         required={true}
-        value={props.form.pseudo}
+        value={props.form.username}
       />
       <TextInput
         name="name"
@@ -40,22 +40,22 @@ const SignUpForm = props => {
         value={props.form.email}
       />
       <TextInput
-        name="key"
+        name="password"
         onChange={e => props.handleChange(e)}
         type="password"
-        label="Key"
+        label="Password"
         required={true}
         autoComplete="new-password"
-        value={props.form.key}
+        value={props.form.password}
       />
       <TextInput
-        name="confirmKey"
+        name="confirmPass"
         onChange={e => props.handleChange(e)}
         type="password"
-        label="Confirm Key"
+        label="Confirm Password"
         required={true}
         autoComplete="new-password"
-        value={props.form.confirmKey}
+        value={props.form.confirmPass}
       />
       <Recaptcha
         sitekey="6LdmgKwUAAAAAHtAd7q4tR4BwjYYhf_Vk7MYndPb"

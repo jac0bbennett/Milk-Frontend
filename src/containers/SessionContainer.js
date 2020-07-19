@@ -19,6 +19,7 @@ class SessionContainer extends Container {
 
   handleSignIn = userId => {
     this.setState({ userId });
+    this.handleGetDefaultTheme();
     history.push("/panel/apps");
   };
 
@@ -64,6 +65,19 @@ class SessionContainer extends Container {
     }
 
     this.setState({ theme });
+  };
+
+  handleGetDefaultTheme = () => {
+    if (
+      localStorage.getItem("theme") === "dark" ||
+      (!localStorage.getItem("theme") &&
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      this.handleSetTheme("dark");
+    } else if (localStorage.getItem("theme") === "light") {
+      this.handleSetTheme("light");
+    }
   };
 
   bindLoadbar = loadbar => {
