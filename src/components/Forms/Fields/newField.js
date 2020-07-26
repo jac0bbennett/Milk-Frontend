@@ -98,7 +98,7 @@ const NewFieldForm = props => {
       <br />
       <br />
       <FormMsg msg={msg} />
-      <SubmitButton>Submit</SubmitButton>
+      <SubmitButton>Add</SubmitButton>
       <br />
       <br />
     </form>

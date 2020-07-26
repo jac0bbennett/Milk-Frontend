@@ -76,7 +76,7 @@ const NewTypeForm = props => {
       <br />
       <br />
       <FormMsg msg={msg} />
-      <SubmitButton>Submit</SubmitButton>
+      <SubmitButton>Create</SubmitButton>
       <br />
       <br />
     </form>
