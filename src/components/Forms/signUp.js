@@ -48,15 +48,6 @@ const SignUpForm = props => {
         autoComplete="new-password"
         value={props.form.password}
       />
-      <TextInput
-        name="confirmPass"
-        onChange={e => props.handleChange(e)}
-        type="password"
-        label="Confirm Password"
-        required={true}
-        autoComplete="new-password"
-        value={props.form.confirmPass}
-      />
       <Recaptcha
         sitekey="6LdmgKwUAAAAAHtAd7q4tR4BwjYYhf_Vk7MYndPb"
         verifyCallback={verifyCaptcha}

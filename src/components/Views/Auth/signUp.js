@@ -8,8 +8,7 @@ const SignUp = props => {
     username: "",
     name: "",
     email: "",
-    password: "",
-    confirmPass: ""
+    password: ""
   });
   const [captcha, setCaptcha] = useState("");
   const [msg, setMsg] = useState("");
@@ -27,15 +26,13 @@ const SignUp = props => {
     const formUsername = form.username;
     const formName = form.name;
     const formEmail = form.email;
-    const formPass = form.pass;
-    const formConfirmPass = form.confirmPass;
+    const formPass = form.password;
 
     const req = await postRequest("/api/panel/signup", {
       username: formUsername,
       name: formName,
       email: formEmail,
       password: formPass,
-      confirmPass: formConfirmPass,
       captcha: captcha
     });
 
@@ -45,6 +42,7 @@ const SignUp = props => {
       props.loadbar.setToError(true);
     } else {
       props.loadbar.progressTo(100);
+      props.page.handleShowModal("confirmemailalert", { email: formEmail });
       history.push("/panel/signin");
     }
   };

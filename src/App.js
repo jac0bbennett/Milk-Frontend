@@ -13,6 +13,7 @@ import EditContentType from "./components/Views/ContentTypes/editType";
 import ContentList from "./components/Views/Content/contentList";
 import EditContent from "./components/Views/Content/editContent";
 import UserSettings from "./components/Views/User/settings";
+import ConfirmEmail from "./components/Views/Auth/confirmEmail";
 import { Modal } from "./components/UI/Modal/modal";
 import Cloak from "./components/UI/Modal/cloak";
 import { Provider, Subscribe } from "unstated";
@@ -165,6 +166,18 @@ const App = () => {
                   path="/panel/signout"
                   render={props => (
                     <SignOut
+                      {...props}
+                      loadbar={loadbar}
+                      page={page}
+                      session={session}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/verify/:confirmcode"
+                  render={props => (
+                    <ConfirmEmail
                       {...props}
                       loadbar={loadbar}
                       page={page}
