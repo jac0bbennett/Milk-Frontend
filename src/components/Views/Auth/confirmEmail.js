@@ -26,7 +26,7 @@ const ConfirmEmail = props => {
     req();
   }, [props.page, props.loadbar, props.match.params.confirmcode]);
 
-  return <h2>Confirming...</h2>;
+  return <h2>{msg}</h2>;
 };
 
 export default ConfirmEmail;
