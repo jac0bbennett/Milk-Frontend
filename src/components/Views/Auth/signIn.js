@@ -5,6 +5,27 @@ import SignInForm from "../../Forms/signIn.js";
 const SignIn = props => {
   const [form, setForm] = useState({ username: "", password: "" });
   const [msg, setMsg] = useState("");
+  const [showResend, setShowResend] = useState(false);
+
+  const resendEmailLink = async () => {
+    props.loadbar.progressTo(15);
+    setMsg("sending...");
+
+    const formUsername = form.username;
+
+    const req = await postRequest("/api/resendemailconfirmation", {
+      username: formUsername
+    });
+
+    if (req.error) {
+      let reqMsg = req.error;
+      setMsg(reqMsg);
+      props.loadbar.setToError(true);
+    } else {
+      setMsg("Email Resent!");
+      props.loadbar.progressTo(100);
+    }
+  };
 
   useEffect(() => {
     props.loadbar.progressTo(15);
@@ -26,6 +47,9 @@ const SignIn = props => {
 
     if (req.error) {
       const reqMsg = req.error;
+      if (reqMsg.includes("confirm")) {
+        setShowResend(true);
+      }
       setMsg(reqMsg);
       props.loadbar.setToError(true);
     } else {
@@ -39,6 +63,7 @@ const SignIn = props => {
     formCopy[event.target.name] = event.target.value;
     setForm(formCopy);
     setMsg("");
+    setShowResend(false);
   };
 
   const handleSubmit = event => {
@@ -52,6 +77,8 @@ const SignIn = props => {
       handleSubmit={handleSubmit}
       form={form}
       msg={msg}
+      showResend={showResend}
+      resendEmailLink={resendEmailLink}
     />
   );
 };

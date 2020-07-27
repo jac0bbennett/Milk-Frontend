@@ -26,8 +26,18 @@ const SignInForm = props => {
         value={props.form.password}
       />
       <br />
-      <br />
       <FormMsg msg={props.msg} />
+      <br />
+      <br />
+      {props.showResend ? (
+        <button
+          className="flatbut"
+          type="button"
+          onClick={props.resendEmailLink}
+        >
+          Resend Email
+        </button>
+      ) : null}
       <SubmitButton>Sign In</SubmitButton>
       <br />
       <br />
