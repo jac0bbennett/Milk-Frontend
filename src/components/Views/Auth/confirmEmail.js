@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { postRequest } from "../../../utils/requests";
 import history from "../../../utils/history";
 
 const ConfirmEmail = props => {
+  const [msg, setMsg] = useState("Confirming...");
+
   useEffect(() => {
     props.page.handlePageChange("Confirming Email", "confirmEmail");
     props.loadbar.progressTo(30);
@@ -13,6 +15,7 @@ const ConfirmEmail = props => {
       });
       if (resp.error) {
         props.loadbar.setToError(true);
+        setMsg("Failed to confirm email!");
       } else {
         props.loadbar.progressTo(100);
         props.page.handleShowModal("confirmedemailalert");
