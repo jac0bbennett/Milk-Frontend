@@ -9,7 +9,6 @@ const UserSettings = props => {
   const [username, setUsername] = useState("");
   const [curPass, setCurPass] = useState("");
   const [newPass, setNewPass] = useState("");
-  const [confirmPass, setConfirmPass] = useState("");
   const [isLoaded, setIsLoaded] = useState("");
   const [settingsMsg, setSettingsMsg] = useState("");
   const [changePassMsg, setChangePassMsg] = useState("");
@@ -55,10 +54,6 @@ const UserSettings = props => {
         setNewPass(event.target.value);
         setChangePassMsg("");
         break;
-      case "confirmPass":
-        setConfirmPass(event.target.value);
-        setChangePassMsg("");
-        break;
       default:
         break;
     }
@@ -91,8 +86,7 @@ const UserSettings = props => {
 
     const resp = await patchRequest("/api/panel/settings", {
       curPass: curPass,
-      newPass: newPass,
-      confirmPass: confirmPass
+      newPass: newPass
     });
 
     if (resp.error) {
@@ -103,7 +97,6 @@ const UserSettings = props => {
       setChangePassMsg("Updated!");
       setCurPass("");
       setNewPass("");
-      setConfirmPass("");
     }
   };
 
@@ -173,15 +166,6 @@ const UserSettings = props => {
               label="New Password"
               autoComplete="new-password"
               value={newPass}
-              onChange={handleChange}
-              required={true}
-            />
-            <TextInput
-              name="confirmPass"
-              type="password"
-              label="Confirm New Pass"
-              autoComplete="new-password"
-              value={confirmPass}
               onChange={handleChange}
               required={true}
             />

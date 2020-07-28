@@ -18,7 +18,10 @@ const ConfirmEmail = props => {
         setMsg("Failed to confirm email!");
       } else {
         props.loadbar.progressTo(100);
-        props.page.handleShowModal("confirmedemailalert");
+        props.page.handleShowModal("msgalert", {
+          title: "Email Confirmed!",
+          content: "Your account is all setup! Go ahead and Sign In."
+        });
         history.push("/panel/signin");
       }
     };

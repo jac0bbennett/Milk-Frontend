@@ -79,6 +79,7 @@ const SignIn = props => {
       msg={msg}
       showResend={showResend}
       resendEmailLink={resendEmailLink}
+      page={props.page}
     />
   );
 };

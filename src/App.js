@@ -14,6 +14,7 @@ import ContentList from "./components/Views/Content/contentList";
 import EditContent from "./components/Views/Content/editContent";
 import UserSettings from "./components/Views/User/settings";
 import ConfirmEmail from "./components/Views/Auth/confirmEmail";
+import ResetPassword from "./components/Views/Auth/resetPassword";
 import { Modal } from "./components/UI/Modal/modal";
 import Cloak from "./components/UI/Modal/cloak";
 import { Provider, Subscribe } from "unstated";
@@ -178,6 +179,18 @@ const App = () => {
                   path="/verify/:confirmcode"
                   render={props => (
                     <ConfirmEmail
+                      {...props}
+                      loadbar={loadbar}
+                      page={page}
+                      session={session}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/resetpassword/:token"
+                  render={props => (
+                    <ResetPassword
                       {...props}
                       loadbar={loadbar}
                       page={page}

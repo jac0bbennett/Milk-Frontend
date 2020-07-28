@@ -25,6 +25,13 @@ const SignInForm = props => {
         autoComplete={"current-password"}
         value={props.form.password}
       />
+      <span
+        className="bluetext"
+        style={{ cursor: "pointer", fontSize: "13px", float: "right" }}
+        onClick={() => props.page.handleShowModal("resetpasswordform")}
+      >
+        Reset Password?
+      </span>
       <br />
       <FormMsg msg={props.msg} />
       <br />

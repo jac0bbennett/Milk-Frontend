@@ -1,39 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { postRequest } from "../../../utils/requests";
-import SignUpForm from "../../Forms/signUp.js";
+import { NewPasswordForm } from "../../Forms/resetPassword.js";
 import history from "../../../utils/history";
 
-const SignUp = props => {
-  const [form, setForm] = useState({
-    username: "",
-    name: "",
-    email: "",
-    password: ""
-  });
-  const [captcha, setCaptcha] = useState("");
+const ResetPassword = props => {
+  const [form, setForm] = useState({ password: "" });
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
     props.loadbar.progressTo(15);
-    props.page.handlePageChange("Sign Up", "signUp");
+    props.page.handlePageChange("Reset Password", "resetPassword");
     props.loadbar.progressTo(100);
   }, [props.loadbar, props.page]);
 
-  const handleSignUp = async () => {
+  const handleUpdate = async () => {
     props.loadbar.progressTo(15);
     setMsg("submitting...");
 
-    const formUsername = form.username;
-    const formName = form.name;
-    const formEmail = form.email;
     const formPass = form.password;
+    const token = props.match.params.token;
 
-    const req = await postRequest("/api/panel/signup", {
-      username: formUsername,
-      name: formName,
-      email: formEmail,
+    const req = await postRequest("/api/resetpassword/change", {
       password: formPass,
-      captcha: captcha
+      token: token
     });
 
     if (req.error) {
@@ -42,12 +31,9 @@ const SignUp = props => {
       props.loadbar.setToError(true);
     } else {
       props.loadbar.progressTo(100);
-      props.page.handleShowModal("confirmemailalert", {
-        title: "Email Confirmation Sent",
-        content:
-          "An email has been sent to " +
-          formEmail +
-          ". Please confirm it to finish setting up your account."
+      props.page.handleShowModal("msgalert", {
+        title: "Password Updated!",
+        content: "Now sign in to your account with your new password."
       });
       history.push("/panel/signin");
     }
@@ -62,22 +48,17 @@ const SignUp = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    handleSignUp();
-  };
-
-  const handleCaptcha = resp => {
-    setCaptcha(resp);
+    handleUpdate();
   };
 
   return (
-    <SignUpForm
+    <NewPasswordForm
       handleChange={handleChange}
       handleSubmit={handleSubmit}
-      handleCaptcha={handleCaptcha}
       form={form}
       msg={msg}
     />
   );
 };
 
-export default SignUp;
+export default ResetPassword;
