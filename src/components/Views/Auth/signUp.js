@@ -42,7 +42,7 @@ const SignUp = props => {
       props.loadbar.setToError(true);
     } else {
       props.loadbar.progressTo(100);
-      props.page.handleShowModal("confirmemailalert", {
+      props.page.handleShowModal("msgalert", {
         title: "Email Confirmation Sent",
         content:
           "An email has been sent to " +
