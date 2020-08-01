@@ -14,6 +14,7 @@ const TextInput = props => {
         disabled={props.disabled}
         ref={props.setRef}
         onBlur={props.onBlur}
+        autoFocus={props.autoFocus}
       />
       <span className="floating-label">{props.label}</span>
     </div>

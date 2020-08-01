@@ -12,6 +12,7 @@ import ConfirmActionForm from "../../Forms/confirmAction";
 import EditFieldOptionValuesForm from "../../Forms/Fields/editOptionValues";
 import MsgAlert from "../../Forms/msgAlert";
 import { ResetPasswordForm } from "../../Forms/resetPassword";
+import UploadAssetForm from "../../Forms/Assets/upload";
 
 const Content = props => {
   switch (props.page.state.modalComp) {
@@ -41,6 +42,8 @@ const Content = props => {
       return <MsgAlert {...props} />;
     case "resetpasswordform":
       return <ResetPasswordForm {...props} />;
+    case "uploadassetform":
+      return <UploadAssetForm {...props} />;
     default:
       return <h2>Form</h2>;
   }

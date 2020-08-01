@@ -15,6 +15,7 @@ const SignInForm = props => {
         autoComplete={"username"}
         required={true}
         value={props.form.username}
+        autoFocus={true}
       />
       <TextInput
         name="password"

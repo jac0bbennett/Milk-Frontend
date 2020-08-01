@@ -12,6 +12,7 @@ const UserSettings = props => {
   const [isLoaded, setIsLoaded] = useState("");
   const [settingsMsg, setSettingsMsg] = useState("");
   const [changePassMsg, setChangePassMsg] = useState("");
+  const [email, setEmail] = useState("");
 
   const [theme, setTheme] = useState(localStorage.getItem("theme"));
 
@@ -27,6 +28,7 @@ const UserSettings = props => {
         const selApp = resp.meta.appUUID;
         setName(resp.data.user.name);
         setUsername(resp.data.user.username);
+        setEmail(resp.data.user.email);
         setIsLoaded(true);
         props.session.handleSession(userId, selApp);
         props.loadbar.progressTo(100);
@@ -148,6 +150,15 @@ const UserSettings = props => {
             </span>
           </form>
           <br />
+          <hr />
+          <TextInput
+            name="email"
+            type="email"
+            label="Email"
+            autoComplete="email"
+            value={email}
+            disabled={true}
+          />
           <hr />
           <h3>Change Password</h3>
           <form onSubmit={handleChangePass} autoComplete="off">

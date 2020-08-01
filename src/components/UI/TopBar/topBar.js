@@ -19,6 +19,12 @@ const TopBar = props => {
       appDep: true
     },
     {
+      to: "/panel/apps/" + selApp + "/assets",
+      label: "assets",
+      navId: "assets",
+      appDep: true
+    },
+    {
       to: "/panel/settings",
       label: "settings",
       navId: "settings",

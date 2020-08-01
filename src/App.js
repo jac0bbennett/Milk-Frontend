@@ -12,6 +12,7 @@ import ContentTypeList from "./components/Views/ContentTypes/typeList";
 import EditContentType from "./components/Views/ContentTypes/editType";
 import ContentList from "./components/Views/Content/contentList";
 import EditContent from "./components/Views/Content/editContent";
+import AssetList from "./components/Views/Assets/assetList";
 import UserSettings from "./components/Views/User/settings";
 import ConfirmEmail from "./components/Views/Auth/confirmEmail";
 import ResetPassword from "./components/Views/Auth/resetPassword";
@@ -131,6 +132,18 @@ const App = () => {
                   path={"/panel/apps/:appuuid/content/:contentuuid"}
                   render={props => (
                     <EditContent
+                      {...props}
+                      loadbar={loadbar}
+                      page={page}
+                      session={session}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path={"/panel/apps/:appuuid/assets"}
+                  render={props => (
+                    <AssetList
                       {...props}
                       loadbar={loadbar}
                       page={page}

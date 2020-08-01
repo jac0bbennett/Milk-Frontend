@@ -33,7 +33,7 @@ const SignUpForm = props => {
       <TextInput
         name="email"
         onChange={e => props.handleChange(e)}
-        type="text"
+        type="email"
         label="Email"
         autoComplete="email"
         required={true}

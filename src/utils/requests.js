@@ -1,13 +1,11 @@
 import axios from "axios";
 import history from "./history";
 
-let baseApiUrl = "";
-
-if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-  baseApiUrl = "http://localhost:5100";
-} else {
-  baseApiUrl = "https://milk.jwb.cloud";
-}
+const baseApiUrl = () => {
+  return !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+    ? "http://localhost:5100"
+    : "https://milk.jwb.cloud";
+};
 
 const api = axios.create({
   withCredentials: true
@@ -30,7 +28,7 @@ const handleReq = req => {
 
 const getRequest = async url => {
   try {
-    const req = await api.get(baseApiUrl + url);
+    const req = await api.get(baseApiUrl() + url);
     return handleReq(req);
   } catch (err) {
     return retError(err);
@@ -39,7 +37,7 @@ const getRequest = async url => {
 
 const postRequest = async (url, params) => {
   try {
-    const req = await api.post(baseApiUrl + url, params);
+    const req = await api.post(baseApiUrl() + url, params);
     return handleReq(req);
   } catch (err) {
     return retError(err);
@@ -48,7 +46,7 @@ const postRequest = async (url, params) => {
 
 const patchRequest = async (url, params) => {
   try {
-    const req = await api.patch(baseApiUrl + url, params);
+    const req = await api.patch(baseApiUrl() + url, params);
     return handleReq(req);
   } catch (err) {
     return retError(err);
@@ -57,11 +55,11 @@ const patchRequest = async (url, params) => {
 
 const deleteRequest = async url => {
   try {
-    const req = await api.delete(baseApiUrl + url);
+    const req = await api.delete(baseApiUrl() + url);
     return handleReq(req);
   } catch (err) {
     return retError(err);
   }
 };
 
-export { getRequest, postRequest, patchRequest, deleteRequest };
+export { getRequest, postRequest, patchRequest, deleteRequest, baseApiUrl };
