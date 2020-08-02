@@ -36,6 +36,10 @@ class PageContainer extends Container {
     //document.body.style.overflowY = "scroll";
   };
 
+  handleUpdateModalData = newData => {
+    this.setState({ modalData: newData });
+  };
+
   handleSetRefresh = () => {
     this.setState({ refreshView: this.state.refreshView + 1 });
   };

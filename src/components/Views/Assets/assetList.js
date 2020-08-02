@@ -42,7 +42,13 @@ const AssetList = props => {
         props.session.handleSession(userId, selApp, selAppName);
       }
     }
-  }, [props.loadbar, props.session, nextPage, loadedAll]);
+  }, [
+    props.loadbar,
+    props.session,
+    nextPage,
+    loadedAll,
+    props.match.params.appuuid
+  ]);
 
   useEffect(() => {
     props.page.handlePageChange("Your Assets", "assets");
@@ -51,16 +57,11 @@ const AssetList = props => {
   }, [props.page, props.loadbar, getAssets]);
 
   useEffect(() => {
-    setLoadedAll(false);
-    setIsLoaded(false);
-    if (nextPage === 1) {
-      props.loadbar.progressTo(15);
-      getAssets();
-    } else {
-      setNextPage(1);
+    if ("newAsset" in props.page.state.modalData) {
+      setAssets(c => [props.page.state.modalData.newAsset, ...c]);
+      setAssetCount(c => c + 1);
     }
-    window.scrollTo(0, 0);
-  }, [props.page.state.refreshView]);
+  }, [props.page.state.modalData]);
 
   const NoAppMsg = () => {
     return (
@@ -71,7 +72,7 @@ const AssetList = props => {
           </i>
           <br />
           <br />
-          You don&#39;t have any assets.
+          No assets for this app.
         </span>
         <br />
         <br />

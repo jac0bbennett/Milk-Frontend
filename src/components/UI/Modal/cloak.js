@@ -2,7 +2,7 @@ import React from "react";
 
 const Cloak = props => {
   const showStyle = {
-    opacity: 0.5,
+    opacity: 0.75,
     visibility: "visible"
   };
   const style = props.isShow ? showStyle : {};
