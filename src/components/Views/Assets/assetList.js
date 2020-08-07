@@ -13,7 +13,7 @@ const AssetList = props => {
   const [nextPage, setNextPage] = useState(1);
 
   const getAssets = useCallback(async () => {
-    if (!loadedAll) {
+    if (!loadedAll || nextPage === 1) {
       const resp = await getRequest(
         "/api/panel/apps/" +
           props.match.params.appuuid +
@@ -55,6 +55,11 @@ const AssetList = props => {
     props.loadbar.progressTo(15);
     getAssets();
   }, [props.page, props.loadbar, getAssets]);
+
+  useEffect(() => {
+    setNextPage(1);
+    getAssets();
+  }, [props.page.state.refreshView, getAssets]);
 
   useEffect(() => {
     if ("newAsset" in props.page.state.modalData) {

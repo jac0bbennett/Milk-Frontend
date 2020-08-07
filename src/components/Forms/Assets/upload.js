@@ -32,9 +32,6 @@ const UploadForm = props => {
             formData
           );
 
-          uploadCount++;
-          setMsg(uploadingMsg(uploadCount, files.length));
-
           if (resp.error) {
             let failedFilesCopy = [...failedFiles];
             failedFilesCopy.push(file.name);
@@ -48,10 +45,12 @@ const UploadForm = props => {
             props.page.handleUpdateModalData({ newAsset: newAsset });
           }
 
+          uploadCount++;
+          setMsg(uploadingMsg(uploadCount, files.length));
+
           if (uploadCount === files.length) {
             setMsg("Finished uploading " + uploadCount + "!");
             setIsUploading(false);
-            props.page.handleSetRefresh();
           }
         });
       }
@@ -69,7 +68,8 @@ const UploadForm = props => {
     onDrop: onDrop,
     accept: "image/*",
     maxSize: 5242880,
-    onDropRejected: f => rejectFiles(f)
+    onDropRejected: f => rejectFiles(f),
+    preventDropOnDocument: true
   });
 
   return (

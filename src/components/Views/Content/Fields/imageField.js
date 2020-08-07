@@ -3,50 +3,16 @@ import TextInput from "../../../UI/Inputs/txtInput";
 import { patchRequest } from "../../../../utils/requests";
 import FieldMsg from "./fieldMsg";
 
-const ShortTextField = props => {
+const ImageField = props => {
   const [content, setContent] = useState(props.value);
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(0);
   const [changeCount, setChangeCount] = useState(0);
   const [saved, setSaved] = useState(false);
   const [msg, setMsg] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
 
-  const charLimit = 500;
-
-  const genSlug = title => {
-    const maxLength = 75;
-
-    const slug = title
-      .toLowerCase()
-      .replace(/[^a-zA-Z0-9_ ]/g, "")
-      .trim()
-      .replace(/\s+/g, "-");
-
-    if (slug.length > maxLength) {
-      const truncSlug = slug.substr(0, maxLength);
-
-      return truncSlug.substr(0, truncSlug.lastIndexOf("-"));
-    } else {
-      return slug;
-    }
-  };
-
-  const checkSlugChanged = () => {
-    if (props.fieldOptions && props.fieldOptions.autoSlug) {
-      if (genSlug(props.pageTitle) === props.value) {
-        return false;
-      } else if (!props.value && props.contentStatus === "draft") {
-        return false;
-      } else if (!props.value && props.contentStatus !== "draft") {
-        return true;
-      } else {
-        return true;
-      }
-    } else {
-      return true;
-    }
-  };
-  const [slugChanged, setSlugChanged] = useState(checkSlugChanged());
+  const charLimit = 2000;
 
   const { drafting, disablePublish, updateEditedTime, updateTitle } = props;
 
@@ -92,23 +58,6 @@ const ShortTextField = props => {
   );
 
   useEffect(() => {
-    if (!slugChanged) {
-      const newSlug = genSlug(props.pageTitle);
-      if (
-        newSlug !== content ||
-        (!content &&
-          props.pageTitle &&
-          !props.pageTitle.match(/[^a-zA-Z0-9_ ]/g))
-      ) {
-        setSaved(false);
-        setMsg("saving...");
-        setContent(newSlug);
-        autoSave(newSlug);
-      }
-    }
-  }, [props.fieldOptions, props.pageTitle, slugChanged, content, autoSave]);
-
-  useEffect(() => {
     if (!isTyping && saved) {
       setMsg("Saved to draft");
     }
@@ -119,7 +68,6 @@ const ShortTextField = props => {
     setContent(newValue);
     setIsTyping(true);
     setSaved(false);
-    setSlugChanged(true);
 
     if (typingTimeout) {
       clearTimeout(typingTimeout);
@@ -171,17 +119,30 @@ const ShortTextField = props => {
 
   return (
     <div style={{ marginBottom: "10px" }}>
+      <h4
+        style={{ marginBottom: "5px" }}
+        className={isFocused ? "bluetext" : ""}
+      >
+        {props.label}
+      </h4>
+      <img
+        src={content}
+        alt=""
+        style={{ maxWidth: "300px", maxHeight: "300px" }}
+      />
       <TextInput
         dataId={props.dataId}
         name={props.slug}
-        type="text"
-        label={props.label}
+        type="url"
+        label="Image Url"
         value={content}
         onChange={handleChange}
         required={false}
         autoComplete="off"
         disabled={props.disabled}
         wide={true}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       />
       <span
         title="Characters"
@@ -195,4 +156,4 @@ const ShortTextField = props => {
   );
 };
 
-export default ShortTextField;
+export default ImageField;

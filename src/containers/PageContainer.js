@@ -16,10 +16,7 @@ class PageContainer extends Container {
     this.setState({ title: title, pageId: pageId });
   };
 
-  handleShowModal = (
-    comp = this.state.modalComp,
-    data = this.state.modalData
-  ) => {
+  handleShowModal = (comp = this.state.modalComp, data = {}) => {
     this.setState({ showModal: true, modalComp: comp, modalData: data });
     //document.body.style.overflowY = "hidden";
   };

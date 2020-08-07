@@ -1,0 +1,132 @@
+import React, { useState, useEffect } from "react";
+import TextInput from "../../UI/Inputs/txtInput";
+import TextAreaInput from "../../UI/Inputs/txtArea";
+import { patchRequest } from "../../../utils/requests";
+import FormMsg from "../../UI/Misc/formMsg";
+import SubmitButton from "../../UI/Buttons/submitButton";
+import DeleteButton from "../../UI/Buttons/deleteButton";
+
+const EditAssetForm = props => {
+  const [form, setForm] = useState({
+    name: "",
+    description: ""
+  });
+  const [msg, setMsg] = useState("");
+
+  useEffect(() => {
+    setForm({
+      name: props.page.state.modalData.name,
+      description: props.page.state.modalData.description
+    });
+  }, [
+    props.page.state.modalData.name,
+    props.page.state.modalData.description,
+    props.page.state.showModal
+  ]);
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+
+    props.loadbar.progressTo(15);
+    setMsg("saving...");
+
+    const name = form.name;
+    const description = form.description;
+
+    const req = await patchRequest(
+      "/api/panel/apps/" +
+        props.session.state.selApp +
+        "/assets/" +
+        props.page.state.modalData.url,
+      { name, description }
+    );
+
+    if (req.error) {
+      const reqMsg = req.error;
+      setMsg(reqMsg);
+      props.loadbar.setToError(true);
+    } else {
+      setMsg("");
+      props.loadbar.progressTo(100);
+      props.page.handleCloseModal();
+      props.page.handleSetRefresh();
+    }
+  };
+
+  const handleDelete = async event => {
+    const url =
+      "/api/panel/apps/" +
+      props.session.state.selApp +
+      "/assets/" +
+      props.page.state.modalData.url;
+
+    props.page.handleShowModal("confirmdeleteform", {
+      deleteUrl: url,
+      extraText:
+        "This asset will be permanently deleted and unusable in contents!"
+    });
+  };
+
+  const handleChange = event => {
+    let formCopy = { ...form };
+    formCopy.name = event.target.value;
+    setForm(formCopy);
+    setMsg("");
+  };
+
+  return (
+    <form onSubmit={handleSubmit} autoComplete="off">
+      <a
+        href={
+          "https://cdn.jwb.cloud/file/milk-uploads/" +
+          props.page.state.modalData.url
+        }
+        target="_blank"
+        rel="noopener noreferrer"
+        className="floatright"
+      >
+        Original
+      </a>
+      <h2>Edit Asset</h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "15px"
+        }}
+      >
+        <img
+          src={
+            "https://cdn.jwb.cloud/file/milk-uploads/" +
+            props.page.state.modalData.url
+          }
+          style={{ maxWidth: "300px", maxHeight: "300px" }}
+          alt={props.page.state.modalData.description}
+        />
+      </div>
+      <TextInput
+        name="name"
+        type="text"
+        label="Name"
+        value={form.name}
+        onChange={handleChange}
+        required={true}
+      />
+      <TextAreaInput
+        name="description"
+        label="Description"
+        value={form.description}
+        onChange={handleChange}
+        style={{ height: "150px" }}
+      />
+      <br />
+      <br />
+      <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
+      <SubmitButton>Save</SubmitButton>
+      <br />
+      <FormMsg msg={msg} />
+    </form>
+  );
+};
+
+export default EditAssetForm;

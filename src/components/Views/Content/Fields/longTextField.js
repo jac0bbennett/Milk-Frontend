@@ -16,6 +16,8 @@ const LongTextField = props => {
   const [oldCaret, setOldCaret] = useState(0);
   const [tabKeyPress, setTabKeyPress] = useState(false);
 
+  const charLimit = 50000;
+
   useEffect(() => {
     if (!isTyping && saved) {
       setMsg("Saved to draft");
@@ -89,7 +91,7 @@ const LongTextField = props => {
       setChangeCount(0);
     }
 
-    if (newValue.length > 50000) {
+    if (newValue.length > charLimit) {
       setMsg(props.label + " too long!");
       props.disablePublish(true);
     } else {
@@ -97,7 +99,7 @@ const LongTextField = props => {
       props.disablePublish(false);
       props.drafting(true);
       setTypingTimeout(
-        setTimeout(function() {
+        setTimeout(function () {
           setIsTyping(false);
           autoSave(newValue);
           setChangeCount(0);
@@ -144,7 +146,10 @@ const LongTextField = props => {
         className="softtext"
         style={{ fontSize: "9pt", marginRight: "15px" }}
       >
-        <span title="Characters">{content.length} / 50000</span> (
+        <span title="Characters">
+          {content.length} / {charLimit}
+        </span>{" "}
+        (
         <span title="Words">
           {/\S/.test(content) ? contentLength : contentLength - 1})
         </span>

@@ -66,7 +66,7 @@ const BooleanField = props => {
         style={{ cursor: "pointer" }}
         onClick={() => handleChange(content === "True" ? "False" : "True")}
       >
-        <span className="icolab" style={{ fontSize: "14pt" }}>
+        <span className="icolab" style={{ fontSize: "13pt" }}>
           {props.label}{" "}
         </span>
         <i className="material-icons">

@@ -89,6 +89,8 @@ const NewFieldForm = props => {
       >
         <option value="text_short">Short Text</option>
         <option value="text_long">Long Text</option>
+        <option value="image_single">Image</option>
+        <option value="image_multi">Image Gallery</option>
         <option value="dropdown">Dropdown</option>
         <option value="list">List</option>
         <option value="number_int">Integer</option>

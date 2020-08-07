@@ -7,6 +7,7 @@ import LongTextField from "./Fields/longTextField";
 import NumberField from "./Fields/numberField";
 import BooleanField from "./Fields/booleanField";
 import DropdownField from "./Fields/dropdownField";
+import ImageField from "./Fields/imageField";
 import ListField from "./Fields/listField";
 import Moment from "react-moment";
 import moment from "moment";
@@ -320,6 +321,8 @@ const EditContent = props => {
         return <DropdownField {...passProps} />;
       case "list":
         return <ListField {...passProps} />;
+      case "image_single":
+        return <ImageField {...passProps} />;
       default:
         return <ShortTextField {...passProps} />;
     }

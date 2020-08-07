@@ -154,6 +154,7 @@ h3,
 h4,
 h5 {
   font-weight: 400;
+  transition: 200ms ease;
 }
 
 hr {
