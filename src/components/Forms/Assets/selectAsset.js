@@ -1,32 +1,28 @@
 import React, { useState, useEffect, useCallback } from "react";
-import AssetItem from "./assetItem";
-import FAB from "../../UI/Buttons/fab";
 import { getRequest } from "../../../utils/requests";
 import BottomScrollListener from "react-bottom-scroll-listener";
-import { MiniHeader } from "../../UI/Misc/miniHeader";
+import SelectAssetItem from "./selectAssetItem";
 
-const AssetList = props => {
+const SelectAssetForm = props => {
   const [isLoaded, setIsLoaded] = useState(0);
-  const [assetCount, setAssetCount] = useState(0);
   const [assets, setAssets] = useState([]);
   const [loadedAll, setLoadedAll] = useState(false);
   const [nextPage, setNextPage] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
 
   const getAssets = useCallback(async () => {
-    if (!loadedAll) {
+    if (!loadedAll || nextPage === 1) {
       const resp = await getRequest(
         "/api/panel/apps/" +
-          props.match.params.appuuid +
+          props.session.state.selApp +
           "/assets?page=" +
           nextPage
       );
       if (resp.error) {
-        props.loadbar.setToError(true);
+        // props.loadbar.setToError(true);
       } else {
-        const userId = resp.meta.userId;
-        const selApp = resp.meta.appUUID;
-        const selAppName = resp.meta.appName;
         const respAssets = resp.data.assets;
+        setRefreshing(false);
         if (nextPage > 1) {
           setAssets(c => c.concat(respAssets));
         } else {
@@ -37,35 +33,28 @@ const AssetList = props => {
         } else if (nextPage === 1) {
           setIsLoaded(true);
         }
-        props.loadbar.progressTo(100);
-        setAssetCount(resp.data.assetCount);
-        props.session.handleSession(userId, selApp, selAppName);
       }
     }
-  }, [
-    props.loadbar,
-    props.session,
-    nextPage,
-    loadedAll,
-    props.match.params.appuuid
-  ]);
+  }, [nextPage, loadedAll, props.session.state.selApp]);
 
   useEffect(() => {
-    props.page.handlePageChange("Your Assets", "assets");
-    props.loadbar.progressTo(15);
     getAssets();
-  }, [props.page, props.loadbar, getAssets]);
+  }, [getAssets]);
 
-  useEffect(() => {
-    if ("newAsset" in props.page.state.modalData) {
-      setAssets(c => [props.page.state.modalData.newAsset, ...c]);
-      setAssetCount(c => c + 1);
-    }
-  }, [props.page.state.modalData]);
+  const selectImage = url => {
+    props.page.state.modalData.callback(url);
+    props.page.handleCloseModal();
+  };
+
+  const refresh = () => {
+    setNextPage(1);
+    setRefreshing(true);
+    getAssets();
+  };
 
   const NoAppMsg = () => {
     return (
-      <div id="midmsg">
+      <div id="midmsg" style={{ marginTop: "20px", marginBottom: "50px" }}>
         <span style={{ fontSize: "14pt" }} className="softtext">
           <i style={{ fontSize: "42pt" }} className="material-icons">
             inbox
@@ -74,41 +63,39 @@ const AssetList = props => {
           <br />
           No assets for this app.
         </span>
-        <br />
-        <br />
-        <br />
-        <button
-          style={{ fontSize: "9pt" }}
-          onClick={() => props.page.handleShowModal("uploadassetform")}
-          className="raisedbut"
-        >
-          <span className="icolab">Add One</span>
-          <i style={{ fontSize: "11pt" }} className="material-icons">
-            add
-          </i>
-        </button>
       </div>
     );
   };
 
   return (
     <div>
-      <MiniHeader header="Assets" />
-      <span className="pageData" style={{ marginBottom: "15px" }}>
-        <span className="floatright contentstatus">{assetCount} / 500</span>
-      </span>
-      <FAB page={props.page} modalComp="uploadassetform">
-        <i className="material-icons">add</i>
-      </FAB>
-      <div className="assetlist">
+      <h2>
+        Select Asset
+        <i
+          className="material-icons floatright"
+          title="Refresh"
+          style={{ cursor: "pointer" }}
+          onClick={() => refresh()}
+        >
+          refresh
+        </i>
+      </h2>
+      {refreshing ? (
+        <div
+          className="loadingicon"
+          style={{ margin: "auto", marginBottom: "30px" }}
+        />
+      ) : null}
+      <div className="assetlistmodal">
         {assets.length > 0 ? (
           <React.Fragment>
             {assets.map(asset => (
-              <AssetItem
+              <SelectAssetItem
                 key={asset.url}
                 asset={asset}
                 session={props.session}
                 page={props.page}
+                selectImage={selectImage}
               />
             ))}
             <center>
@@ -122,7 +109,7 @@ const AssetList = props => {
             </center>
             {assets.length >= 20 && !loadedAll ? (
               <BottomScrollListener
-                offset={500}
+                offset={200}
                 onBottom={() => setNextPage(nextPage + 1)}
               />
             ) : null}
@@ -130,11 +117,11 @@ const AssetList = props => {
         ) : isLoaded ? (
           <NoAppMsg />
         ) : (
-          <br />
+          <div className="loadingicon" style={{ marginBottom: "30px" }} />
         )}
       </div>
     </div>
   );
 };
 
-export default AssetList;
+export default SelectAssetForm;

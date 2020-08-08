@@ -117,19 +117,40 @@ const ImageField = props => {
     }
   }, [props.isDraftDiscarded, props.value]);
 
+  const selectCallback = url => {
+    const fakeEvent = { target: { name: props.slug, value: url } };
+    handleChange(fakeEvent);
+  };
+
   return (
     <div style={{ marginBottom: "10px" }}>
       <h4
         style={{ marginBottom: "5px" }}
         className={isFocused ? "bluetext" : ""}
       >
-        {props.label}
+        <span className="icolab">{props.label}</span>{" "}
+        <i
+          className="material-icons changeimage"
+          style={{ fontSize: "170%" }}
+          onClick={() =>
+            props.page.handleShowModal("selectassetform", {
+              callback: selectCallback
+            })
+          }
+        >
+          add_photo_alternate
+        </i>
       </h4>
       <img
         src={content}
         alt=""
         style={{ maxWidth: "300px", maxHeight: "300px" }}
       />
+      {!content ? (
+        <p className="softtext" style={{ fontSize: "11pt" }}>
+          Select Image from Assets or Enter Image Url
+        </p>
+      ) : null}
       <TextInput
         dataId={props.dataId}
         name={props.slug}

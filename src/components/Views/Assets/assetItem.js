@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Truncate } from "../../../utils/text";
 import Moment from "react-moment";
 
 const AssetItem = props => {
+  const [asset, setAsset] = useState(props.asset);
+
   return (
     <div
       className="secondaryitemcont"
@@ -21,23 +23,19 @@ const AssetItem = props => {
             overflow: "hidden"
           }}
         >
-          <img
-            src={"//cdn.jwb.cloud/file/milk-uploads/" + props.asset.url}
-            alt={props.asset.description}
-            height="50px"
-          />
+          <img src={asset.url} alt={asset.description} height="50px" />
         </div>
         <h3 style={{ marginLeft: "20px", textOverflow: "" }}>
-          {Truncate(props.asset.name, 32)}
+          {Truncate(asset.name, 32)}
         </h3>
       </div>
       <div style={{ marginLeft: "auto" }}>
         <span
           className="softtext"
           style={{ fontSize: "11pt" }}
-          title={new Date(props.asset.createdAt)}
+          title={new Date(asset.createdAt)}
         >
-          <Moment fromNow>{props.asset.createdAt}</Moment>
+          <Moment fromNow>{asset.createdAt}</Moment>
         </span>
         <button
           className="flatbut"
@@ -47,7 +45,12 @@ const AssetItem = props => {
             marginLeft: "15px"
           }}
           onClick={() =>
-            props.page.handleShowModal("editassetform", props.asset)
+            props.page.handleShowModal("editassetform", {
+              asset: asset,
+              callback: a => {
+                setAsset(a);
+              }
+            })
           }
         >
           <i

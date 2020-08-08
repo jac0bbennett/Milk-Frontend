@@ -15,12 +15,12 @@ const EditAssetForm = props => {
 
   useEffect(() => {
     setForm({
-      name: props.page.state.modalData.name,
-      description: props.page.state.modalData.description
+      name: props.page.state.modalData.asset.name,
+      description: props.page.state.modalData.asset.description
     });
   }, [
-    props.page.state.modalData.name,
-    props.page.state.modalData.description,
+    props.page.state.modalData.asset.name,
+    props.page.state.modalData.asset.description,
     props.page.state.showModal
   ]);
 
@@ -37,7 +37,7 @@ const EditAssetForm = props => {
       "/api/panel/apps/" +
         props.session.state.selApp +
         "/assets/" +
-        props.page.state.modalData.url,
+        props.page.state.modalData.asset.slug,
       { name, description }
     );
 
@@ -48,6 +48,12 @@ const EditAssetForm = props => {
     } else {
       setMsg("");
       props.loadbar.progressTo(100);
+      const newAsset = {
+        name: req.name,
+        url: req.url,
+        description: req.description
+      };
+      props.page.state.modalData.callback(newAsset);
       props.page.handleCloseModal();
       props.page.handleSetRefresh();
     }
@@ -58,7 +64,7 @@ const EditAssetForm = props => {
       "/api/panel/apps/" +
       props.session.state.selApp +
       "/assets/" +
-      props.page.state.modalData.url;
+      props.page.state.modalData.asset.slug;
 
     props.page.handleShowModal("confirmdeleteform", {
       deleteUrl: url,
@@ -77,10 +83,7 @@ const EditAssetForm = props => {
   return (
     <form onSubmit={handleSubmit} autoComplete="off">
       <a
-        href={
-          "https://cdn.jwb.cloud/file/milk-uploads/" +
-          props.page.state.modalData.url
-        }
+        href={props.page.state.modalData.asset.url}
         target="_blank"
         rel="noopener noreferrer"
         className="floatright"
@@ -96,12 +99,9 @@ const EditAssetForm = props => {
         }}
       >
         <img
-          src={
-            "https://cdn.jwb.cloud/file/milk-uploads/" +
-            props.page.state.modalData.url
-          }
+          src={props.page.state.modalData.asset.url}
           style={{ maxWidth: "300px", maxHeight: "300px" }}
-          alt={props.page.state.modalData.description}
+          alt={props.page.state.modalData.asset.description}
         />
       </div>
       <TextInput
