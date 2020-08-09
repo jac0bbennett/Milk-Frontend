@@ -12,7 +12,7 @@ const SelectAssetItem = props => {
         height: "150px",
         overflow: "hidden"
       }}
-      onClick={() => props.selectImage(props.asset.url)}
+      onClick={() => props.selectImage(props.asset)}
     >
       <img src={props.asset.url} alt={props.asset.description} height="150px" />
     </div>

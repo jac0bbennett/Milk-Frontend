@@ -117,8 +117,8 @@ const ImageField = props => {
     }
   }, [props.isDraftDiscarded, props.value]);
 
-  const selectCallback = url => {
-    const fakeEvent = { target: { name: props.slug, value: url } };
+  const selectCallback = asset => {
+    const fakeEvent = { target: { name: props.slug, value: asset.url } };
     handleChange(fakeEvent);
   };
 
@@ -131,7 +131,7 @@ const ImageField = props => {
         <span className="icolab">{props.label}</span>{" "}
         <i
           className="material-icons changeimage"
-          style={{ fontSize: "170%" }}
+          style={{ fontSize: "27px" }}
           onClick={() =>
             props.page.handleShowModal("selectassetform", {
               callback: selectCallback

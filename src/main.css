@@ -542,7 +542,7 @@ input[type="checkbox"] {
 }
 
 .flatbut:focus {
-  background: #fff;
+  background: inherit;
 }
 
 .darkflatbutton {
@@ -592,6 +592,14 @@ input[type="checkbox"] {
   color: #fd4845;
 }
 
+.hoverblue {
+  transition: 200ms ease;
+}
+
+.hoverblue:hover {
+  color: #4c8fd5;
+}
+
 #fieldoptions {
   width: 300px;
 }
@@ -631,7 +639,7 @@ input[type="checkbox"] {
 }
 
 .changeimage:hover {
-  color: #3c81c8;
+  color: #4c8fd5;
 }
 
 .assetlistmodal {

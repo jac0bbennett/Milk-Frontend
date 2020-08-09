@@ -14,7 +14,7 @@ const TextAreaInput = props => {
       <textarea
         name={props.name}
         value={props.value}
-        onChange={props.handleChange}
+        onChange={props.onChange}
         style={props.style}
         disabled={props.disabled}
         ref={props.setRef}

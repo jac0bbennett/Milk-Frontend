@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Truncate } from "../../../utils/text";
-import Moment from "react-moment";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const AssetItem = props => {
   const [asset, setAsset] = useState(props.asset);
+  const [copied, setCopied] = useState(false);
 
   return (
     <div
@@ -30,19 +31,35 @@ const AssetItem = props => {
         </h3>
       </div>
       <div style={{ marginLeft: "auto" }}>
-        <span
-          className="softtext"
-          style={{ fontSize: "11pt" }}
-          title={new Date(asset.createdAt)}
-        >
-          <Moment fromNow>{asset.createdAt}</Moment>
-        </span>
+        <CopyToClipboard text={asset.url}>
+          <button
+            className="flatbut"
+            title="Copy Url"
+            style={{
+              padding: "5px",
+              height: "60px"
+            }}
+            onClick={() => setCopied(true)}
+          >
+            <i
+              style={{
+                paddingRight: "10px",
+                paddingLeft: "10px"
+              }}
+              className="material-icons"
+            >
+              content_copy
+            </i>
+            {copied ? <span className="greentext"> Copied</span> : null}
+          </button>
+        </CopyToClipboard>
         <button
           className="flatbut"
+          title="Edit"
           style={{
             padding: "5px",
             height: "60px",
-            marginLeft: "15px"
+            marginLeft: "5px"
           }}
           onClick={() =>
             props.page.handleShowModal("editassetform", {

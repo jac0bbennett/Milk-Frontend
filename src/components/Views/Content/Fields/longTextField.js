@@ -14,7 +14,7 @@ const LongTextField = props => {
   const [view, setView] = useState("edit");
   const input = useRef(null);
   const [oldCaret, setOldCaret] = useState(0);
-  const [tabKeyPress, setTabKeyPress] = useState(false);
+  const [caretOffset, setCaretOffset] = useState(0);
 
   const charLimit = 50000;
 
@@ -52,11 +52,9 @@ const LongTextField = props => {
   };
 
   useEffect(() => {
-    if (tabKeyPress === true) {
-      input.current.selectionStart = input.current.selectionEnd = oldCaret + 4;
-      setTabKeyPress(false);
-    }
-  }, [tabKeyPress, oldCaret]);
+    input.current.selectionStart = input.current.selectionEnd =
+      oldCaret + caretOffset;
+  }, [oldCaret, caretOffset]);
 
   const handleKeyPress = event => {
     if (event.keyCode === 9) {
@@ -67,7 +65,7 @@ const LongTextField = props => {
       const newContent = val.substring(0, start) + "    " + val.substring(end);
       setContent(newContent);
       setOldCaret(start);
-      setTabKeyPress(true);
+      setCaretOffset(4);
       event.target.value = newContent;
       handleChange(event);
     }
@@ -157,14 +155,52 @@ const LongTextField = props => {
     );
   };
 
+  const selectAsset = event => {
+    event.preventDefault();
+
+    props.page.handleShowModal("selectassetform", {
+      callback: selectAssetCallback,
+      callbackData: input.current.selectionStart
+    });
+  };
+
+  const selectAssetCallback = (asset, caret) => {
+    input.current.focus();
+    input.current.selectionStart = input.current.selectionEnd = caret;
+    const start = input.current.selectionStart;
+    const end = input.current.selectionEnd;
+    const addedText = "![" + (asset.description || "") + "](" + asset.url + ")";
+    const newContent =
+      content.substring(0, start) + addedText + content.substring(end);
+    setContent(newContent);
+    setOldCaret(start);
+    setCaretOffset(addedText.length);
+    const fakeEvent = { target: { name: props.name, value: newContent } };
+    handleChange(fakeEvent);
+  };
+
   return (
     <div className="longtxtinp" style={{ marginBottom: "30px" }}>
-      <h4
-        style={{ marginBottom: "5px" }}
-        className={isFocused ? "bluetext" : ""}
-      >
-        {props.label}
-      </h4>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <h4
+          style={{ marginBottom: "5px" }}
+          className={isFocused ? "bluetext" : ""}
+        >
+          {props.label}
+        </h4>
+        <i
+          className="material-icons changeimage"
+          title="Insert Asset"
+          style={{
+            fontSize: "27px",
+            marginLeft: "auto",
+            marginBottom: "-10px"
+          }}
+          onClick={e => selectAsset(e)}
+        >
+          add_photo_alternate
+        </i>
+      </div>
       {view === "edit" ? (
         <React.Fragment>
           <textarea

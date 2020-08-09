@@ -41,8 +41,11 @@ const SelectAssetForm = props => {
     getAssets();
   }, [getAssets]);
 
-  const selectImage = url => {
-    props.page.state.modalData.callback(url);
+  const selectImage = asset => {
+    const callbackData = props.page.state.modalData.callbackData
+      ? props.page.state.modalData.callbackData
+      : null;
+    props.page.state.modalData.callback(asset, callbackData);
     props.page.handleCloseModal();
   };
 
@@ -69,17 +72,32 @@ const SelectAssetForm = props => {
 
   return (
     <div>
-      <h2>
-        Select Asset
-        <i
-          className="material-icons floatright"
-          title="Refresh"
-          style={{ cursor: "pointer" }}
-          onClick={() => refresh()}
-        >
-          refresh
-        </i>
-      </h2>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <h2>Select Asset</h2>
+        <div style={{ marginLeft: "auto" }}>
+          <i
+            className="material-icons hoverblue"
+            title="Upload"
+            style={{ cursor: "pointer", marginRight: "15px" }}
+            onClick={() =>
+              props.page.handleShowModal("uploadassetform", {
+                callbackOnLast: true,
+                callback: a => props.page.handleShowModal("selectassetform")
+              })
+            }
+          >
+            publish
+          </i>
+          <i
+            className="material-icons hoverblue"
+            title="Refresh"
+            style={{ cursor: "pointer" }}
+            onClick={() => refresh()}
+          >
+            refresh
+          </i>
+        </div>
+      </div>
       {refreshing ? (
         <div
           className="loadingicon"

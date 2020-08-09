@@ -57,11 +57,14 @@ const AssetList = props => {
   }, [props.page, props.loadbar, getAssets]);
 
   useEffect(() => {
-    if ("newAsset" in props.page.state.modalData) {
-      setAssets(c => [props.page.state.modalData.newAsset, ...c]);
-      setAssetCount(c => c + 1);
-    }
-  }, [props.page.state.modalData]);
+    setNextPage(1);
+    getAssets();
+  }, [props.page.state.refreshView, getAssets]);
+
+  const uploadCallback = a => {
+    setAssets(c => [a, ...c]);
+    setAssetCount(c => c + 1);
+  };
 
   const NoAppMsg = () => {
     return (
@@ -79,7 +82,11 @@ const AssetList = props => {
         <br />
         <button
           style={{ fontSize: "9pt" }}
-          onClick={() => props.page.handleShowModal("uploadassetform")}
+          onClick={() =>
+            props.page.handleShowModal("uploadassetform", {
+              callback: uploadCallback
+            })
+          }
           className="raisedbut"
         >
           <span className="icolab">Add One</span>
@@ -97,7 +104,11 @@ const AssetList = props => {
       <span className="pageData" style={{ marginBottom: "15px" }}>
         <span className="floatright contentstatus">{assetCount} / 500</span>
       </span>
-      <FAB page={props.page} modalComp="uploadassetform">
+      <FAB
+        page={props.page}
+        modalComp="uploadassetform"
+        modalData={{ callback: uploadCallback }}
+      >
         <i className="material-icons">add</i>
       </FAB>
       <div className="assetlist">

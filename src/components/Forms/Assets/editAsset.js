@@ -5,6 +5,7 @@ import { patchRequest } from "../../../utils/requests";
 import FormMsg from "../../UI/Misc/formMsg";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import DeleteButton from "../../UI/Buttons/deleteButton";
+import Moment from "react-moment";
 
 const EditAssetForm = props => {
   const [form, setForm] = useState({
@@ -16,7 +17,7 @@ const EditAssetForm = props => {
   useEffect(() => {
     setForm({
       name: props.page.state.modalData.asset.name,
-      description: props.page.state.modalData.asset.description
+      description: props.page.state.modalData.asset.description || ""
     });
   }, [
     props.page.state.modalData.asset.name,
@@ -55,7 +56,6 @@ const EditAssetForm = props => {
       };
       props.page.state.modalData.callback(newAsset);
       props.page.handleCloseModal();
-      props.page.handleSetRefresh();
     }
   };
 
@@ -75,7 +75,7 @@ const EditAssetForm = props => {
 
   const handleChange = event => {
     let formCopy = { ...form };
-    formCopy.name = event.target.value;
+    formCopy[event.target.name] = event.target.value;
     setForm(formCopy);
     setMsg("");
   };
@@ -104,6 +104,14 @@ const EditAssetForm = props => {
           alt={props.page.state.modalData.asset.description}
         />
       </div>
+      <span
+        className="softtext floatright"
+        style={{ fontSize: "11pt" }}
+        title={new Date(props.page.state.modalData.asset.createdAt)}
+      >
+        <Moment fromNow>{props.page.state.modalData.asset.createdAt}</Moment>
+      </span>
+      <br />
       <TextInput
         name="name"
         type="text"

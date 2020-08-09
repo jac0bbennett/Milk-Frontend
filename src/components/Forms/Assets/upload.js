@@ -32,17 +32,20 @@ const UploadForm = props => {
             formData
           );
 
+          const newAsset = {
+            name: resp.name,
+            url: resp.url,
+            description: resp.description
+          };
+
           if (resp.error) {
             let failedFilesCopy = [...failedFiles];
             failedFilesCopy.push(file.name);
             setFailedFiles(failedFilesCopy);
           } else {
-            const newAsset = {
-              name: resp.name,
-              url: resp.url,
-              description: resp.description
-            };
-            props.page.handleUpdateModalData({ newAsset: newAsset });
+            if (!props.page.state.modalData.callbackOnLast) {
+              props.page.state.modalData.callback(newAsset);
+            }
           }
 
           uploadCount++;
@@ -51,6 +54,9 @@ const UploadForm = props => {
           if (uploadCount === files.length) {
             setMsg("Finished uploading " + uploadCount + "!");
             setIsUploading(false);
+            if (props.page.state.modalData.callbackOnLast) {
+              props.page.state.modalData.callback(newAsset);
+            }
           }
         });
       }
@@ -74,7 +80,7 @@ const UploadForm = props => {
 
   return (
     <div>
-      <h2>New Asset</h2>
+      <h2>Upload Asset</h2>
       <div
         style={{
           display: "flex",
