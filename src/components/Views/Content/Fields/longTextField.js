@@ -158,7 +158,7 @@ const LongTextField = props => {
   const selectAsset = event => {
     event.preventDefault();
 
-    props.page.handleShowModal("selectassetform", {
+    props.page.handleShowModal("selectassetform", undefined, {
       callback: selectAssetCallback,
       callbackData: input.current.selectionStart
     });
@@ -177,6 +177,7 @@ const LongTextField = props => {
     setCaretOffset(addedText.length);
     const fakeEvent = { target: { name: props.name, value: newContent } };
     handleChange(fakeEvent);
+    props.page.handleUpdatePersistentModalData({});
   };
 
   return (

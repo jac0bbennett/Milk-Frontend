@@ -36,7 +36,7 @@ const ConfirmActionForm = props => {
   };
 
   return (
-    <div style={{ width: "300px" }}>
+    <div className="smallmodal">
       <h3>{props.page.state.modalData.titleText}</h3>
       <div className="softtext" style={{ width: "100%" }}>
         {props.page.state.modalData.extraText}

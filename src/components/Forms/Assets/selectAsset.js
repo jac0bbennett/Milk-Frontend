@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { getRequest } from "../../../utils/requests";
-import BottomScrollListener from "react-bottom-scroll-listener";
 import SelectAssetItem from "./selectAssetItem";
 
 const SelectAssetForm = props => {
@@ -11,27 +10,29 @@ const SelectAssetForm = props => {
   const [refreshing, setRefreshing] = useState(false);
 
   const getAssets = useCallback(async () => {
-    if (!loadedAll || nextPage === 1) {
+    if (!loadedAll || nextPage === null) {
+      const nPage = nextPage || 1;
       const resp = await getRequest(
         "/api/panel/apps/" +
           props.session.state.selApp +
           "/assets?page=" +
-          nextPage
+          nPage
       );
       if (resp.error) {
         // props.loadbar.setToError(true);
       } else {
         const respAssets = resp.data.assets;
         setRefreshing(false);
-        if (nextPage > 1) {
+        if (nPage > 1) {
           setAssets(c => c.concat(respAssets));
         } else {
           setAssets(respAssets);
         }
-        if (nextPage > 1 && resp.data.assets.length === 0) {
+        if (nPage > 1 && resp.data.assets.length < 20) {
           setLoadedAll(true);
-        } else if (nextPage === 1) {
+        } else if (nPage === 1) {
           setIsLoaded(true);
+          setLoadedAll(false);
         }
       }
     }
@@ -42,17 +43,16 @@ const SelectAssetForm = props => {
   }, [getAssets]);
 
   const selectImage = asset => {
-    const callbackData = props.page.state.modalData.callbackData
-      ? props.page.state.modalData.callbackData
+    const callbackData = props.page.state.persistentModalData.callbackData
+      ? props.page.state.persistentModalData.callbackData
       : null;
-    props.page.state.modalData.callback(asset, callbackData);
+    props.page.state.persistentModalData.callback(asset, callbackData);
     props.page.handleCloseModal();
   };
 
   const refresh = () => {
-    setNextPage(1);
+    setNextPage(null);
     setRefreshing(true);
-    getAssets();
   };
 
   const NoAppMsg = () => {
@@ -82,7 +82,7 @@ const SelectAssetForm = props => {
             onClick={() =>
               props.page.handleShowModal("uploadassetform", {
                 callbackOnLast: true,
-                callback: a => props.page.handleShowModal("selectassetform")
+                callback: () => props.page.handleShowModal("selectassetform")
               })
             }
           >
@@ -116,20 +116,16 @@ const SelectAssetForm = props => {
                 selectImage={selectImage}
               />
             ))}
-            <center>
-              {loadedAll ? (
-                <span className="softtext" style={{ paddingBottom: "30px" }}>
-                  El Fin
-                </span>
-              ) : assets.length >= 20 ? (
-                <div className="loadingicon" style={{ marginBottom: "30px" }} />
-              ) : null}
-            </center>
             {assets.length >= 20 && !loadedAll ? (
-              <BottomScrollListener
-                offset={200}
-                onBottom={() => setNextPage(nextPage + 1)}
-              />
+              <button
+                className="flatbut"
+                onClick={() => {
+                  setNextPage(nextPage + 1);
+                  setRefreshing(true);
+                }}
+              >
+                Load More
+              </button>
             ) : null}
           </React.Fragment>
         ) : isLoaded ? (

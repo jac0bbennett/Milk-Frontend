@@ -13,12 +13,13 @@ const AssetList = props => {
   const [nextPage, setNextPage] = useState(1);
 
   const getAssets = useCallback(async () => {
-    if (!loadedAll) {
+    if (!loadedAll || nextPage === null) {
+      const nPage = nextPage || 1;
       const resp = await getRequest(
         "/api/panel/apps/" +
           props.match.params.appuuid +
           "/assets?page=" +
-          nextPage
+          nPage
       );
       if (resp.error) {
         props.loadbar.setToError(true);
@@ -27,14 +28,14 @@ const AssetList = props => {
         const selApp = resp.meta.appUUID;
         const selAppName = resp.meta.appName;
         const respAssets = resp.data.assets;
-        if (nextPage > 1) {
+        if (nPage > 1) {
           setAssets(c => c.concat(respAssets));
         } else {
           setAssets(respAssets);
         }
-        if (nextPage > 1 && resp.data.assets.length === 0) {
+        if (nPage > 1 && resp.data.assets.length === 0) {
           setLoadedAll(true);
-        } else if (nextPage === 1) {
+        } else if (nPage === 1) {
           setIsLoaded(true);
         }
         props.loadbar.progressTo(100);
@@ -57,9 +58,8 @@ const AssetList = props => {
   }, [props.page, props.loadbar, getAssets]);
 
   useEffect(() => {
-    setNextPage(1);
-    getAssets();
-  }, [props.page.state.refreshView, getAssets]);
+    setNextPage(null);
+  }, [props.page.state.refreshView]);
 
   const uploadCallback = a => {
     setAssets(c => [a, ...c]);

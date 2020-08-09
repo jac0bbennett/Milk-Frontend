@@ -120,12 +120,21 @@ const ImageField = props => {
   const selectCallback = asset => {
     const fakeEvent = { target: { name: props.slug, value: asset.url } };
     handleChange(fakeEvent);
+    props.page.handleUpdatePersistentModalData({});
   };
 
   return (
-    <div style={{ marginBottom: "10px" }}>
+    <div
+      style={{
+        marginBottom: "10px",
+        marginTop: "10px",
+        border: "1px solid gray",
+        padding: "5px",
+        borderRadius: "5px"
+      }}
+    >
       <h4
-        style={{ marginBottom: "5px" }}
+        style={{ marginTop: "5px", marginBottom: "5px" }}
         className={isFocused ? "bluetext" : ""}
       >
         <span className="icolab">{props.label}</span>{" "}
@@ -133,7 +142,7 @@ const ImageField = props => {
           className="material-icons changeimage"
           style={{ fontSize: "27px" }}
           onClick={() =>
-            props.page.handleShowModal("selectassetform", {
+            props.page.handleShowModal("selectassetform", undefined, {
               callback: selectCallback
             })
           }
@@ -141,11 +150,18 @@ const ImageField = props => {
           add_photo_alternate
         </i>
       </h4>
-      <img
-        src={content}
-        alt=""
-        style={{ maxWidth: "300px", maxHeight: "300px" }}
-      />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <img
+          src={content}
+          alt=""
+          style={{ maxWidth: "100%", maxHeight: "300px", cursor: "pointer" }}
+          onClick={() =>
+            props.page.handleShowModal("selectassetform", undefined, {
+              callback: selectCallback
+            })
+          }
+        />
+      </div>
       {!content ? (
         <p className="softtext" style={{ fontSize: "11pt" }}>
           Select Image from Assets or Enter Image Url

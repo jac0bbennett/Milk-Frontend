@@ -279,6 +279,10 @@ hr {
   display: none;
 }
 
+.smallmodal {
+  width: 300px;
+}
+
 .msg {
   margin-top: 20px;
 }
@@ -921,6 +925,10 @@ textarea {
     width: 80%;
     padding-left: 7%;
     padding-right: 7%;
+  }
+
+  .smallmodal {
+    width: 100%;
   }
 
   #wrapper {

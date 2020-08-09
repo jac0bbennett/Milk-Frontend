@@ -8,7 +8,8 @@ class PageContainer extends Container {
     refreshView: 0,
     showModal: false,
     modalComp: "none",
-    modalData: {}
+    modalData: {},
+    persistentModalData: {}
   };
 
   handlePageChange = (title, pageId) => {
@@ -16,8 +17,17 @@ class PageContainer extends Container {
     this.setState({ title: title, pageId: pageId });
   };
 
-  handleShowModal = (comp = this.state.modalComp, data = {}) => {
-    this.setState({ showModal: true, modalComp: comp, modalData: data });
+  handleShowModal = (
+    comp = this.state.modalComp,
+    data = {},
+    persistentData = this.state.persistentModalData
+  ) => {
+    this.setState({
+      showModal: true,
+      modalComp: comp,
+      modalData: data,
+      persistentModalData: persistentData
+    });
     //document.body.style.overflowY = "hidden";
   };
 
@@ -35,6 +45,9 @@ class PageContainer extends Container {
 
   handleUpdateModalData = newData => {
     this.setState({ modalData: newData });
+  };
+  handleUpdatePersistentModalData = newData => {
+    this.setState({ persistentModalData: newData });
   };
 
   handleSetRefresh = () => {

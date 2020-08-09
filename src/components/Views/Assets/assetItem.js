@@ -11,7 +11,9 @@ const AssetItem = props => {
       className="secondaryitemcont"
       style={{ alignItems: "center", flexWrap: "wrap" }}
     >
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div
+        style={{ display: "flex", alignItems: "center", overflowX: "hidden" }}
+      >
         <div
           className="assetimg"
           style={{
@@ -26,9 +28,7 @@ const AssetItem = props => {
         >
           <img src={asset.url} alt={asset.description} height="50px" />
         </div>
-        <h3 style={{ marginLeft: "20px", textOverflow: "" }}>
-          {Truncate(asset.name, 32)}
-        </h3>
+        <h3 style={{ marginLeft: "20px" }}>{Truncate(asset.name, 32)}</h3>
       </div>
       <div style={{ marginLeft: "auto" }}>
         <CopyToClipboard text={asset.url}>
