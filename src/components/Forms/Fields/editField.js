@@ -5,11 +5,13 @@ import SubmitButton from "../../UI/Buttons/submitButton";
 import DeleteButton from "../../UI/Buttons/deleteButton";
 import { patchRequest } from "../../../utils/requests";
 import ShortTextOptions from "./shortTextOptions";
+import DropDownInput from "../../UI/Inputs/dropInput";
 
 const EditFieldForm = props => {
   const [form, setForm] = useState({
     name: props.page.state.modalData.field.name,
     slug: props.page.state.modalData.field.slug,
+    fieldType: props.page.state.modalData.field.fieldType,
     options: props.page.state.modalData.field.options || {}
   });
   const [msg, setMsg] = useState("");
@@ -19,6 +21,7 @@ const EditFieldForm = props => {
     setForm({
       name: field.name,
       slug: field.slug,
+      fieldType: field.fieldType,
       options: { ...field.options } || {}
     });
     setMsg("");
@@ -33,6 +36,7 @@ const EditFieldForm = props => {
     const fieldid = props.page.state.modalData.field.id;
     const fieldname = form.name;
     const fieldslug = form.slug;
+    const fieldtype = form.fieldType;
     const fieldoptions = JSON.stringify(form.options);
 
     const req = await patchRequest(
@@ -42,7 +46,7 @@ const EditFieldForm = props => {
         props.page.state.modalData.typeSlug +
         "/fields/" +
         fieldid,
-      { fieldname, fieldslug, fieldoptions }
+      { fieldname, fieldslug, fieldtype, fieldoptions }
     );
 
     if (req.error) {
@@ -110,14 +114,28 @@ const EditFieldForm = props => {
         required={true}
       />
       <br />
-
-      {props.page.state.modalData.field.fieldType === "text_short" ? (
+      {["text_short", "text_long", "image_single"].includes(form.fieldType) ? (
+        <React.Fragment>
+          <DropDownInput
+            name="fieldType"
+            label="Type"
+            onChange={handleChange}
+            value={form.fieldType}
+            required={true}
+          >
+            <option value="text_short">Short Text</option>
+            <option value="text_long">Long Text</option>
+            <option value="image_single">Image</option>
+          </DropDownInput>
+          <br />{" "}
+        </React.Fragment>
+      ) : null}
+      {form.fieldType === "text_short" ? (
         <ShortTextOptions
           handleChange={handleChange}
           form={form}
         ></ShortTextOptions>
-      ) : props.page.state.modalData.field.fieldType === "dropdown" ||
-        props.page.state.modalData.field.fieldType === "list" ? (
+      ) : form.fieldType === "dropdown" || form.fieldType === "list" ? (
         <React.Fragment>
           <button
             className="flatbut"

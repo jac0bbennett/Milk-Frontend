@@ -18,6 +18,8 @@ const decodeFieldType = fieldtype => {
       return "Decimal";
     case "boolean":
       return "Boolean";
+    case "image_single":
+      return "Image";
     default:
       return "Field";
   }
@@ -39,6 +41,8 @@ const getIcon = fieldtype => {
       return "filter_5";
     case "boolean":
       return "hdr_strong";
+    case "image_single":
+      return "image";
     default:
       return "text_fields";
   }
