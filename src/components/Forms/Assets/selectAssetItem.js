@@ -14,7 +14,12 @@ const SelectAssetItem = props => {
       }}
       onClick={() => props.selectImage(props.asset)}
     >
-      <img src={props.asset.url} alt={props.asset.description} height="150px" />
+      <img
+        title={props.asset.name}
+        src={props.asset.url}
+        alt={props.asset.description}
+        height="150px"
+      />
     </div>
   );
 };

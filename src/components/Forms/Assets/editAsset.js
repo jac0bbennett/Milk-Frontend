@@ -8,6 +8,7 @@ import DeleteButton from "../../UI/Buttons/deleteButton";
 import Moment from "react-moment";
 
 const EditAssetForm = props => {
+  const id = props.page.state.modalData.asset.id;
   const [form, setForm] = useState({
     name: "",
     description: ""
@@ -69,7 +70,11 @@ const EditAssetForm = props => {
     props.page.handleShowModal("confirmdeleteform", {
       deleteUrl: url,
       extraText:
-        "This asset will be permanently deleted and unusable in contents!"
+        "This asset will be permanently deleted and unusable in contents!",
+      callback: () =>
+        props.page.handleUpdateModalData({
+          removedAsset: id
+        })
     });
   };
 

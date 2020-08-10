@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { getRequest } from "../../../utils/requests";
 import SelectAssetItem from "./selectAssetItem";
 
@@ -9,38 +9,34 @@ const SelectAssetForm = props => {
   const [nextPage, setNextPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
 
-  const getAssets = useCallback(async () => {
-    if (!loadedAll || nextPage === null) {
-      const nPage = nextPage || 1;
-      const resp = await getRequest(
-        "/api/panel/apps/" +
-          props.session.state.selApp +
-          "/assets?page=" +
-          nPage
-      );
-      if (resp.error) {
-        // props.loadbar.setToError(true);
-      } else {
-        const respAssets = resp.data.assets;
-        setRefreshing(false);
-        if (nPage > 1) {
-          setAssets(c => c.concat(respAssets));
+  useEffect(() => {
+    const getAssets = async n => {
+      if (!loadedAll || n === null) {
+        if (n === null) n = 1;
+        const resp = await getRequest(
+          "/api/panel/apps/" + props.session.state.selApp + "/assets?page=" + n
+        );
+        if (resp.error) {
+          // props.loadbar.setToError(true);
         } else {
-          setAssets(respAssets);
-        }
-        if (nPage > 1 && resp.data.assets.length < 20) {
-          setLoadedAll(true);
-        } else if (nPage === 1) {
-          setIsLoaded(true);
-          setLoadedAll(false);
+          const respAssets = resp.data.assets;
+          setRefreshing(false);
+          if (n > 1) {
+            setAssets(c => c.concat(respAssets));
+          } else {
+            setAssets(respAssets);
+          }
+          if (n > 1 && resp.data.assets.length < 20) {
+            setLoadedAll(true);
+          } else if (n === 1) {
+            setIsLoaded(true);
+            setLoadedAll(false);
+          }
         }
       }
-    }
+    };
+    getAssets(nextPage);
   }, [nextPage, loadedAll, props.session.state.selApp]);
-
-  useEffect(() => {
-    getAssets();
-  }, [getAssets]);
 
   const selectImage = asset => {
     const callbackData = props.page.state.persistentModalData.callbackData

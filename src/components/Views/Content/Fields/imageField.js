@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import TextInput from "../../../UI/Inputs/txtInput";
 import { patchRequest } from "../../../../utils/requests";
 import FieldMsg from "./fieldMsg";
@@ -11,6 +11,8 @@ const ImageField = props => {
   const [saved, setSaved] = useState(false);
   const [msg, setMsg] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+
+  const input = useRef(null);
 
   const charLimit = 2000;
 
@@ -118,8 +120,9 @@ const ImageField = props => {
   }, [props.isDraftDiscarded, props.value]);
 
   const selectCallback = asset => {
-    const fakeEvent = { target: { name: props.slug, value: asset.url } };
-    handleChange(fakeEvent);
+    input.current.focus();
+    document.execCommand("selectAll", false, null);
+    document.execCommand("insertText", false, asset.url);
     props.page.handleUpdatePersistentModalData({});
   };
 
@@ -180,6 +183,7 @@ const ImageField = props => {
         wide={true}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        setRef={input}
       />
       <span
         title="Characters"

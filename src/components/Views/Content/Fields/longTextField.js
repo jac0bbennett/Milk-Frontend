@@ -13,8 +13,6 @@ const LongTextField = props => {
   const [isFocused, setIsFocused] = useState(false);
   const [view, setView] = useState("edit");
   const input = useRef(null);
-  const [oldCaret, setOldCaret] = useState(0);
-  const [caretOffset, setCaretOffset] = useState(0);
 
   const charLimit = 50000;
 
@@ -51,23 +49,10 @@ const LongTextField = props => {
     }
   };
 
-  useEffect(() => {
-    input.current.selectionStart = input.current.selectionEnd =
-      oldCaret + caretOffset;
-  }, [oldCaret, caretOffset]);
-
   const handleKeyPress = event => {
     if (event.keyCode === 9) {
       event.preventDefault();
-      const val = content;
-      const start = event.target.selectionStart;
-      const end = event.target.selectionEnd;
-      const newContent = val.substring(0, start) + "    " + val.substring(end);
-      setContent(newContent);
-      setOldCaret(start);
-      setCaretOffset(4);
-      event.target.value = newContent;
-      handleChange(event);
+      document.execCommand("insertText", false, "    ");
     }
   };
 
@@ -155,6 +140,14 @@ const LongTextField = props => {
     );
   };
 
+  const selectAssetCallback = (asset, caret) => {
+    input.current.focus();
+    input.current.selectionStart = input.current.selectionEnd = caret;
+    const addedText = "![" + (asset.description || "") + "](" + asset.url + ")";
+    document.execCommand("insertText", false, addedText);
+    props.page.handleUpdatePersistentModalData({});
+  };
+
   const selectAsset = event => {
     event.preventDefault();
 
@@ -162,22 +155,6 @@ const LongTextField = props => {
       callback: selectAssetCallback,
       callbackData: input.current.selectionStart
     });
-  };
-
-  const selectAssetCallback = (asset, caret) => {
-    input.current.focus();
-    input.current.selectionStart = input.current.selectionEnd = caret;
-    const start = input.current.selectionStart;
-    const end = input.current.selectionEnd;
-    const addedText = "![" + (asset.description || "") + "](" + asset.url + ")";
-    const newContent =
-      content.substring(0, start) + addedText + content.substring(end);
-    setContent(newContent);
-    setOldCaret(start);
-    setCaretOffset(addedText.length);
-    const fakeEvent = { target: { name: props.name, value: newContent } };
-    handleChange(fakeEvent);
-    props.page.handleUpdatePersistentModalData({});
   };
 
   return (

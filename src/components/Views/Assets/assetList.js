@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import AssetItem from "./assetItem";
 import FAB from "../../UI/Buttons/fab";
 import { getRequest } from "../../../utils/requests";
@@ -12,54 +12,53 @@ const AssetList = props => {
   const [loadedAll, setLoadedAll] = useState(false);
   const [nextPage, setNextPage] = useState(1);
 
-  const getAssets = useCallback(async () => {
-    if (!loadedAll || nextPage === null) {
-      const nPage = nextPage || 1;
-      const resp = await getRequest(
-        "/api/panel/apps/" +
-          props.match.params.appuuid +
-          "/assets?page=" +
-          nPage
-      );
-      if (resp.error) {
-        props.loadbar.setToError(true);
-      } else {
-        const userId = resp.meta.userId;
-        const selApp = resp.meta.appUUID;
-        const selAppName = resp.meta.appName;
-        const respAssets = resp.data.assets;
-        if (nPage > 1) {
-          setAssets(c => c.concat(respAssets));
-        } else {
-          setAssets(respAssets);
-        }
-        if (nPage > 1 && resp.data.assets.length === 0) {
-          setLoadedAll(true);
-        } else if (nPage === 1) {
-          setIsLoaded(true);
-        }
-        props.loadbar.progressTo(100);
-        setAssetCount(resp.data.assetCount);
-        props.session.handleSession(userId, selApp, selAppName);
-      }
-    }
-  }, [
-    props.loadbar,
-    props.session,
-    nextPage,
-    loadedAll,
-    props.match.params.appuuid
-  ]);
-
   useEffect(() => {
     props.page.handlePageChange("Your Assets", "assets");
     props.loadbar.progressTo(15);
-    getAssets();
-  }, [props.page, props.loadbar, getAssets]);
+    const getAssets = async n => {
+      if (!loadedAll) {
+        const resp = await getRequest(
+          "/api/panel/apps/" + props.match.params.appuuid + "/assets?page=" + n
+        );
+        if (resp.error) {
+          props.loadbar.setToError(true);
+        } else {
+          const userId = resp.meta.userId;
+          const selApp = resp.meta.appUUID;
+          const selAppName = resp.meta.appName;
+          const respAssets = resp.data.assets;
+          if (n > 1) {
+            setAssets(c => c.concat(respAssets));
+          } else {
+            setAssets(respAssets);
+          }
+          if (n > 1 && resp.data.assets.length === 0) {
+            setLoadedAll(true);
+          } else if (n === 1) {
+            setIsLoaded(true);
+          }
+          props.loadbar.progressTo(100);
+          setAssetCount(resp.data.assetCount);
+          props.session.handleSession(userId, selApp, selAppName);
+        }
+      }
+    };
+    getAssets(nextPage);
+  }, [
+    props.page,
+    props.loadbar,
+    props.session,
+    nextPage,
+    props.match.params.appuuid,
+    loadedAll
+  ]);
 
   useEffect(() => {
-    setNextPage(null);
-  }, [props.page.state.refreshView]);
+    if ("removedAsset" in props.page.state.modalData) {
+      const removedId = props.page.state.modalData.removedAsset;
+      setAssets(c => c.filter(a => a.id !== removedId));
+    }
+  }, [props.page.state.modalData]);
 
   const uploadCallback = a => {
     setAssets(c => [a, ...c]);
