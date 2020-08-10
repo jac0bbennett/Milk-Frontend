@@ -16,49 +16,53 @@ const UploadForm = props => {
   const onDrop = useCallback(
     files => {
       if (files.length > 0) {
-        setIsUploading(true);
-        setFailedFiles([]);
-        setRejectedFiles([]);
-        let uploadCount = 0;
+        if (files.length <= 10) {
+          setIsUploading(true);
+          setFailedFiles([]);
+          setRejectedFiles([]);
+          let uploadCount = 0;
 
-        setMsg(uploadingMsg(uploadCount, files.length));
-
-        files.map(async file => {
-          const formData = new FormData();
-          formData.append("file", file);
-
-          const resp = await postRequest(
-            "/api/panel/apps/" + props.session.state.selApp + "/assets",
-            formData
-          );
-
-          const newAsset = {
-            name: resp.name,
-            url: resp.url,
-            description: resp.description
-          };
-
-          if (resp.error) {
-            let failedFilesCopy = [...failedFiles];
-            failedFilesCopy.push(file.name);
-            setFailedFiles(failedFilesCopy);
-          } else {
-            if (!props.page.state.modalData.callbackOnLast) {
-              props.page.state.modalData.callback(newAsset);
-            }
-          }
-
-          uploadCount++;
           setMsg(uploadingMsg(uploadCount, files.length));
 
-          if (uploadCount === files.length) {
-            setMsg("Finished uploading " + uploadCount + "!");
-            setIsUploading(false);
-            if (props.page.state.modalData.callbackOnLast) {
-              props.page.state.modalData.callback(newAsset);
+          files.map(async file => {
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const resp = await postRequest(
+              "/api/panel/apps/" + props.session.state.selApp + "/assets",
+              formData
+            );
+
+            const newAsset = {
+              name: resp.name,
+              url: resp.url,
+              description: resp.description
+            };
+
+            if (resp.error) {
+              let failedFilesCopy = [...failedFiles];
+              failedFilesCopy.push(file.name);
+              setFailedFiles(failedFilesCopy);
+            } else {
+              if (!props.page.state.modalData.callbackOnLast) {
+                props.page.state.modalData.callback(newAsset);
+              }
             }
-          }
-        });
+
+            uploadCount++;
+            setMsg(uploadingMsg(uploadCount, files.length));
+
+            if (uploadCount === files.length) {
+              setMsg("Finished uploading " + uploadCount + "!");
+              setIsUploading(false);
+              if (props.page.state.modalData.callbackOnLast) {
+                props.page.state.modalData.callback(newAsset);
+              }
+            }
+          });
+        } else {
+          setMsg("Upload is limited to 10 files at a time!");
+        }
       }
     },
     [props.session.state.selApp, failedFiles, props.page]
