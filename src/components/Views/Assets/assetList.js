@@ -32,7 +32,7 @@ const AssetList = props => {
           } else {
             setAssets(respAssets);
           }
-          if (n > 1 && resp.data.assets.length === 0) {
+          if (resp.data.assets.length < 20) {
             setLoadedAll(true);
           } else if (n === 1) {
             setIsLoaded(true);
@@ -57,6 +57,7 @@ const AssetList = props => {
     if ("removedAsset" in props.page.state.modalData) {
       const removedId = props.page.state.modalData.removedAsset;
       setAssets(c => c.filter(a => a.id !== removedId));
+      setAssetCount(c => c - 1);
     }
   }, [props.page.state.modalData]);
 
@@ -101,7 +102,7 @@ const AssetList = props => {
     <div>
       <MiniHeader header="Assets" />
       <span className="pageData" style={{ marginBottom: "15px" }}>
-        <span className="floatright contentstatus">{assetCount} / 500</span>
+        <span className="floatright contentstatus">{assetCount} / 200</span>
       </span>
       <FAB
         page={props.page}
@@ -126,11 +127,11 @@ const AssetList = props => {
                 <span className="softtext" style={{ paddingBottom: "30px" }}>
                   El Fin
                 </span>
-              ) : assets.length >= 20 ? (
+              ) : (
                 <div className="loadingicon" style={{ marginBottom: "30px" }} />
-              ) : null}
+              )}
             </center>
-            {assets.length >= 20 && !loadedAll ? (
+            {!loadedAll ? (
               <BottomScrollListener
                 offset={500}
                 onBottom={() => setNextPage(nextPage + 1)}
