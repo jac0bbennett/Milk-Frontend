@@ -11,8 +11,7 @@ const SelectAssetForm = props => {
 
   useEffect(() => {
     const getAssets = async n => {
-      if (!loadedAll || n === null) {
-        if (n === null) n = 1;
+      if (!loadedAll) {
         const resp = await getRequest(
           "/api/panel/apps/" + props.session.state.selApp + "/assets?page=" + n
         );
@@ -20,7 +19,6 @@ const SelectAssetForm = props => {
           // props.loadbar.setToError(true);
         } else {
           const respAssets = resp.data.assets;
-          setRefreshing(false);
           if (n > 1) {
             setAssets(c => c.concat(respAssets));
           } else {
@@ -33,9 +31,11 @@ const SelectAssetForm = props => {
             setLoadedAll(false);
           }
         }
+        setRefreshing(false);
       }
     };
-    getAssets(nextPage);
+
+    getAssets(nextPage || 1);
   }, [nextPage, loadedAll, props.session.state.selApp]);
 
   const selectImage = asset => {
@@ -46,9 +46,10 @@ const SelectAssetForm = props => {
     props.page.handleCloseModal();
   };
 
-  const refresh = () => {
-    setNextPage(null);
+  const refresh = n => {
     setRefreshing(true);
+    setLoadedAll(false);
+    setNextPage(n === 1 ? null : 1);
   };
 
   const NoAppMsg = () => {
@@ -88,7 +89,9 @@ const SelectAssetForm = props => {
             className="material-icons hoverblue"
             title="Refresh"
             style={{ cursor: "pointer" }}
-            onClick={() => refresh()}
+            onClick={() => {
+              return !refreshing ? refresh(nextPage) : null;
+            }}
           >
             refresh
           </i>
@@ -116,7 +119,7 @@ const SelectAssetForm = props => {
               <button
                 className="flatbut"
                 onClick={() => {
-                  setNextPage(nextPage + 1);
+                  setNextPage(nextPage ? nextPage + 1 : 2);
                   setRefreshing(true);
                 }}
               >
