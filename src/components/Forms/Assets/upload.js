@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { postRequest } from "../../../utils/requests";
+import { postRequest, patchRequest } from "../../../utils/requests";
 import FormMsg from "../../UI/Misc/formMsg";
 import { useDropzone } from "react-dropzone";
 
@@ -14,7 +14,7 @@ const UploadForm = props => {
   };
 
   const onDrop = useCallback(
-    files => {
+    async files => {
       if (files.length > 0) {
         if (files.length <= 10) {
           setIsUploading(true);
@@ -24,28 +24,56 @@ const UploadForm = props => {
 
           setMsg(uploadingMsg(uploadCount, files.length));
 
+          const uploadData = await postRequest(
+            "/api/panel/apps/" +
+              props.session.state.selApp +
+              "/assets/genupload",
+            { names: Array.from(files, f => f.name) }
+          );
+
           files.map(async file => {
             const formData = new FormData();
+
+            for (const [k, v] of Object.entries(
+              uploadData[file.name]["fields"]
+            )) {
+              formData.append(k, v);
+            }
+
             formData.append("file", file);
 
             const resp = await postRequest(
-              "/api/panel/apps/" + props.session.state.selApp + "/assets",
-              formData
+              uploadData[file.name]["url"],
+              formData,
+              true
             );
 
-            const newAsset = {
-              name: resp.name,
-              url: resp.url,
-              description: resp.description
-            };
+            const newFileName = uploadData[file.name]["fields"]["key"].split(
+              "/"
+            )[1];
+
+            let newAsset = {};
 
             if (resp.error) {
               let failedFilesCopy = [...failedFiles];
               failedFilesCopy.push(file.name);
               setFailedFiles(failedFilesCopy);
             } else {
-              if (!props.page.state.modalData.callbackOnLast) {
-                props.page.state.modalData.callback(newAsset);
+              const completeUpload = await patchRequest(
+                "/api/panel/apps/" +
+                  props.session.state.selApp +
+                  "/assets/" +
+                  newFileName,
+                { status: "complete" }
+              );
+
+              if (completeUpload.error) {
+                alert("There was an error completing the upload!");
+              } else {
+                newAsset = completeUpload;
+                if (!props.page.state.modalData.callbackOnLast) {
+                  props.page.state.modalData.callback(newAsset);
+                }
               }
             }
 
@@ -111,7 +139,9 @@ const UploadForm = props => {
           : null}
         {failedFiles.length > 0
           ? failedFiles.map(f => (
-              <p className="redtext">{f} failed to upload!</p>
+              <p key={f} className="redtext">
+                {f} failed to upload!
+              </p>
             ))
           : null}
       </div>

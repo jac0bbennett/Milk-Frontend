@@ -35,9 +35,9 @@ const getRequest = async url => {
   }
 };
 
-const postRequest = async (url, params) => {
+const postRequest = async (url, params, external = false) => {
   try {
-    const req = await api.post(baseApiUrl() + url, params);
+    const req = await api.post(!external ? baseApiUrl() + url : url, params);
     return handleReq(req);
   } catch (err) {
     return retError(err);
