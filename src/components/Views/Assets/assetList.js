@@ -122,7 +122,7 @@ const AssetList = props => {
               />
             ))}
             <center>
-              {loadedAll ? (
+              {loadedAll && assetCount >= 20 ? (
                 <span className="softtext" style={{ paddingBottom: "30px" }}>
                   El Fin
                 </span>
