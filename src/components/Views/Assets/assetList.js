@@ -32,10 +32,9 @@ const AssetList = props => {
           } else {
             setAssets(respAssets);
           }
+          setIsLoaded(true);
           if (resp.data.assets.length < 20) {
             setLoadedAll(true);
-          } else if (n === 1) {
-            setIsLoaded(true);
           }
           props.loadbar.progressTo(100);
           setAssetCount(resp.data.assetCount);
