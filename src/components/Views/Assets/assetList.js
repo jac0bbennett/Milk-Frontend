@@ -126,9 +126,9 @@ const AssetList = props => {
                 <span className="softtext" style={{ paddingBottom: "30px" }}>
                   El Fin
                 </span>
-              ) : (
+              ) : !loadedAll ? (
                 <div className="loadingicon" style={{ marginBottom: "30px" }} />
-              )}
+              ) : null}
             </center>
             {!loadedAll ? (
               <BottomScrollListener
