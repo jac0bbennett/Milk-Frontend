@@ -564,6 +564,16 @@ input[type="checkbox"] {
   background: inherit;
 }
 
+.iconflatbut {
+  padding: 5px;
+  height: 60px;
+}
+
+.iconflatbut i {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
 .material-icons {
   vertical-align: middle;
 }

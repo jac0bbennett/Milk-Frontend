@@ -66,33 +66,12 @@ const TypeItem = props => {
           justifyContent: "flex-end"
         }}
       >
-        <button
-          className="flatbut"
-          onClick={handleCreate}
-          style={{
-            padding: "5px"
-          }}
-        >
-          <i
-            style={{ paddingRight: "20px", paddingLeft: "20px" }}
-            className="material-icons"
-          >
-            add
-          </i>
+        <button className="flatbut iconflatbut" onClick={handleCreate}>
+          <i className="material-icons">add</i>
         </button>
         <Link to={props.url} className="not-text-link">
-          <button
-            className="flatbut"
-            style={{
-              padding: "5px"
-            }}
-          >
-            <i
-              style={{ paddingRight: "20px", paddingLeft: "20px" }}
-              className="material-icons"
-            >
-              create
-            </i>
+          <button className="flatbut iconflatbut" style={{ marginLeft: "5px" }}>
+            <i className="material-icons">create</i>
           </button>
         </Link>
       </div>

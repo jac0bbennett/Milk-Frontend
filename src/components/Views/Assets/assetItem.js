@@ -33,32 +33,18 @@ const AssetItem = props => {
       <div style={{ marginLeft: "auto" }}>
         <CopyToClipboard text={asset.url}>
           <button
-            className="flatbut"
+            className="flatbut iconflatbut"
             title="Copy Url"
-            style={{
-              padding: "5px",
-              height: "60px"
-            }}
             onClick={() => setCopied(true)}
           >
-            <i
-              style={{
-                paddingRight: "10px",
-                paddingLeft: "10px"
-              }}
-              className="material-icons"
-            >
-              content_copy
-            </i>
+            <i className="material-icons">content_copy</i>
             {copied ? <span className="greentext"> Copied</span> : null}
           </button>
         </CopyToClipboard>
         <button
-          className="flatbut"
+          className="flatbut iconflatbut"
           title="Edit"
           style={{
-            padding: "5px",
-            height: "60px",
             marginLeft: "5px"
           }}
           onClick={() =>
@@ -70,15 +56,7 @@ const AssetItem = props => {
             })
           }
         >
-          <i
-            style={{
-              paddingRight: "10px",
-              paddingLeft: "10px"
-            }}
-            className="material-icons"
-          >
-            more_vert
-          </i>
+          <i className="material-icons">more_vert</i>
         </button>
       </div>
     </div>
