@@ -1,6 +1,11 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:600,400,500,300");
 @import url("https://fonts.googleapis.com/css?family=Montserrat:600,400,500,300");
 
+:root {
+  --main-accent-color: #3c81c8;
+  --darker-accent-color: #4c8fd5;
+}
+
 html {
   left: calc(100vw - 100%);
 }
@@ -95,7 +100,7 @@ body {
 #nav li.currenttab {
   color: #212121;
   height: 48px;
-  border-bottom: 2px solid #3c81c8;
+  border-bottom: 2px solid var(--main-accent-color);
 }
 
 #nav a {
@@ -105,11 +110,11 @@ body {
 #wrapper a:not(.not-text-link),
 form a {
   text-decoration: none;
-  color: #3c81c8;
+  color: var(--main-accent-color);
 }
 
 form a {
-  border-bottom: 1px solid #3c81c8;
+  border-bottom: 1px solid var(--main-accent-color);
 }
 
 .LoadingBar {
@@ -118,10 +123,10 @@ form a {
   width: 0;
   height: 3px;
   top: 0px;
-  background: #3c81c8;
+  background: var(--main-accent-color);
   z-index: 2000;
   outline: none;
-  border-color: #3c81c8;
+  border-color: var(--main-accent-color);
 }
 
 .LoadingBar-glow {
@@ -129,7 +134,7 @@ form a {
   position: absolute;
   height: 100%;
   width: 100%;
-  box-shadow: 0 0 10px #3c81c8;
+  box-shadow: 0 0 10px var(--main-accent-color);
   right: 0;
 }
 
@@ -166,7 +171,7 @@ hr {
 .fab {
   height: 55px;
   width: 55px;
-  background: #3c81c8;
+  background: var(--main-accent-color);
   outline: none;
   border: none;
   color: #fff;
@@ -184,7 +189,7 @@ hr {
 }
 
 .fab:hover {
-  background: #4c8fd5;
+  background: var(--darker-accent-color);
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13), 0 3px 2px rgba(0, 0, 0, 0.25);
 }
@@ -242,7 +247,7 @@ hr {
 
 .miniheader {
   border-radius: 5px;
-  color: #3c81c8;
+  color: var(--main-accent-color);
   padding: 5px;
   text-decoration: overline;
   margin-top: -10px;
@@ -329,7 +334,7 @@ hr {
 
 .gentxtinp:focus ~ .floating-label,
 .gendropinp:focus ~ .floating-label {
-  color: #3c81c8;
+  color: var(--main-accent-color);
 }
 
 .gentxtinp:focus ~ .floating-label,
@@ -355,7 +360,7 @@ hr {
 }
 
 .gentxtinp:focus {
-  border-bottom: 2px solid #3c81c8;
+  border-bottom: 2px solid var(--main-accent-color);
 }
 
 .gentxtinp.wide {
@@ -419,7 +424,7 @@ input[type="checkbox"] {
   height: 36px;
   padding-left: 16px;
   padding-right: 16px;
-  background: #3c81c8;
+  background: var(--main-accent-color);
   outline: none;
   border: none;
   color: #fff;
@@ -435,7 +440,7 @@ input[type="checkbox"] {
 }
 
 .raisedbut:hover {
-  background: #4c8fd5;
+  background: var(--darker-accent-color);
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13), 0 3px 2px rgba(0, 0, 0, 0.25);
 }
@@ -501,7 +506,7 @@ input[type="checkbox"] {
 }
 
 .selappdiv {
-  border-left: 5px #4c8fd5 solid;
+  border-left: 5px var(--darker-accent-color) solid;
 }
 
 .secondaryitemcont {
@@ -595,7 +600,7 @@ input[type="checkbox"] {
 }
 
 .bluetext {
-  color: #4c8fd5;
+  color: var(--darker-accent-color);
 }
 
 .redtext {
@@ -611,7 +616,7 @@ input[type="checkbox"] {
 }
 
 .hoverblue:hover {
-  color: #4c8fd5;
+  color: var(--darker-accent-color);
 }
 
 #fieldoptions {
@@ -653,7 +658,7 @@ input[type="checkbox"] {
 }
 
 .changeimage:hover {
-  color: #4c8fd5;
+  color: var(--darker-accent-color);
 }
 
 .assetlistmodal {
@@ -676,7 +681,7 @@ input[type="checkbox"] {
 
 textarea {
   width: 100%;
-  outline-color: #3c81c8;
+  outline-color: var(--main-accent-color);
   font-size: 12pt;
   font-family: consolas;
   padding: 10px;
@@ -764,7 +769,7 @@ textarea {
 .loadingicon {
   width: 20px;
   height: 20px;
-  background-color: #3c81c8;
+  background-color: var(--main-accent-color);
   border-radius: 100%;
   -webkit-animation: sk-scaleout 0.7s infinite ease-in-out;
   animation: sk-scaleout 0.8s infinite ease-in-out;
