@@ -1,23 +1,45 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Moment from "react-moment";
+import moment from "moment";
 
 const ContentItem = props => {
   const getStatus = () => {
     if (props.content.status === 0) {
       return <span className="softtext">Draft</span>;
     } else if (
-      props.content.editedAt !== props.content.publishedAt &&
-      props.content.editedAt !== props.content.updatedAt
+      props.content.editedAt > props.content.publishedAt &&
+      props.content.editedAt > props.content.updatedAt
     ) {
       return (
         <React.Fragment>
-          <span className="yellowtext">Published</span>
+          <span
+            className="yellowtext"
+            title={new Date(props.content.publishedAt)}
+          >
+            Published
+          </span>
           <span className="softtext"> (Pending draft)</span>
         </React.Fragment>
       );
+    } else if (new Date(props.content.publishedAt) > new Date()) {
+      return (
+        <span className="bluetext" title={new Date(props.content.publishedAt)}>
+          {moment().diff(props.content.publishedAt, "months") >= 10 ? (
+            <Moment format="MMM Do YYYY, h:mma">
+              {props.content.publishedAt}
+            </Moment>
+          ) : (
+            <Moment format="MMM Do, h:mma">{props.content.publishedAt}</Moment>
+          )}
+        </span>
+      );
     } else {
-      return <span className="greentext">Published</span>;
+      return (
+        <span className="greentext" title={new Date(props.content.publishedAt)}>
+          Published
+        </span>
+      );
     }
   };
 

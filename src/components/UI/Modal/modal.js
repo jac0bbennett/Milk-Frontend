@@ -7,6 +7,7 @@ import NewTypeForm from "../../Forms/ContentTypes/newType";
 import NewFieldForm from "../../Forms/Fields/newField";
 import EditFieldForm from "../../Forms/Fields/editField";
 import NewContentForm from "../../Forms/Content/newContent";
+import ScheduleForm from "../../Forms/Content/schedule";
 import ConfirmDeleteForm from "../../Forms/confirmDelete";
 import ConfirmActionForm from "../../Forms/confirmAction";
 import EditFieldOptionValuesForm from "../../Forms/Fields/editOptionValues";
@@ -34,6 +35,8 @@ const Content = props => {
       return <EditFieldForm {...props} />;
     case "newcontentform":
       return <NewContentForm {...props} />;
+    case "scheduleform":
+      return <ScheduleForm {...props} />;
     case "confirmdeleteform":
       return <ConfirmDeleteForm {...props} />;
     case "confirmactionform":

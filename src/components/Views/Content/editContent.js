@@ -138,10 +138,12 @@ const EditContent = props => {
     if (contentData.status === 0) {
       setContentStatus("draft");
     } else if (
-      contentData.editedAt !== contentData.publishedAt &&
-      contentData.editedAt !== contentData.updatedAt
+      contentData.editedAt > contentData.publishedAt &&
+      contentData.editedAt > contentData.updatedAt
     ) {
       setContentStatus("publishedChange");
+    } else if (new Date(contentData.publishedAt) > new Date()) {
+      setContentStatus("scheduled");
     } else {
       setContentStatus("published");
     }
@@ -255,6 +257,30 @@ const EditContent = props => {
     });
   };
 
+  const handleUnschedule = () => {
+    const url =
+      "/api/panel/apps/" +
+      props.session.state.selApp +
+      "/content/" +
+      props.match.params.contentuuid;
+
+    props.page.handleShowModal("confirmactionform", {
+      discardUrl: url,
+      action: "unpublish",
+      callback: unpublishCallback,
+      titleText: "Are you sure you want to unschedule this?",
+      extraText:
+        "It will not be made available through the API at the scheduled time!",
+      msgText: "unscheduling..."
+    });
+  };
+
+  const scheduleCallback = data => {
+    if (data) {
+      setContentData(data);
+    }
+  };
+
   const getFieldValue = fieldSlug => {
     return contentData.fields[fieldSlug]
       ? contentData.fields[fieldSlug].draft || ""
@@ -276,12 +302,35 @@ const EditContent = props => {
     } else if (contentStatus === "publishedChange") {
       return (
         <React.Fragment>
-          <span className="yellowtext">Published</span>
+          <span
+            className="yellowtext"
+            title={new Date(contentData.publishedAt)}
+          >
+            Published
+          </span>
           <span className="softtext"> (Pending draft)</span>
         </React.Fragment>
       );
+    } else if (contentStatus === "scheduled") {
+      return (
+        <span>
+          <span className="bluetext" title={new Date(contentData.publishedAt)}>
+            {moment().diff(contentData.publishedAt, "months") >= 10 ? (
+              <Moment format="MMM Do YYYY, h:mma">
+                {contentData.publishedAt}
+              </Moment>
+            ) : (
+              <Moment format="MMM Do, h:mma">{contentData.publishedAt}</Moment>
+            )}
+          </span>
+        </span>
+      );
     } else {
-      return <span className="greentext">Published</span>;
+      return (
+        <span className="greentext" title={new Date(contentData.publishedAt)}>
+          Published
+        </span>
+      );
     }
   };
 
@@ -376,17 +425,44 @@ const EditContent = props => {
                   <Moment format="MMM Do, h:mma">{contentData.editedAt}</Moment>
                 )}
               </span>
-              <span style={{ marginTop: "-10px", marginRight: "15px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: "-10px",
+                  marginRight: "15px"
+                }}
+              >
                 <span style={{ fontSize: "11pt" }}>{msg}</span>
+                {contentStatus === "draft" ? (
+                  <button
+                    className="flatbut darkflatbutton"
+                    onClick={() => {
+                      props.page.handleShowModal("scheduleform", {
+                        uuid: props.match.params.contentuuid,
+                        callback: scheduleCallback
+                      });
+                    }}
+                    style={{
+                      padding: "0px",
+                      width: "40px",
+                      marginRight: "5px"
+                    }}
+                  >
+                    <i className="material-icons" style={{ fontSize: "21px" }}>
+                      alarm
+                    </i>
+                  </button>
+                ) : null}
                 <button
                   onClick={handlePublish}
                   className="raisedbut"
-                  style={{ marginLeft: "10px" }}
+                  style={{ marginRight: "10px" }}
                   disabled={isPublishing || isDrafting || publishDisabled}
                 >
                   {contentStatus === "draft" ? "Publish" : "Update"}
                 </button>
-              </span>
+              </div>
             </div>
           </div>
           <br />
@@ -396,6 +472,11 @@ const EditContent = props => {
             contentStatus === "publishedChange" ? (
               <button className="flatbut bluetext" onClick={handleUnpublish}>
                 Unpublish
+              </button>
+            ) : null}
+            {contentStatus === "scheduled" ? (
+              <button className="flatbut bluetext" onClick={handleUnschedule}>
+                Unschedule
               </button>
             ) : null}
             {contentStatus === "draft" ||

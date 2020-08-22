@@ -349,7 +349,8 @@ hr {
   opacity: 1;
 }
 
-.gentxtinp {
+.gentxtinp,
+.datepicker input[type="text"] {
   margin-top: 12px;
   font-size: 14pt;
   width: 300px;
@@ -359,8 +360,18 @@ hr {
   border-bottom: 2px solid #000;
 }
 
-.gentxtinp:focus {
+.gentxtinp:focus,
+.datepicker input[type="text"]:focus {
   border-bottom: 2px solid var(--main-accent-color);
+}
+
+.datepicker input[type="text"] {
+  width: 270px;
+  padding-left: 10px;
+}
+
+.datepicker input[type="text"]:focus + label {
+  color: var(--main-accent-color);
 }
 
 .gentxtinp.wide {
@@ -613,6 +624,7 @@ input[type="checkbox"] {
 
 .hoverblue {
   transition: 200ms ease;
+  cursor: pointer;
 }
 
 .hoverblue:hover {

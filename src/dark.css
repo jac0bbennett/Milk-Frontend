@@ -86,6 +86,7 @@ body.darkmode input {
 }
 
 body.darkmode .gentxtinp,
+body.darkmode .datepicker input[type="text"],
 body.darkmode .gendropinp {
   border-bottom: 2px solid #c7c7c7;
 }
@@ -100,7 +101,8 @@ body.darkmode .gendropinp:focus ~ .floating-label {
   color: #3c81c8;
 }
 
-body.darkmode .gentxtinp:focus {
+body.darkmode .gentxtinp:focus,
+body.darkmode .datepicker input[type="text"]:focus {
   border-bottom: 2px solid #3c81c8;
 }
 
