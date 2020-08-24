@@ -6,11 +6,13 @@ import moment from "moment";
 const ContentItem = props => {
   const editedAt = new Date(props.content.editedAt);
   const publishedAt = new Date(props.content.publishedAt);
-  const updatedAt = new Date(props.content.updatedAt);
   const getStatus = () => {
     if (props.content.status === 0) {
       return <span className="softtext">Draft</span>;
-    } else if (editedAt > publishedAt && editedAt !== updatedAt) {
+    } else if (
+      editedAt > publishedAt &&
+      props.content.editedAt !== props.content.updatedAt
+    ) {
       return (
         <React.Fragment>
           <span className="yellowtext" title={publishedAt}>

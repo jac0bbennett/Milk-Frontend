@@ -139,11 +139,13 @@ const EditContent = props => {
   useEffect(() => {
     const editedAt = new Date(contentData.editedAt);
     const publishedAt = new Date(contentData.publishedAt);
-    const updatedAt = new Date(contentData.updatedAt);
     if (contentData.status === 0) {
       setContentStatus("draft");
       setFieldsDisabled(false);
-    } else if (editedAt > publishedAt && editedAt !== updatedAt) {
+    } else if (
+      editedAt > publishedAt &&
+      contentData.editedAt !== contentData.updatedAt
+    ) {
       setContentStatus("publishedChange");
       setFieldsDisabled(false);
     } else if (publishedAt > new Date()) {
