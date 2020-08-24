@@ -150,11 +150,12 @@ const LongTextField = props => {
 
   const selectAsset = event => {
     event.preventDefault();
-
-    props.page.handleShowModal("selectassetform", undefined, {
-      callback: selectAssetCallback,
-      callbackData: input.current.selectionStart
-    });
+    if (!props.disabled) {
+      props.page.handleShowModal("selectassetform", undefined, {
+        callback: selectAssetCallback,
+        callbackData: input.current.selectionStart
+      });
+    }
   };
 
   return (
@@ -167,7 +168,11 @@ const LongTextField = props => {
           {props.label}
         </h4>
         <i
-          className="material-icons changeimage"
+          className={
+            !props.disabled
+              ? "material-icons changeimage"
+              : "material-icons changeimage softtext"
+          }
           title="Insert Asset"
           style={{
             fontSize: "27px",

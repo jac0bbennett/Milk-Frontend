@@ -142,13 +142,19 @@ const ImageField = props => {
       >
         <span className="icolab">{props.label}</span>{" "}
         <i
-          className="material-icons changeimage"
-          style={{ fontSize: "27px" }}
-          onClick={() =>
-            props.page.handleShowModal("selectassetform", undefined, {
-              callback: selectCallback
-            })
+          className={
+            !props.disabled
+              ? "material-icons changeimage"
+              : "material-icons changeimage softtext"
           }
+          style={{ fontSize: "27px" }}
+          onClick={() => {
+            if (!props.disabled) {
+              props.page.handleShowModal("selectassetform", undefined, {
+                callback: selectCallback
+              });
+            }
+          }}
         >
           add_photo_alternate
         </i>
