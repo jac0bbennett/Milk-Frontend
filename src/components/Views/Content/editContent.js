@@ -148,7 +148,7 @@ const EditContent = props => {
     ) {
       setContentStatus("publishedChange");
       setFieldsDisabled(false);
-    } else if (publishedAt > new Date()) {
+    } else if (publishedAt > editedAt) {
       setContentStatus("scheduled");
       setFieldsDisabled(true);
     } else {
