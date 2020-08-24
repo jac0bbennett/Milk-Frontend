@@ -4,39 +4,34 @@ import Moment from "react-moment";
 import moment from "moment";
 
 const ContentItem = props => {
+  const editedAt = new Date(props.content.editedAt);
+  const publishedAt = new Date(props.content.publishedAt);
+  const updatedAt = new Date(props.content.updatedAt);
   const getStatus = () => {
     if (props.content.status === 0) {
       return <span className="softtext">Draft</span>;
-    } else if (
-      props.content.editedAt < props.content.publishedAt &&
-      props.content.editedAt !== props.content.updatedAt
-    ) {
+    } else if (editedAt < publishedAt && editedAt !== updatedAt) {
       return (
         <React.Fragment>
-          <span
-            className="yellowtext"
-            title={new Date(props.content.publishedAt)}
-          >
+          <span className="yellowtext" title={publishedAt}>
             Published
           </span>
           <span className="softtext"> (Pending draft)</span>
         </React.Fragment>
       );
-    } else if (new Date(props.content.publishedAt) > new Date()) {
+    } else if (publishedAt > new Date()) {
       return (
-        <span className="bluetext" title={new Date(props.content.publishedAt)}>
-          {moment().diff(props.content.publishedAt, "months") >= 10 ? (
-            <Moment format="MMM Do YYYY, h:mma">
-              {props.content.publishedAt}
-            </Moment>
+        <span className="bluetext" title={publishedAt}>
+          {moment().diff(publishedAt, "months") >= 10 ? (
+            <Moment format="MMM Do YYYY, h:mma">{publishedAt}</Moment>
           ) : (
-            <Moment format="MMM Do, h:mma">{props.content.publishedAt}</Moment>
+            <Moment format="MMM Do, h:mma">{publishedAt}</Moment>
           )}
         </span>
       );
     } else {
       return (
-        <span className="greentext" title={new Date(props.content.publishedAt)}>
+        <span className="greentext" title={publishedAt}>
           Published
         </span>
       );
