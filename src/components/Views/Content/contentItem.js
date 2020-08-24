@@ -10,7 +10,7 @@ const ContentItem = props => {
   const getStatus = () => {
     if (props.content.status === 0) {
       return <span className="softtext">Draft</span>;
-    } else if (editedAt < publishedAt && editedAt !== updatedAt) {
+    } else if (editedAt > publishedAt && editedAt !== updatedAt) {
       return (
         <React.Fragment>
           <span className="yellowtext" title={publishedAt}>
