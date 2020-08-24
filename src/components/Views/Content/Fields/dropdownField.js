@@ -32,7 +32,7 @@ const DropdownField = props => {
     } else {
       props.drafting(false);
       props.disablePublish(false);
-      props.updateEditedTime(req.edited);
+      props.updateEditedTime(req.editedAt);
       setSaved(true);
     }
   };

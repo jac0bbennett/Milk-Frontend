@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { getRequest, postRequest } from "../../../utils/requests";
-import DeleteButton from "../../UI/Buttons/deleteButton";
 import history from "../../../utils/history";
 import ShortTextField from "./Fields/shortTextField";
 import LongTextField from "./Fields/longTextField";
@@ -23,8 +22,11 @@ const EditContent = props => {
   const [contentStatus, setContentStatus] = useState("draft");
   const [isPublishing, setIsPublishing] = useState(false);
   const [isDrafting, setIsDrafting] = useState(false);
+  const [fieldsDisabled, setFieldsDisabled] = useState(false);
   const [isDraftDiscarded, setIsDraftDiscarded] = useState(false);
   const [publishDisabled, setPublishDisabled] = useState(false);
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const moreOptions = useRef(null);
 
   const handleUpdateTitle = useCallback(
     (newTitle = "") => {
@@ -135,17 +137,21 @@ const EditContent = props => {
   }, [props.page.state.showModal, props.page.state.modalComp]);
 
   useEffect(() => {
+    const editedAt = new Date(contentData.editedAt);
+    const publishedAt = new Date(contentData.publishedAt);
+    const updatedAt = new Date(contentData.updatedAt);
     if (contentData.status === 0) {
       setContentStatus("draft");
-    } else if (
-      contentData.editedAt > contentData.publishedAt &&
-      contentData.editedAt > contentData.updatedAt
-    ) {
+      setFieldsDisabled(false);
+    } else if (editedAt > publishedAt && editedAt !== updatedAt) {
       setContentStatus("publishedChange");
-    } else if (new Date(contentData.publishedAt) > new Date()) {
+      setFieldsDisabled(false);
+    } else if (publishedAt > new Date()) {
       setContentStatus("scheduled");
+      setFieldsDisabled(true);
     } else {
       setContentStatus("published");
+      setFieldsDisabled(false);
     }
   }, [
     contentData.editedAt,
@@ -153,6 +159,17 @@ const EditContent = props => {
     contentData.publishedAt,
     contentData.updatedAt
   ]);
+
+  const handleClickOutsideMore = event => {
+    if (moreOptions && !moreOptions.current.contains(event.target)) {
+      setShowMoreOptions(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutsideMore);
+    return () => document.removeEventListener("click", handleClickOutsideMore);
+  }, []);
 
   const handlePublish = async event => {
     event.preventDefault();
@@ -347,7 +364,7 @@ const EditContent = props => {
       updateTitle: handleUpdateTitle,
       pageTitle: pageTitle,
       updateEditedTime: handleUpdateEditedTime,
-      disabled: isPublishing,
+      disabled: fieldsDisabled || isPublishing,
       drafting: handleDrafting,
       contentStatus: contentStatus,
       isDraftDiscarded: isDraftDiscarded,
@@ -434,61 +451,75 @@ const EditContent = props => {
                 }}
               >
                 <span style={{ fontSize: "11pt" }}>{msg}</span>
-                {contentStatus === "draft" ? (
-                  <button
-                    className="flatbut darkflatbutton"
-                    onClick={() => {
-                      props.page.handleShowModal("scheduleform", {
-                        uuid: props.match.params.contentuuid,
-                        callback: scheduleCallback
-                      });
-                    }}
-                    style={{
-                      padding: "0px",
-                      width: "40px",
-                      marginRight: "5px"
-                    }}
-                  >
-                    <i className="material-icons" style={{ fontSize: "21px" }}>
-                      alarm
-                    </i>
-                  </button>
-                ) : null}
                 <button
                   onClick={handlePublish}
                   className="raisedbut"
-                  style={{ marginRight: "10px" }}
                   disabled={isPublishing || isDrafting || publishDisabled}
                 >
-                  {contentStatus === "draft" ? "Publish" : "Update"}
+                  {contentStatus === "draft" || contentStatus === "scheduled"
+                    ? "Publish"
+                    : "Update"}
                 </button>
+                <div ref={moreOptions}>
+                  <button
+                    className="flatbut darkflatbutton"
+                    onClick={() => setShowMoreOptions(!showMoreOptions)}
+                    style={{
+                      padding: "0px",
+                      width: "30px",
+                      marginLeft: "5px"
+                    }}
+                  >
+                    <i className="material-icons" style={{ fontSize: "21px" }}>
+                      more_vert
+                    </i>
+                  </button>
+                  {showMoreOptions ? (
+                    <div className="publishoptions">
+                      <ul>
+                        {contentStatus === "draft" ? (
+                          <li
+                            onClick={() => {
+                              props.page.handleShowModal("scheduleform", {
+                                uuid: props.match.params.contentuuid,
+                                callback: scheduleCallback
+                              });
+                            }}
+                          >
+                            Schedule
+                          </li>
+                        ) : null}
+                        {contentStatus === "published" ||
+                        contentStatus === "publishedChange" ? (
+                          <li onClick={handleUnpublish}>Unpublish</li>
+                        ) : null}
+                        {contentStatus === "scheduled" ? (
+                          <li onClick={handleUnschedule}>Unschedule</li>
+                        ) : null}
+                        {contentStatus === "publishedChange" ? (
+                          <li onClick={handleDiscardDraft}>Discard Draft</li>
+                        ) : null}
+                        <li onClick={handleDelete} className="redtext">
+                          Delete
+                        </li>
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
           <br />
+          {contentStatus === "scheduled" ? (
+            <React.Fragment>
+              <span className="softtext">
+                Scheduled content cannot be edited.
+              </span>
+              <br />
+              <br />
+            </React.Fragment>
+          ) : null}
           {fields.map(field => FieldInput(field))}
-          <div className="gencontainerfooter">
-            {contentStatus === "published" ||
-            contentStatus === "publishedChange" ? (
-              <button className="flatbut bluetext" onClick={handleUnpublish}>
-                Unpublish
-              </button>
-            ) : null}
-            {contentStatus === "scheduled" ? (
-              <button className="flatbut bluetext" onClick={handleUnschedule}>
-                Unschedule
-              </button>
-            ) : null}
-            {contentStatus === "draft" ||
-            contentStatus === "publishedChange" ? (
-              <button className="flatbut" onClick={handleDiscardDraft}>
-                Discard Draft
-              </button>
-            ) : null}
-            <DeleteButton style={{ marginLeft: "auto" }} onClick={handleDelete}>
-              Delete
-            </DeleteButton>
-          </div>
         </div>
       ) : (
         <br />

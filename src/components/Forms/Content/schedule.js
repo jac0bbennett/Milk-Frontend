@@ -62,7 +62,10 @@ const ScheduleForm = props => {
           id="datepicker"
           selected={datetime}
           showTimeSelect
-          onChange={date => setDatetime(date)}
+          onChange={date => {
+            setDatetime(date);
+            setMsg("");
+          }}
           dateFormat="M/d/yyyy h:mm aa"
           minDate={new Date()}
         />

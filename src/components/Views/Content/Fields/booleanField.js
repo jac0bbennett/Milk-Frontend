@@ -30,7 +30,7 @@ const BooleanField = props => {
       props.drafting(false);
     } else {
       props.drafting(false);
-      props.updateEditedTime(req.edited);
+      props.updateEditedTime(req.editedAt);
       if (props.name === "title") {
         props.updateTitle(newVal);
       }

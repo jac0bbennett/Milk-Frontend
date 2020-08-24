@@ -34,7 +34,7 @@ const NumberField = props => {
     } else {
       props.disablePublish(false);
       props.drafting(false);
-      props.updateEditedTime(req.edited);
+      props.updateEditedTime(req.editedAt);
       if (props.name === "title") {
         props.updateTitle(newVal);
       }
@@ -80,7 +80,7 @@ const NumberField = props => {
       props.disablePublish(false);
       props.drafting(true);
       setTypingTimeout(
-        setTimeout(function() {
+        setTimeout(function () {
           autoSave(newValue);
         }, 700)
       );

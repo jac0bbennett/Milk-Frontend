@@ -41,7 +41,7 @@ const LongTextField = props => {
     } else {
       props.disablePublish(false);
       props.drafting(false);
-      props.updateEditedTime(req.edited);
+      props.updateEditedTime(req.editedAt);
       if (props.name === "title") {
         props.updateTitle(newVal);
       }

@@ -40,7 +40,7 @@ const ImageField = props => {
       } else {
         drafting(false);
         disablePublish(false);
-        updateEditedTime(req.edited);
+        updateEditedTime(req.editedAt);
         if (props.fieldOptions && props.fieldOptions.title) {
           updateTitle(newVal);
         }

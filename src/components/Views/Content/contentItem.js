@@ -8,8 +8,8 @@ const ContentItem = props => {
     if (props.content.status === 0) {
       return <span className="softtext">Draft</span>;
     } else if (
-      props.content.editedAt > props.content.publishedAt &&
-      props.content.editedAt > props.content.updatedAt
+      props.content.editedAt < props.content.publishedAt &&
+      props.content.editedAt !== props.content.updatedAt
     ) {
       return (
         <React.Fragment>
