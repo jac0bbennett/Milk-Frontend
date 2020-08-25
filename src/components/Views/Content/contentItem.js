@@ -21,7 +21,7 @@ const ContentItem = props => {
           <span className="softtext"> (Pending draft)</span>
         </React.Fragment>
       );
-    } else if (publishedAt > editedAt) {
+    } else if (publishedAt > editedAt && publishedAt > new Date()) {
       return (
         <span className="bluetext" title={publishedAt}>
           {moment().diff(publishedAt, "months") >= 10 ? (
