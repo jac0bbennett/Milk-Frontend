@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { getRequest, postRequest } from "../../../utils/requests";
 import history from "../../../utils/history";
 import ShortTextField from "./Fields/shortTextField";
@@ -8,6 +8,7 @@ import BooleanField from "./Fields/booleanField";
 import DropdownField from "./Fields/dropdownField";
 import ImageField from "./Fields/imageField";
 import ListField from "./Fields/listField";
+import DropMenu from "../../UI/Misc/dropMenu";
 import Moment from "react-moment";
 import moment from "moment";
 
@@ -25,8 +26,6 @@ const EditContent = props => {
   const [fieldsDisabled, setFieldsDisabled] = useState(false);
   const [isDraftDiscarded, setIsDraftDiscarded] = useState(false);
   const [publishDisabled, setPublishDisabled] = useState(false);
-  const [showMoreOptions, setShowMoreOptions] = useState(false);
-  const moreOptions = useRef(null);
 
   const handleUpdateTitle = useCallback(
     (newTitle = "") => {
@@ -161,17 +160,6 @@ const EditContent = props => {
     contentData.publishedAt,
     contentData.updatedAt
   ]);
-
-  const handleClickOutsideMore = event => {
-    if (moreOptions && !moreOptions.current.contains(event.target)) {
-      setShowMoreOptions(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutsideMore);
-    return () => document.removeEventListener("click", handleClickOutsideMore);
-  }, []);
 
   const handlePublish = async event => {
     event.preventDefault();
@@ -462,52 +450,33 @@ const EditContent = props => {
                     ? "Publish"
                     : "Update"}
                 </button>
-                <div ref={moreOptions}>
-                  <button
-                    className="flatbut darkflatbutton"
-                    onClick={() => setShowMoreOptions(!showMoreOptions)}
-                    style={{
-                      padding: "0px",
-                      width: "30px",
-                      marginLeft: "5px"
-                    }}
-                  >
-                    <i className="material-icons" style={{ fontSize: "21px" }}>
-                      more_vert
-                    </i>
-                  </button>
-                  {showMoreOptions ? (
-                    <div className="publishoptions">
-                      <ul>
-                        {contentStatus === "draft" ? (
-                          <li
-                            onClick={() => {
-                              props.page.handleShowModal("scheduleform", {
-                                uuid: props.match.params.contentuuid,
-                                callback: scheduleCallback
-                              });
-                            }}
-                          >
-                            Schedule
-                          </li>
-                        ) : null}
-                        {contentStatus === "published" ||
-                        contentStatus === "publishedChange" ? (
-                          <li onClick={handleUnpublish}>Unpublish</li>
-                        ) : null}
-                        {contentStatus === "scheduled" ? (
-                          <li onClick={handleUnschedule}>Unschedule</li>
-                        ) : null}
-                        {contentStatus === "publishedChange" ? (
-                          <li onClick={handleDiscardDraft}>Discard Draft</li>
-                        ) : null}
-                        <li onClick={handleDelete} className="redtext">
-                          Delete
-                        </li>
-                      </ul>
-                    </div>
+                <DropMenu>
+                  {contentStatus === "draft" ? (
+                    <li
+                      onClick={() => {
+                        props.page.handleShowModal("scheduleform", {
+                          uuid: props.match.params.contentuuid,
+                          callback: scheduleCallback
+                        });
+                      }}
+                    >
+                      Schedule
+                    </li>
                   ) : null}
-                </div>
+                  {contentStatus === "published" ||
+                  contentStatus === "publishedChange" ? (
+                    <li onClick={handleUnpublish}>Unpublish</li>
+                  ) : null}
+                  {contentStatus === "scheduled" ? (
+                    <li onClick={handleUnschedule}>Unschedule</li>
+                  ) : null}
+                  {contentStatus === "publishedChange" ? (
+                    <li onClick={handleDiscardDraft}>Discard Draft</li>
+                  ) : null}
+                  <li onClick={handleDelete} className="redtext">
+                    Delete
+                  </li>
+                </DropMenu>
               </div>
             </div>
           </div>

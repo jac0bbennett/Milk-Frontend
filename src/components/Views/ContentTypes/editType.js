@@ -7,6 +7,7 @@ import FormMsg from "../../UI/Misc/formMsg";
 import FAB from "../../UI/Buttons/fab";
 import FieldList from "./fieldList";
 import history from "../../../utils/history";
+import DropMenu from "../../UI/Misc/dropMenu";
 import Moment from "react-moment";
 import arrayMove from "array-move";
 
@@ -158,9 +159,16 @@ const EditContentType = props => {
               value={typeData.slug}
               disabled={true}
             />
-            <div style={{ float: "right" }}>
+            <div
+              style={{ display: "flex", alignItems: "center", float: "right" }}
+            >
               <FormMsg msg={msg} />
               <SubmitButton>Save</SubmitButton>
+              <DropMenu>
+                <li onClick={handleDelete} className="redtext">
+                  Delete
+                </li>
+              </DropMenu>
             </div>
           </form>
 
@@ -181,11 +189,6 @@ const EditContentType = props => {
               <span className="softtext">No Fields</span>
             </center>
           )}
-          <DeleteButton style={{ float: "right" }} onClick={handleDelete}>
-            Delete
-          </DeleteButton>
-          <br />
-          <br />
         </div>
       ) : (
         <br />
