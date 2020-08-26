@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import TextInput from "../../UI/Inputs/txtInput";
 import { getRequest, patchRequest } from "../../../utils/requests";
 import SubmitButton from "../../UI/Buttons/submitButton";
-import DeleteButton from "../../UI/Buttons/deleteButton";
 import FormMsg from "../../UI/Misc/formMsg";
 import FAB from "../../UI/Buttons/fab";
 import FieldList from "./fieldList";
