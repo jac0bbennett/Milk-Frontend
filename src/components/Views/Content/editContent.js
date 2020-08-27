@@ -473,7 +473,10 @@ const EditContent = props => {
                   {contentStatus === "publishedChange" ? (
                     <li onClick={handleDiscardDraft}>Discard Draft</li>
                   ) : null}
-                  <li onClick={handleDelete} className="redtext">
+                  <li
+                    onClick={handleDelete}
+                    className="redtext dropmenusection"
+                  >
                     Delete
                   </li>
                 </DropMenu>

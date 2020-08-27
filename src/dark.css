@@ -190,3 +190,7 @@ body.darkmode .dropmenuoptions {
 body.darkmode .dropmenuoptions ul li:hover {
   background: #2c2c2c;
 }
+
+body.darkmode .dropmenusection {
+  border-top: 1px solid #464646;
+}
