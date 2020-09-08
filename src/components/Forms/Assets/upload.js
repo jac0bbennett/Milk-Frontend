@@ -132,7 +132,7 @@ const UploadForm = props => {
         ) : null}
         {rejectedFiles.length > 0
           ? rejectedFiles.map(f => (
-              <p className="redtext">
+              <p className="redtext" key={f}>
                 {f} too large! Must be {"<"} 5mb.
               </p>
             ))

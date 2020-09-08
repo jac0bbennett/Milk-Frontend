@@ -103,11 +103,17 @@ const EditAssetForm = props => {
           marginBottom: "15px"
         }}
       >
-        <img
-          src={props.page.state.modalData.asset.url}
-          style={{ maxWidth: "300px", maxHeight: "300px" }}
-          alt={props.page.state.modalData.asset.description}
-        />
+        <a
+          href={props.page.state.modalData.asset.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src={props.page.state.modalData.asset.url}
+            style={{ maxWidth: "300px", maxHeight: "300px" }}
+            alt={props.page.state.modalData.asset.description}
+          />
+        </a>
       </div>
       <span
         className="softtext floatright"
