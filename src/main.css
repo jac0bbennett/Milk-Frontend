@@ -695,7 +695,7 @@ textarea {
   width: 100%;
   outline-color: var(--main-accent-color);
   font-size: 12pt;
-  font-family: consolas;
+  font-family: consolas, monospace;
   padding: 10px;
   border-radius: 3px;
   color: #414141;
