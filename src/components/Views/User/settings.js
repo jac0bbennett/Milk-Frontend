@@ -6,7 +6,6 @@ import SubmitButton from "../../UI/Buttons/submitButton";
 
 const UserSettings = props => {
   const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
   const [curPass, setCurPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [isLoaded, setIsLoaded] = useState("");
@@ -27,7 +26,6 @@ const UserSettings = props => {
         const userId = resp.meta.userId;
         const selApp = resp.meta.appUUID;
         setName(resp.data.user.name);
-        setUsername(resp.data.user.username);
         setEmail(resp.data.user.email);
         setIsLoaded(true);
         props.session.handleSession(userId, selApp);
@@ -42,10 +40,6 @@ const UserSettings = props => {
     switch (event.target.name) {
       case "name":
         setName(event.target.value);
-        setSettingsMsg("");
-        break;
-      case "username":
-        setUsername(event.target.value);
         setSettingsMsg("");
         break;
       case "curPass":
@@ -67,8 +61,7 @@ const UserSettings = props => {
     setSettingsMsg("saving...");
 
     const resp = await patchRequest("/api/panel/settings", {
-      name: name,
-      username: username
+      name: name
     });
 
     if (resp.error) {
@@ -133,14 +126,6 @@ const UserSettings = props => {
               type="text"
               label="Your Name"
               value={name}
-              onChange={handleChange}
-              required={true}
-            />
-            <TextInput
-              name="username"
-              type="text"
-              label="Username"
-              value={username}
               onChange={handleChange}
               required={true}
             />

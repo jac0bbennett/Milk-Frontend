@@ -8,13 +8,13 @@ const SignInForm = props => {
     <form id="signin" onSubmit={props.handleSubmit}>
       <h1>Sign In</h1>
       <TextInput
-        name="username"
+        name="email"
         onChange={e => props.handleChange(e)}
         type="text"
-        label="Username"
-        autoComplete={"username"}
+        label="Email"
+        autoComplete={"email"}
         required={true}
-        value={props.form.username}
+        value={props.form.email}
         autoFocus={true}
       />
       <TextInput

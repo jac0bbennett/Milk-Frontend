@@ -13,15 +13,6 @@ const SignUpForm = props => {
     <form id="signin" onSubmit={props.handleSubmit}>
       <h1>Sign Up</h1>
       <TextInput
-        name="username"
-        onChange={e => props.handleChange(e)}
-        type="text"
-        label="Username"
-        autoComplete="username"
-        required={true}
-        value={props.form.username}
-      />
-      <TextInput
         name="name"
         onChange={e => props.handleChange(e)}
         type="text"

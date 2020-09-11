@@ -5,7 +5,6 @@ import history from "../../../utils/history";
 
 const SignUp = props => {
   const [form, setForm] = useState({
-    username: "",
     name: "",
     email: "",
     password: ""
@@ -23,13 +22,11 @@ const SignUp = props => {
     props.loadbar.progressTo(15);
     setMsg("submitting...");
 
-    const formUsername = form.username;
     const formName = form.name;
     const formEmail = form.email;
     const formPass = form.password;
 
     const req = await postRequest("/api/panel/signup", {
-      username: formUsername,
       name: formName,
       email: formEmail,
       password: formPass,

@@ -5,7 +5,7 @@ import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
 
 const ResetPasswordForm = props => {
-  const [form, setForm] = useState({ username: "" });
+  const [form, setForm] = useState({ email: "" });
   const [msg, setMsg] = useState("");
   const [reset, setReset] = useState(false);
 
@@ -15,9 +15,9 @@ const ResetPasswordForm = props => {
     props.loadbar.progressTo(15);
     setMsg("processing...");
 
-    const username = form.username;
+    const email = form.email;
 
-    const req = await postRequest("/api/resetpassword", { username });
+    const req = await postRequest("/api/resetpassword", { email });
 
     if (req.error) {
       const reqMsg = req.error;
@@ -25,7 +25,7 @@ const ResetPasswordForm = props => {
       props.loadbar.setToError(true);
     } else {
       setMsg("");
-      setForm({ username: "" });
+      setForm({ email: "" });
       props.loadbar.progressTo(100);
       setReset(true);
     }
@@ -33,7 +33,7 @@ const ResetPasswordForm = props => {
 
   const handleChange = event => {
     let formCopy = { ...form };
-    formCopy.username = event.target.value;
+    formCopy.email = event.target.value;
     setForm(formCopy);
     setMsg("");
   };
@@ -46,8 +46,8 @@ const ResetPasswordForm = props => {
           <TextInput
             name="name"
             type="text"
-            label="Username"
-            value={form.username}
+            label="Email"
+            value={form.email}
             onChange={handleChange}
             required={true}
           />

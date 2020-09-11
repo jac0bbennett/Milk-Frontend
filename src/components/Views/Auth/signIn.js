@@ -3,7 +3,7 @@ import { postRequest } from "../../../utils/requests";
 import SignInForm from "../../Forms/signIn.js";
 
 const SignIn = props => {
-  const [form, setForm] = useState({ username: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [msg, setMsg] = useState("");
   const [showResend, setShowResend] = useState(false);
 
@@ -11,10 +11,10 @@ const SignIn = props => {
     props.loadbar.progressTo(15);
     setMsg("sending...");
 
-    const formUsername = form.username;
+    const formEmail = form.email;
 
     const req = await postRequest("/api/resendemailconfirmation", {
-      username: formUsername
+      email: formEmail
     });
 
     if (req.error) {
@@ -37,11 +37,11 @@ const SignIn = props => {
     props.loadbar.progressTo(15);
     setMsg("signing in...");
 
-    const formUsername = form.username;
+    const formEmail = form.email;
     const formPass = form.password;
 
     const req = await postRequest("/api/panel/signin", {
-      username: formUsername,
+      email: formEmail,
       password: formPass
     });
 
