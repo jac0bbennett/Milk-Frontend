@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 const EditAppForm = props => {
   const [form, setForm] = useState({ name: props.page.state.modalData.name });
   const [msg, setMsg] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setForm({ name: props.page.state.modalData.name });
@@ -16,9 +17,9 @@ const EditAppForm = props => {
 
   const handleSubmit = async event => {
     event.preventDefault();
+    setSaving(true);
 
     props.loadbar.progressTo(15);
-    setMsg("submitting...");
 
     const appname = form.name;
 
@@ -37,6 +38,7 @@ const EditAppForm = props => {
       props.page.handleCloseModal();
       props.page.handleSetRefresh();
     }
+    setSaving(false);
   };
 
   const deleteCallback = () => {
@@ -84,7 +86,9 @@ const EditAppForm = props => {
       <br />
       <br />
       <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
-      <SubmitButton>Submit</SubmitButton>
+      <SubmitButton disabled={saving ? true : false}>
+        {!saving ? "Save" : "Saving"}
+      </SubmitButton>
       <br />
       <br />
       <FormMsg msg={msg} />

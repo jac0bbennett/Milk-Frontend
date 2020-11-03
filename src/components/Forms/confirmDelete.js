@@ -12,7 +12,6 @@ const ConfirmDeleteForm = props => {
 
   const handleDelete = async () => {
     props.loadbar.progressTo(15);
-    setMsg("...deleting");
     setIsDeleting(true);
 
     const req = await deleteRequest(props.page.state.modalData.deleteUrl);
@@ -47,11 +46,13 @@ const ConfirmDeleteForm = props => {
       <button onClick={props.page.handleCloseModal} className="flatbut">
         Cancel
       </button>
-      {!isDeleting ? (
-        <DeleteButton style={{ float: "right" }} onClick={handleDelete}>
-          Confirm
-        </DeleteButton>
-      ) : null}
+      <DeleteButton
+        style={{ float: "right" }}
+        onClick={handleDelete}
+        disabled={isDeleting ? true : false}
+      >
+        {!isDeleting ? "Confirm" : "Deleting..."}
+      </DeleteButton>
 
       <span className="msg floatright">{msg}</span>
     </div>

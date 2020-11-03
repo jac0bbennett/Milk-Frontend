@@ -4,7 +4,7 @@ import history from "./history";
 const baseApiUrl = () => {
   return !process.env.NODE_ENV || process.env.NODE_ENV === "development"
     ? "http://localhost:5100"
-    : "https://milk.jwb.cloud";
+    : "//";
 };
 
 const api = axios.create({

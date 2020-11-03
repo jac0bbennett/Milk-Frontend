@@ -2,7 +2,7 @@ import React from "react";
 
 const FormMsg = props => {
   return (
-    <span className="msg" style={props.style}>
+    <span className="msg softtext" style={props.style}>
       {props.msg}
     </span>
   );

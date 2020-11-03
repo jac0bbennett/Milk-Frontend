@@ -28,7 +28,6 @@ import PageContainer from "./containers/PageContainer";
 
 const sessionCont = new SessionContainer();
 const loadbarCont = new LoadbarContainer();
-const pageCont = new PageContainer();
 
 sessionCont.bindLoadbar(loadbarCont);
 
@@ -38,8 +37,8 @@ const App = () => {
   }, []);
 
   return (
-    <Provider>
-      <Subscribe to={[sessionCont, loadbarCont, pageCont]}>
+    <Provider inject={[sessionCont, loadbarCont]}>
+      <Subscribe to={[SessionContainer, LoadbarContainer, PageContainer]}>
         {(session, loadbar, page) => (
           <React.Fragment>
             <div id="overlay" className={page.state.showModal ? "is-show" : ""}>
@@ -59,7 +58,7 @@ const App = () => {
               onProgressDone={loadbar.progressDone}
               error={loadbar.state.error}
             />
-            <TopBar page={page} session={session} />
+            <TopBar session={session} page={page} />
             <div id="wrapper">
               <Switch>
                 <Route

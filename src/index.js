@@ -5,6 +5,7 @@ import "./dark.css";
 import App from "./App";
 import { Router } from "react-router-dom";
 import history from "./utils/history";
+import "@stripe/stripe-js";
 //import registerServiceWorker from "./registerServiceWorker";
 
 ReactDOM.render(

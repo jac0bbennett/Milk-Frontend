@@ -10,12 +10,13 @@ const NewFieldForm = props => {
   const [form, setForm] = useState({ name: "", slug: "", fieldtype: "" });
   const [msg, setMsg] = useState("");
   const [changedSlug, setChangedSlug] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("adding...");
+    setSubmitting(true);
 
     const fieldname = form.name;
     const fieldslug = form.slug;
@@ -42,6 +43,7 @@ const NewFieldForm = props => {
       props.page.handleSetRefresh();
       setChangedSlug(false);
     }
+    setSubmitting(false);
   };
 
   const handleChange = event => {
@@ -99,7 +101,9 @@ const NewFieldForm = props => {
       <br />
       <br />
       <FormMsg msg={msg} />
-      <SubmitButton>Add</SubmitButton>
+      <SubmitButton disabled={submitting ? true : false}>
+        {!submitting ? "Add" : "Adding..."}
+      </SubmitButton>
       <br />
       <br />
     </form>

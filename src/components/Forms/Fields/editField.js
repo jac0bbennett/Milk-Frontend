@@ -15,6 +15,7 @@ const EditFieldForm = props => {
     options: props.page.state.modalData.field.options || {}
   });
   const [msg, setMsg] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const field = { ...props.page.state.modalData.field };
@@ -31,7 +32,7 @@ const EditFieldForm = props => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("saving...");
+    setSaving(true);
 
     const fieldid = props.page.state.modalData.field.id;
     const fieldname = form.name;
@@ -59,6 +60,7 @@ const EditFieldForm = props => {
       props.page.handleCloseModal();
       props.page.handleSetRefresh();
     }
+    setSaving(false);
   };
 
   const handleDelete = async event => {
@@ -151,7 +153,9 @@ const EditFieldForm = props => {
       ) : null}
       <br />
       <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
-      <SubmitButton>Save</SubmitButton>
+      <SubmitButton disabled={saving ? true : false}>
+        {!saving ? "Save" : "Saving..."}
+      </SubmitButton>
       <br />
       <br />
       <FormMsg msg={msg} />

@@ -7,12 +7,14 @@ import SubmitButton from "../../UI/Buttons/submitButton";
 const NewAppForm = props => {
   const [form, setForm] = useState({ name: "" });
   const [msg, setMsg] = useState("");
+  const [creating, setCreating] = useState(false);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
+    setCreating(true);
+
     props.loadbar.progressTo(15);
-    setMsg("creating...");
 
     const appname = form.name;
 
@@ -29,6 +31,8 @@ const NewAppForm = props => {
       props.page.handleCloseModal();
       props.page.handleSetRefresh();
     }
+
+    setCreating(false);
   };
 
   const handleChange = event => {
@@ -52,7 +56,9 @@ const NewAppForm = props => {
       <br />
       <br />
       <FormMsg msg={msg} />
-      <SubmitButton>Create</SubmitButton>
+      <SubmitButton disabled={creating ? true : false}>
+        {!creating ? "Create" : "Creating..."}
+      </SubmitButton>
       <br />
       <br />
     </form>

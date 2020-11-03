@@ -288,10 +288,6 @@ hr {
   width: 300px;
 }
 
-.msg {
-  margin-top: 20px;
-}
-
 #midmsg {
   text-align: center;
   width: 100%;
@@ -458,6 +454,7 @@ input[type="checkbox"] {
 
 .raisedbut:disabled {
   background: #81a7cc;
+  cursor: default;
 }
 
 .floatright {
@@ -831,6 +828,12 @@ textarea {
   border-top: 1px solid #b3b3b3;
 }
 
+.settingsection {
+  min-width: 200px;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
 @-webkit-keyframes sk-scaleout {
   0% {
     -webkit-transform: translate(-20px);
@@ -1023,6 +1026,9 @@ textarea {
   }
   .narrowcontainer {
     width: 90%;
+  }
+  .settingsection {
+    width: 100%;
   }
 }
 

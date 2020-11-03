@@ -8,12 +8,13 @@ import "react-datepicker/dist/react-datepicker.css";
 const ScheduleForm = props => {
   const [datetime, setDatetime] = useState(new Date());
   const [msg, setMsg] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("scheduling...");
+    setSubmitting(true);
 
     let schedTime = null;
 
@@ -44,6 +45,7 @@ const ScheduleForm = props => {
       props.page.handleCloseModal();
       props.page.state.modalData.callback(req.data);
     }
+    setSubmitting(false);
   };
 
   return (
@@ -72,7 +74,9 @@ const ScheduleForm = props => {
         <br />
         <br />
         <br />
-        <SubmitButton>Schedule</SubmitButton>
+        <SubmitButton disabled={submitting ? true : false}>
+          {!submitting ? "Schedule" : "Scheduling..."}
+        </SubmitButton>
         <br />
         <FormMsg msg={msg} />
       </div>

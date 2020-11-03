@@ -8,12 +8,13 @@ import DropDownInput from "../../UI/Inputs/dropInput";
 const NewApiKeyForm = props => {
   const [form, setForm] = useState({ name: "", access: "" });
   const [msg, setMsg] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("creating...");
+    setSubmitting(true);
 
     const keyname = form.name;
     const keyaccess = form.access;
@@ -29,11 +30,12 @@ const NewApiKeyForm = props => {
       props.loadbar.setToError(true);
     } else {
       setMsg("");
-      setForm({ name: "" });
+      setForm({ name: "", access: "" });
       props.loadbar.progressTo(100);
       props.page.handleCloseModal();
       props.page.handleSetRefresh();
     }
+    setSubmitting(false);
   };
 
   const handleChange = event => {
@@ -67,7 +69,9 @@ const NewApiKeyForm = props => {
       <br />
       <br />
       <FormMsg msg={msg} />
-      <SubmitButton>Submit</SubmitButton>
+      <SubmitButton disabled={submitting ? true : false}>
+        {!submitting ? "Submit" : "Submitting..."}
+      </SubmitButton>
       <br />
       <br />
     </form>

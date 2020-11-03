@@ -9,12 +9,13 @@ import history from "../../../utils/history";
 const NewContentForm = props => {
   const [form, setForm] = useState({ type: "" });
   const [msg, setMsg] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("creating...");
+    setSubmitting(true);
 
     const typeslug = form.type;
 
@@ -36,6 +37,7 @@ const NewContentForm = props => {
         "/panel/apps/" + props.session.state.selApp + "/content/" + req.uuid
       );
     }
+    setSubmitting(false);
   };
 
   const handleChange = event => {
@@ -66,7 +68,9 @@ const NewContentForm = props => {
           <br />
           <br />
           <FormMsg msg={msg} />
-          <SubmitButton>Create</SubmitButton>{" "}
+          <SubmitButton disable={submitting ? true : false}>
+            {!submitting ? "Create" : "Creating..."}
+          </SubmitButton>
         </div>
       ) : (
         <span className="softtext">

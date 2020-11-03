@@ -68,7 +68,7 @@ const LongTextField = props => {
 
     setChangeCount(changeCount + 1);
 
-    if (changeCount > 20) {
+    if (changeCount > 10) {
       setMsg("saving...");
       autoSave(newValue);
       setChangeCount(0);

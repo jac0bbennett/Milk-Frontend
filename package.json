@@ -16,6 +16,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "@stripe/stripe-js": "^1.11.0",
     "array-move": "^2.2.1",
     "eslint-plugin-react": "^7.18.3",
     "moment": "^2.24.0",

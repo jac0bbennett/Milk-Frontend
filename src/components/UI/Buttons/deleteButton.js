@@ -7,6 +7,7 @@ const DeleteButton = props => {
       style={props.style}
       className="flatbut redtext"
       type="button"
+      disabled={props.disabled}
     >
       {props.children}
     </button>

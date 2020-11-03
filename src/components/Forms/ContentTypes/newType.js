@@ -8,12 +8,13 @@ const NewTypeForm = props => {
   const [form, setForm] = useState({ name: "", slug: "" });
   const [msg, setMsg] = useState("");
   const [changedSlug, setChangedSlug] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("creating...");
+    setSubmitting(true);
 
     const typename = form.name;
     const typeslug = form.slug;
@@ -35,6 +36,7 @@ const NewTypeForm = props => {
       props.page.handleSetRefresh();
       setChangedSlug(false);
     }
+    setSubmitting(false);
   };
 
   const handleChange = event => {
@@ -76,7 +78,9 @@ const NewTypeForm = props => {
       <br />
       <br />
       <FormMsg msg={msg} />
-      <SubmitButton>Create</SubmitButton>
+      <SubmitButton disabled={submitting ? true : false}>
+        {!submitting ? "Create" : "Creating..."}
+      </SubmitButton>
       <br />
       <br />
     </form>

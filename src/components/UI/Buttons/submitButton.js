@@ -5,6 +5,7 @@ const SubmitButton = props => {
     <button
       className="raisedbut submitbut floatright"
       style={props.style}
+      disabled={props.disabled}
       type="submit"
     >
       {props.children}

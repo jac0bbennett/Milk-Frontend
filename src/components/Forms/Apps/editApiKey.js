@@ -11,6 +11,7 @@ const EditApiKeyForm = props => {
     key: props.page.state.modalData.key.key
   });
   const [msg, setMsg] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setForm({
@@ -24,7 +25,7 @@ const EditApiKeyForm = props => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("saving...");
+    setSaving(true);
 
     const keyname = form.name;
     const apikey = form.key;
@@ -44,6 +45,7 @@ const EditApiKeyForm = props => {
       props.page.handleCloseModal();
       props.page.handleSetRefresh();
     }
+    setSaving(false);
   };
 
   const handleDelete = async event => {
@@ -81,7 +83,9 @@ const EditApiKeyForm = props => {
       <br />
       <br />
       <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
-      <SubmitButton>Submit</SubmitButton>
+      <SubmitButton disabled={saving ? true : false}>
+        {!saving ? "Save" : "Saving..."}
+      </SubmitButton>
       <br />
       <br />
       <FormMsg msg={msg} />
