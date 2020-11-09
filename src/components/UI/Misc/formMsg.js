@@ -3,7 +3,7 @@ import React from "react";
 const FormMsg = props => {
   const baseClassnames = "msg";
   const classnames =
-    props.color == "red"
+    props.color === "red"
       ? baseClassnames + " redtext"
       : baseClassnames + " softtext";
   return (
