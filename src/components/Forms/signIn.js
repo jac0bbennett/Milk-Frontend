@@ -34,7 +34,7 @@ const SignInForm = props => {
         Reset Password?
       </span>
       <br />
-      <FormMsg msg={props.msg} />
+      <FormMsg msg={props.msg} color="red" />
       <br />
       <br />
       {props.showResend ? (
@@ -46,7 +46,9 @@ const SignInForm = props => {
           Resend Email
         </button>
       ) : null}
-      <SubmitButton>Sign In</SubmitButton>
+      <SubmitButton disabled={props.submitting ? true : false}>
+        {!props.submitting ? "Sign In" : "Signing In..."}
+      </SubmitButton>
       <br />
       <br />
     </form>

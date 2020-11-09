@@ -6,6 +6,7 @@ const SignIn = props => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [msg, setMsg] = useState("");
   const [showResend, setShowResend] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const resendEmailLink = async () => {
     props.loadbar.progressTo(15);
@@ -35,7 +36,7 @@ const SignIn = props => {
 
   const handleSignIn = async () => {
     props.loadbar.progressTo(15);
-    setMsg("signing in...");
+    setSubmitting(true);
 
     const formEmail = form.email;
     const formPass = form.password;
@@ -56,6 +57,7 @@ const SignIn = props => {
       props.loadbar.progressTo(100);
       props.session.handleSignIn(req.userId);
     }
+    setSubmitting(false);
   };
 
   const handleChange = event => {
@@ -80,6 +82,7 @@ const SignIn = props => {
       showResend={showResend}
       resendEmailLink={resendEmailLink}
       page={props.page}
+      submitting={submitting}
     />
   );
 };
