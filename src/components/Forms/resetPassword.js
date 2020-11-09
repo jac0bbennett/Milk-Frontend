@@ -8,12 +8,13 @@ const ResetPasswordForm = props => {
   const [form, setForm] = useState({ email: "" });
   const [msg, setMsg] = useState("");
   const [reset, setReset] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("processing...");
+    setResetting(true);
 
     const email = form.email;
 
@@ -29,6 +30,7 @@ const ResetPasswordForm = props => {
       props.loadbar.progressTo(100);
       setReset(true);
     }
+    setResetting(false);
   };
 
   const handleChange = event => {
@@ -54,7 +56,9 @@ const ResetPasswordForm = props => {
           <br />
           <br />
           <FormMsg msg={msg} />
-          <SubmitButton>Reset</SubmitButton>{" "}
+          <SubmitButton disabled={resetting ? true : false}>
+            {!resetting ? "Reset" : "Resetting..."}
+          </SubmitButton>{" "}
         </React.Fragment>
       ) : (
         <span className="softtext">Email with reset link sent!</span>
@@ -80,7 +84,9 @@ const NewPasswordForm = props => {
       />
       <br />
       <FormMsg msg={props.msg} />
-      <SubmitButton>Update</SubmitButton>
+      <SubmitButton disabled={props.updating ? true : false}>
+        {!props.updating ? "Reset" : "Resetting..."}
+      </SubmitButton>
       <br />
       <br />
     </form>

@@ -14,6 +14,7 @@ const EditContentType = props => {
   const [msg, setMsg] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [typeData, setTypeData] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     props.page.handlePageChange("", "type");
@@ -50,6 +51,7 @@ const EditContentType = props => {
   ]);
 
   const handleChange = event => {
+    setMsg("");
     let typeCopy = { ...typeData };
     const target = event.target.name;
     typeCopy[target] = event.target.value;
@@ -60,7 +62,7 @@ const EditContentType = props => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("saving...");
+    setSaving(true);
 
     const typename = typeData.name;
 
@@ -77,10 +79,11 @@ const EditContentType = props => {
       setMsg(reqMsg);
       props.loadbar.setToError(true);
     } else {
-      setMsg("");
+      setMsg("Saved!");
       props.loadbar.progressTo(100);
       props.page.handleSetRefresh();
     }
+    setSaving(false);
   };
 
   const deleteCallback = () => {
@@ -162,7 +165,9 @@ const EditContentType = props => {
               style={{ display: "flex", alignItems: "center", float: "right" }}
             >
               <FormMsg msg={msg} />
-              <SubmitButton>Save</SubmitButton>
+              <SubmitButton disabled={saving ? true : false}>
+                {!saving ? "Save" : "Saving..."}
+              </SubmitButton>
               <DropMenu>
                 <li onClick={handleDelete} className="redtext">
                   Delete

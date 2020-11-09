@@ -14,6 +14,7 @@ const EditAssetForm = props => {
     description: ""
   });
   const [msg, setMsg] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setForm({
@@ -30,7 +31,7 @@ const EditAssetForm = props => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("saving...");
+    setSaving(true);
 
     const name = form.name;
     const description = form.description;
@@ -58,6 +59,7 @@ const EditAssetForm = props => {
       props.page.state.modalData.callback(newAsset);
       props.page.handleCloseModal();
     }
+    setSaving(false);
   };
 
   const handleDelete = async event => {
@@ -141,7 +143,9 @@ const EditAssetForm = props => {
       <br />
       <br />
       <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
-      <SubmitButton>Save</SubmitButton>
+      <SubmitButton disabled={saving ? true : false}>
+        {!saving ? "Save" : "Saving..."}
+      </SubmitButton>
       <br />
       <FormMsg msg={msg} />
     </form>

@@ -6,6 +6,7 @@ import history from "../../../utils/history";
 const ResetPassword = props => {
   const [form, setForm] = useState({ password: "" });
   const [msg, setMsg] = useState("");
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     props.loadbar.progressTo(15);
@@ -15,7 +16,7 @@ const ResetPassword = props => {
 
   const handleUpdate = async () => {
     props.loadbar.progressTo(15);
-    setMsg("submitting...");
+    setUpdating(true);
 
     const formPass = form.password;
     const token = props.match.params.token;
@@ -37,6 +38,7 @@ const ResetPassword = props => {
       });
       history.push("/panel/signin");
     }
+    setUpdating(false);
   };
 
   const handleChange = event => {
@@ -57,6 +59,7 @@ const ResetPassword = props => {
       handleSubmit={handleSubmit}
       form={form}
       msg={msg}
+      updating={updating}
     />
   );
 };
