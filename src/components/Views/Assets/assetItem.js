@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Truncate } from "../../../utils/text";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const AssetItem = props => {
   const [asset, setAsset] = useState(props.asset);
   const [copied, setCopied] = useState(false);
+  const [msgTimeout, setMsgTimeout] = useState(0);
+
+  const startMsgTimeout = () => {
+    setMsgTimeout(setTimeout(() => setCopied(false), 4000));
+  };
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(msgTimeout);
+    };
+  }, [msgTimeout]);
 
   return (
     <div
@@ -35,7 +46,10 @@ const AssetItem = props => {
           <button
             className="flatbut iconflatbut"
             title="Copy Url"
-            onClick={() => setCopied(true)}
+            onClick={() => {
+              setCopied(true);
+              startMsgTimeout();
+            }}
           >
             <i className="material-icons">content_copy</i>
             {copied ? <span className="greentext"> Copied</span> : null}
