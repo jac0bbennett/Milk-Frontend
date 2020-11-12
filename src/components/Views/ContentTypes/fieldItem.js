@@ -73,11 +73,15 @@ const FieldItem = SortableElement(props => (
       <button
         className="flatbut darkflatbutton"
         onClick={() => {
-          props.page.handleShowModal("editfieldform", {
-            field: props.field,
-            index: props.i,
-            typeSlug: props.typeSlug
-          });
+          props.page.handleShowModal(
+            "editfieldform",
+            {},
+            {
+              field: props.field,
+              index: props.i,
+              typeSlug: props.typeSlug
+            }
+          );
         }}
         style={{ marginLeft: "auto", marginRight: "5px" }}
       >

@@ -17,7 +17,7 @@ const EditFieldOptionValuesForm = props => {
   const [valuesMsg, setValuesMsg] = useState("");
 
   useEffect(() => {
-    const field = { ...props.page.state.modalData.field };
+    const field = { ...props.page.state.persistentModalData.field };
     setForm({
       name: field.name,
       slug: field.slug,
@@ -25,7 +25,7 @@ const EditFieldOptionValuesForm = props => {
       newValue: ""
     });
     setMsg("");
-  }, [props.page.state.modalData.field]);
+  }, [props.page.state.persistentModalData.field]);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -33,14 +33,14 @@ const EditFieldOptionValuesForm = props => {
     props.loadbar.progressTo(15);
     setMsg("saving...");
 
-    const fieldid = props.page.state.modalData.field.id;
+    const fieldid = props.page.state.persistentModalData.field.id;
     const fieldoptions = JSON.stringify(form.options);
 
     const req = await patchRequest(
       "/api/panel/apps/" +
         props.session.state.selApp +
         "/types/" +
-        props.page.state.modalData.typeSlug +
+        props.page.state.persistentModalData.typeSlug +
         "/fields/" +
         fieldid,
       { fieldoptions }

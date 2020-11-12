@@ -9,16 +9,16 @@ import DropDownInput from "../../UI/Inputs/dropInput";
 
 const EditFieldForm = props => {
   const [form, setForm] = useState({
-    name: props.page.state.modalData.field.name,
-    slug: props.page.state.modalData.field.slug,
-    fieldType: props.page.state.modalData.field.fieldType,
-    options: props.page.state.modalData.field.options || {}
+    name: props.page.state.persistentModalData.field.name,
+    slug: props.page.state.persistentModalData.field.slug,
+    fieldType: props.page.state.persistentModalData.field.fieldType,
+    options: props.page.state.persistentModalData.field.options || {}
   });
   const [msg, setMsg] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const field = { ...props.page.state.modalData.field };
+    const field = { ...props.page.state.persistentModalData.field };
     setForm({
       name: field.name,
       slug: field.slug,
@@ -26,7 +26,7 @@ const EditFieldForm = props => {
       options: { ...field.options } || {}
     });
     setMsg("");
-  }, [props.page.state.modalData.field, props.page.state.showModal]);
+  }, [props.page.state.persistentModalData.field, props.page.state.showModal]);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -34,7 +34,7 @@ const EditFieldForm = props => {
     props.loadbar.progressTo(15);
     setSaving(true);
 
-    const fieldid = props.page.state.modalData.field.id;
+    const fieldid = props.page.state.persistentModalData.field.id;
     const fieldname = form.name;
     const fieldslug = form.slug;
     const fieldtype = form.fieldType;
@@ -44,7 +44,7 @@ const EditFieldForm = props => {
       "/api/panel/apps/" +
         props.session.state.selApp +
         "/types/" +
-        props.page.state.modalData.typeSlug +
+        props.page.state.persistentModalData.typeSlug +
         "/fields/" +
         fieldid,
       { fieldname, fieldslug, fieldtype, fieldoptions }
@@ -66,13 +66,13 @@ const EditFieldForm = props => {
   const handleDelete = async event => {
     event.preventDefault();
 
-    const fieldid = props.page.state.modalData.field.id;
+    const fieldid = props.page.state.persistentModalData.field.id;
 
     const url =
       "/api/panel/apps/" +
       props.session.state.selApp +
       "/types/" +
-      props.page.state.modalData.typeSlug +
+      props.page.state.persistentModalData.typeSlug +
       "/fields/" +
       fieldid;
 
