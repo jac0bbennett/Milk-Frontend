@@ -15,6 +15,7 @@ const EditFieldOptionValuesForm = props => {
   });
   const [msg, setMsg] = useState("");
   const [valuesMsg, setValuesMsg] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const field = { ...props.page.state.persistentModalData.field };
@@ -31,7 +32,7 @@ const EditFieldOptionValuesForm = props => {
     event.preventDefault();
 
     props.loadbar.progressTo(15);
-    setMsg("saving...");
+    setSaving(true);
 
     const fieldid = props.page.state.persistentModalData.field.id;
     const fieldoptions = JSON.stringify(form.options);
@@ -56,6 +57,7 @@ const EditFieldOptionValuesForm = props => {
       props.page.handleCloseModal();
       props.page.handleSetRefresh();
     }
+    setSaving(false);
   };
 
   const handleSubmitValue = event => {
@@ -165,8 +167,12 @@ const EditFieldOptionValuesForm = props => {
       >
         Cancel
       </button>
-      <button onClick={handleSubmit} className="raisedbut floatright">
-        Save
+      <button
+        onClick={handleSubmit}
+        disabled={saving ? true : false}
+        className="raisedbut floatright"
+      >
+        {!saving ? "Save" : "Saving..."}
       </button>
       <br />
       <br />
