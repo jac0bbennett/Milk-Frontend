@@ -127,15 +127,7 @@ const ImageField = props => {
   };
 
   return (
-    <div
-      style={{
-        marginBottom: "10px",
-        marginTop: "10px",
-        border: "1px solid gray",
-        padding: "5px",
-        borderRadius: "5px"
-      }}
-    >
+    <div>
       <h4
         style={{ marginTop: "5px", marginBottom: "5px" }}
         className={isFocused ? "bluetext" : ""}
@@ -159,46 +151,56 @@ const ImageField = props => {
           add_photo_alternate
         </i>
       </h4>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <img
-          src={content}
-          alt=""
-          style={{ maxWidth: "100%", maxHeight: "300px", cursor: "pointer" }}
-          onClick={() =>
-            props.page.handleShowModal("selectassetform", undefined, {
-              callback: selectCallback
-            })
-          }
-        />
-      </div>
-      {!content ? (
-        <p className="softtext" style={{ fontSize: "11pt" }}>
-          Select Image from Assets or Enter Image Url
-        </p>
-      ) : null}
-      <TextInput
-        dataId={props.dataId}
-        name={props.slug}
-        type="url"
-        label="Image Url"
-        value={content}
-        onChange={handleChange}
-        required={false}
-        autoComplete="off"
-        disabled={props.disabled}
-        wide={true}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        setRef={input}
-      />
-      <span
-        title="Characters"
-        className="softtext"
-        style={{ fontSize: "9pt", marginRight: "15px" }}
+      <div
+        style={{
+          marginBottom: "10px",
+          marginTop: "10px",
+          border: "1px solid gray",
+          padding: "5px",
+          borderRadius: "5px"
+        }}
       >
-        {content.length} / {charLimit}
-      </span>
-      <FieldMsg msg={msg} />
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img
+            src={content}
+            alt=""
+            style={{ maxWidth: "100%", maxHeight: "300px", cursor: "pointer" }}
+            onClick={() =>
+              props.page.handleShowModal("selectassetform", undefined, {
+                callback: selectCallback
+              })
+            }
+          />
+        </div>
+        {!content ? (
+          <p className="softtext" style={{ fontSize: "11pt" }}>
+            Select Image from Assets or Enter Image Url
+          </p>
+        ) : null}
+        <TextInput
+          dataId={props.dataId}
+          name={props.slug}
+          type="url"
+          label="Image Url"
+          value={content}
+          onChange={handleChange}
+          required={false}
+          autoComplete="off"
+          disabled={props.disabled}
+          wide={true}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          setRef={input}
+        />
+        <span
+          title="Characters"
+          className="softtext"
+          style={{ fontSize: "9pt", marginRight: "15px" }}
+        >
+          {content.length} / {charLimit}
+        </span>
+        <FieldMsg msg={msg} />
+      </div>
     </div>
   );
 };

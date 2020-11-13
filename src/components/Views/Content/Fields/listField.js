@@ -146,44 +146,54 @@ const ListField = props => {
   }, [props.isDraftDiscarded, props.value]);
 
   return (
-    <div style={{ marginBottom: "10px" }}>
-      <form onSubmit={handleSubmit} autoComplete="off">
-        <TextInput
-          dataId={props.dataId}
-          name={props.slug}
-          type="text"
-          label={props.label}
-          value={content}
-          onChange={handleChange}
-          required={false}
-          autoComplete="off"
-          disabled={props.disabled}
-          wide={true}
-        />
+    <div>
+      <h4 style={{ marginBottom: "5px" }}>{props.label}</h4>
+      <div
+        style={{
+          marginBottom: "10px",
+          border: "1px solid gray",
+          padding: "5px",
+          borderRadius: "5px"
+        }}
+      >
+        <form onSubmit={handleSubmit} autoComplete="off">
+          <TextInput
+            dataId={props.dataId}
+            name={props.slug}
+            type="text"
+            label="New Value"
+            value={content}
+            onChange={handleChange}
+            required={false}
+            autoComplete="off"
+            disabled={props.disabled}
+            wide={true}
+          />
 
-        <span
-          title="Characters"
-          className="softtext"
-          style={{ fontSize: "9pt", marginRight: "15px" }}
-        >
-          {charCount} / 80
-        </span>
+          <span
+            title="Characters"
+            className="softtext"
+            style={{ fontSize: "9pt", marginRight: "15px" }}
+          >
+            {charCount} / 80
+          </span>
 
-        <FieldMsg msg={msg} />
-      </form>
-      {list && list.length > 0 ? (
-        <ListFieldList
-          values={list}
-          page={props.page}
-          fieldSlug={props.slug}
-          deleteValue={handleDeleteValue}
-          useDragHandle={true}
-          onSortEnd={onDropdownSortEnd}
-          axis={"xy"}
-        />
-      ) : (
-        <div className="softtext">No values set</div>
-      )}
+          <FieldMsg msg={msg} />
+        </form>
+        {list && list.length > 0 ? (
+          <ListFieldList
+            values={list}
+            page={props.page}
+            fieldSlug={props.slug}
+            deleteValue={handleDeleteValue}
+            useDragHandle={true}
+            onSortEnd={onDropdownSortEnd}
+            axis={"xy"}
+          />
+        ) : (
+          <div className="softtext">No values set</div>
+        )}
+      </div>
     </div>
   );
 };
