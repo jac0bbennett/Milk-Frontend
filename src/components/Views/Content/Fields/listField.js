@@ -150,6 +150,7 @@ const ListField = props => {
       <h4 style={{ marginBottom: "5px" }}>{props.label}</h4>
       <div
         style={{
+          marginTop: "10px",
           marginBottom: "10px",
           border: "1px solid gray",
           padding: "5px",
