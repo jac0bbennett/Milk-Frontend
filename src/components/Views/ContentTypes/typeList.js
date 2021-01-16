@@ -7,6 +7,7 @@ import { getRequest } from "../../../utils/requests";
 const ContentTypeList = props => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [typeCount, setTypeCount] = useState(0);
+  const [typeLimit, setTypeLimit] = useState(0);
   const [types, setTypes] = useState([]);
 
   useEffect(() => {
@@ -24,6 +25,7 @@ const ContentTypeList = props => {
         const selAppName = resp.meta.appName;
         setTypes(resp.data.types);
         setTypeCount(resp.data.typeCount);
+        setTypeLimit(resp.data.typeLimit);
         setIsLoaded(true);
         props.session.handleSession(userId, selApp, selAppName);
         props.loadbar.progressTo(100);
@@ -72,7 +74,9 @@ const ContentTypeList = props => {
       <MiniHeader header="Content Types" />
       {isLoaded ? (
         <span className="pageData">
-          <span className="floatright contentstatus">{typeCount} / 25</span>
+          <span className="floatright contentstatus">
+            {typeCount} / {typeLimit}
+          </span>
         </span>
       ) : null}
       <FAB page={props.page} modalComp="newtypeform">

@@ -13,6 +13,7 @@ const ContentList = props => {
   const [types, setTypes] = useState([]);
   const [contentsLoaded, setContentsLoaded] = useState(false);
   const [typesLoaded, setTypesLoaded] = useState(false);
+  const [contentLimit, setContentLimit] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [nextPage, setNextPage] = useState(1);
   const [loadedAll, setLoadedAll] = useState(false);
@@ -85,6 +86,7 @@ const ContentList = props => {
           setLoadedAll(true);
         }
         setContentsCount(resp.data.contentCount);
+        setContentLimit(resp.data.contentLimit);
         props.session.handleSession(userId, selApp, selAppName);
       }
       setCurParams(params);
@@ -298,7 +300,7 @@ const ContentList = props => {
                 </DropDownInput>
               </span>
               <span className="contentstatus" style={{ marginLeft: "20px" }}>
-                {contentsCount} / 1000
+                {contentsCount} / {contentLimit}
               </span>
             </span>
           </React.Fragment>

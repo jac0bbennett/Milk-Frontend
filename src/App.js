@@ -14,6 +14,7 @@ import ContentList from "./components/Views/Content/contentList";
 import EditContent from "./components/Views/Content/editContent";
 import AssetList from "./components/Views/Assets/assetList";
 import UserSettings from "./components/Views/User/settings";
+import SubSuccess from "./components/Views/User/Subscription/subSuccess";
 import ConfirmEmail from "./components/Views/Auth/confirmEmail";
 import ResetPassword from "./components/Views/Auth/resetPassword";
 import { Modal } from "./components/UI/Modal/modal";
@@ -212,9 +213,21 @@ const App = () => {
                 />
                 <Route
                   exact
-                  path="/panel/settings"
+                  path="/panel/account"
                   render={props => (
                     <UserSettings
+                      {...props}
+                      loadbar={loadbar}
+                      page={page}
+                      session={session}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/panel/subscription/success"
+                  render={props => (
+                    <SubSuccess
                       {...props}
                       loadbar={loadbar}
                       page={page}

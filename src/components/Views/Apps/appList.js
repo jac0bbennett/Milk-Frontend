@@ -6,6 +6,7 @@ import { getRequest } from "../../../utils/requests";
 const AppList = props => {
   const [isLoaded, setIsLoaded] = useState(0);
   const [appCount, setAppCount] = useState(0);
+  const [appLimit, setAppLimit] = useState(0);
   const [apps, setApps] = useState([]);
 
   useEffect(() => {
@@ -20,6 +21,7 @@ const AppList = props => {
         const selApp = resp.meta.appUUID;
         setApps(resp.data.apps);
         setAppCount(resp.data.appCount);
+        setAppLimit(resp.data.appLimit);
         setIsLoaded(true);
         props.session.handleSession(userId, selApp, undefined);
         props.loadbar.progressTo(100);
@@ -60,7 +62,9 @@ const AppList = props => {
   return (
     <div className="applist">
       <span className="pageData" style={{ marginBottom: "15px" }}>
-        <span className="floatright contentstatus">{appCount} / 10</span>
+        <span className="floatright contentstatus">
+          {appCount} / {appLimit}
+        </span>
       </span>
       <FAB page={props.page} modalComp="newappform">
         <i className="material-icons">add</i>

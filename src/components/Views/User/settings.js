@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import TextInput from "../../UI/Inputs/txtInput";
-import { getRequest, patchRequest } from "../../../utils/requests";
+import { getRequest, patchRequest, postRequest } from "../../../utils/requests";
 import SubmitButton from "../../UI/Buttons/submitButton";
+import { loadStripe } from "@stripe/stripe-js";
+import FormMsg from "../../UI/Misc/formMsg";
+import Moment from "react-moment";
+
+const stripeKey =
+  !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+    ? "pk_test_svt9kHnnF0BPyTyburB41jGk00tgA3voSN"
+    : "pk_live_WqmVyyZjnO3RZX6a3iTlude000XLBPPaDG";
+
+const priceId =
+  !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+    ? "price_1HibwaEYCBWGMzyna9DIoUh6"
+    : "price_1I9ga1EYCBWGMzyn2ZYV8A64";
 
 const UserSettings = props => {
   const [name, setName] = useState("");
@@ -12,13 +25,18 @@ const UserSettings = props => {
   const [settingsMsg, setSettingsMsg] = useState("");
   const [changePassMsg, setChangePassMsg] = useState("");
   const [email, setEmail] = useState("");
+  const [savingInfo, setSavingInfo] = useState(false);
+  const [updatingPass, setUpdatingPass] = useState(false);
+  const [sub, setSub] = useState({});
+  const [subMsg, setSubMsg] = useState("");
+  const [subbing, setSubbing] = useState(false);
 
   const [theme, setTheme] = useState(localStorage.getItem("theme"));
 
   useEffect(() => {
-    props.page.handlePageChange("Settings", "settings");
+    props.page.handlePageChange("Account", "account");
     const req = async () => {
-      const resp = await getRequest("/api/panel/settings");
+      const resp = await getRequest("/api/panel/account");
 
       if (resp.error) {
         props.loadbar.setToError(true);
@@ -27,6 +45,7 @@ const UserSettings = props => {
         const selApp = resp.meta.appUUID;
         setName(resp.data.user.name);
         setEmail(resp.data.user.email);
+        setSub(resp.data.user.subscription);
         setIsLoaded(true);
         props.session.handleSession(userId, selApp);
         props.loadbar.progressTo(100);
@@ -37,17 +56,18 @@ const UserSettings = props => {
   }, [props.page.state.refreshView, props.loadbar, props.session, props.page]);
 
   const handleChange = event => {
+    const newValue = event.target.value;
     switch (event.target.name) {
       case "name":
-        setName(event.target.value);
+        setName(newValue);
         setSettingsMsg("");
         break;
       case "curPass":
-        setCurPass(event.target.value);
+        setCurPass(newValue);
         setChangePassMsg("");
         break;
       case "newPass":
-        setNewPass(event.target.value);
+        setNewPass(newValue);
         setChangePassMsg("");
         break;
       default:
@@ -58,9 +78,10 @@ const UserSettings = props => {
   const handleUpdateSettings = async event => {
     event.preventDefault();
     document.activeElement.blur();
-    setSettingsMsg("saving...");
+    setSavingInfo(true);
+    setSettingsMsg("");
 
-    const resp = await patchRequest("/api/panel/settings", {
+    const resp = await patchRequest("/api/panel/account", {
       name: name
     });
 
@@ -69,17 +90,19 @@ const UserSettings = props => {
       setSettingsMsg(resp.error);
     } else {
       props.loadbar.progressTo(100);
-      setSettingsMsg("");
+      setSettingsMsg("Saved!");
     }
+
+    setSavingInfo(false);
   };
 
   const handleChangePass = async event => {
     event.preventDefault();
     document.activeElement.blur();
+    setUpdatingPass(true);
+    setChangePassMsg("");
 
-    setChangePassMsg("updating...");
-
-    const resp = await patchRequest("/api/panel/settings", {
+    const resp = await patchRequest("/api/panel/account", {
       curPass: curPass,
       newPass: newPass
     });
@@ -93,6 +116,8 @@ const UserSettings = props => {
       setCurPass("");
       setNewPass("");
     }
+
+    setUpdatingPass(false);
   };
 
   const handleThemeChange = value => {
@@ -100,10 +125,123 @@ const UserSettings = props => {
     setTheme(value);
   };
 
+  const handleCreateSubscription = async event => {
+    event.preventDefault();
+
+    setSubbing(true);
+    setSubMsg("");
+
+    const stripe = await loadStripe(stripeKey);
+
+    const resp = await postRequest("/api/billing/new-checkout-session", {
+      priceId: priceId
+    });
+
+    if (resp.error) {
+      props.loadbar.setToError(true);
+      setSubbing(false);
+      setSubMsg(resp.error);
+    } else {
+      stripe.redirectToCheckout({ sessionId: resp.sessionId });
+    }
+  };
+
+  const handleUpdateSubscription = async event => {
+    event.preventDefault();
+
+    setSubbing(true);
+    setSubMsg("");
+
+    const resp = await getRequest("/api/billing/new-customer-portal");
+
+    if (resp.error) {
+      props.loadbar.setToError(true);
+      setSubMsg(resp.error);
+      setSubbing(false);
+    } else {
+      window.location.href = resp.url;
+    }
+  };
+
+  const subscriptionOptions = () => {
+    switch (sub.status) {
+      case "free":
+      case "canceled":
+        return (
+          <React.Fragment>
+            <div className="softtext">
+              <p>You are currently on Free Plan.</p>
+              <p>
+                Upgrade to increase your{" "}
+                <a href="/#pricing">limits and functionality</a>.
+              </p>
+            </div>
+            <br />
+            <button
+              className="raisedbut"
+              onClick={handleCreateSubscription}
+              disabled={!subbing ? false : true}
+            >
+              {!subbing ? "Upgrade ($20)" : "Redirecting..."}
+            </button>
+          </React.Fragment>
+        );
+      case "active":
+      case "past_due":
+        return (
+          <React.Fragment>
+            <div className="softtext">
+              {sub.status === "past_due" ? (
+                <p className="redtext">
+                  Your latest subscription payment is past due and at risk of
+                  being canceled! Please verify your payment method.
+                </p>
+              ) : null}
+              <p>
+                You are currently subscribed to the{" "}
+                <span className="greentext semibold">Premium Plan</span>
+              </p>
+              <p>
+                Renewing:{" "}
+                <span className="semibold">
+                  {sub.renew ? "Yes" : <span className="redtext">No</span>}
+                </span>
+              </p>
+              <p>
+                Monthly Cost: <span className="semibold">$20</span>
+              </p>
+              <p>
+                End of billing period:{" "}
+                <span className="semibold">
+                  <Moment format="MMM, Do, YYYY" unix>
+                    {new Date(sub.end)}
+                  </Moment>
+                </span>
+              </p>
+            </div>
+            <br />
+            <button
+              className="raisedbut"
+              onClick={handleUpdateSubscription}
+              disabled={!subbing ? false : true}
+            >
+              {!subbing ? "Update Subscription" : "Redirecting..."}
+            </button>
+          </React.Fragment>
+        );
+      case "unlimited":
+        return <div className="softtext">You have an unlimited plan!</div>;
+      default:
+        return (
+          <div className="softtext">Your subscription couldn't be loaded</div>
+        );
+    }
+  };
+
   return (
     <React.Fragment>
       {isLoaded ? (
-        <div className="gencontainer narrowcontainer">
+        <div className="gencontainer">
           <Link
             to="/panel/signout"
             className="floatright"
@@ -117,94 +255,126 @@ const UserSettings = props => {
             </i>
             <span className="icolab" style={{ fontSize: "18pt" }}>
               {" "}
-              Settings
+              Account
             </span>
           </h1>
-          <form onSubmit={handleUpdateSettings} autoComplete="off">
-            <TextInput
-              name="name"
-              type="text"
-              label="Your Name"
-              value={name}
-              onChange={handleChange}
-              required={true}
-            />
-            <span className="floatright">
-              <span>{settingsMsg}</span>
-              <SubmitButton>Save</SubmitButton>
-            </span>
-          </form>
-          <br />
-          <hr />
-          <TextInput
-            name="email"
-            type="email"
-            label="Email"
-            autoComplete="email"
-            value={email}
-            disabled={true}
-          />
-          <hr />
-          <h3>Change Password</h3>
-          <form onSubmit={handleChangePass} autoComplete="off">
-            <TextInput
-              name="curPass"
-              type="password"
-              label="Current Password"
-              autoComplete="current-password"
-              value={curPass}
-              onChange={handleChange}
-              required={true}
-            />
-            <TextInput
-              name="newPass"
-              type="password"
-              label="New Password"
-              autoComplete="new-password"
-              value={newPass}
-              onChange={handleChange}
-              required={true}
-            />
-            <br />
-            <span className="floatright">
-              <span>{changePassMsg}</span>
-              <SubmitButton>Change</SubmitButton>
-            </span>
-          </form>
-          <br />
-          <hr />
-          <h3>Theme</h3>
           <div
             style={{
               display: "flex",
-              justifyContent: "space-around",
-              fontSize: "12pt"
+              flexWrap: "wrap",
+              flexDirection: "row",
+              justifyContent: "space-between"
             }}
           >
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => handleThemeChange("light")}
-            >
-              <i className="material-icons">
-                {theme === "light" || theme === null
-                  ? "radio_button_checked"
-                  : "radio_button_unchecked"}
-              </i>
-              <i className="icolab"> Light</i>
+            <div className="settingsection">
+              <form onSubmit={handleUpdateSettings} autoComplete="off">
+                <h3>Basic Info</h3>
+                <TextInput
+                  name="name"
+                  type="text"
+                  label="Your Name"
+                  value={name}
+                  onChange={handleChange}
+                  required={true}
+                />
+                <TextInput
+                  name="email"
+                  type="email"
+                  label="Email"
+                  autoComplete="email"
+                  value={email}
+                  disabled={true}
+                />
+                <br />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center"
+                  }}
+                >
+                  <FormMsg msg={settingsMsg} />
+                  <SubmitButton disabled={!savingInfo ? false : true}>
+                    {!savingInfo ? "Save" : "Saving..."}
+                  </SubmitButton>
+                </div>
+              </form>
             </div>
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => handleThemeChange("dark")}
-            >
-              <i className="material-icons">
-                {theme === "dark"
-                  ? "radio_button_checked"
-                  : "radio_button_unchecked"}
-              </i>
-              <i className="icolab"> Dark</i>
+            <div className="settingsection">
+              <h3>Update Password</h3>
+              <form onSubmit={handleChangePass} autoComplete="off">
+                <TextInput
+                  name="curPass"
+                  type="password"
+                  label="Current Password"
+                  autoComplete="current-password"
+                  value={curPass}
+                  onChange={handleChange}
+                  required={true}
+                />
+                <TextInput
+                  name="newPass"
+                  type="password"
+                  label="New Password"
+                  autoComplete="new-password"
+                  value={newPass}
+                  onChange={handleChange}
+                  required={true}
+                />
+                <br />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center"
+                  }}
+                >
+                  <FormMsg msg={changePassMsg} />
+                  <SubmitButton disabled={updatingPass ? true : false}>
+                    {!updatingPass ? "Update" : "Updating..."}
+                  </SubmitButton>
+                </div>
+              </form>
+            </div>
+            <div className="settingsection">
+              <h3>Theme</h3>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  fontSize: "12pt"
+                }}
+              >
+                <div
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleThemeChange("light")}
+                >
+                  <i className="material-icons">
+                    {theme === "light" || theme === null
+                      ? "radio_button_checked"
+                      : "radio_button_unchecked"}
+                  </i>
+                  <i className="icolab"> Light</i>
+                </div>
+                <div
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleThemeChange("dark")}
+                >
+                  <i className="material-icons">
+                    {theme === "dark"
+                      ? "radio_button_checked"
+                      : "radio_button_unchecked"}
+                  </i>
+                  <i className="icolab"> Dark</i>
+                </div>
+              </div>
+            </div>
+            <div className="settingsection">
+              <h3>Subscription</h3>
+              <span>{subMsg}</span>
+              {subscriptionOptions()}
             </div>
           </div>
-          <br />
         </div>
       ) : null}
     </React.Fragment>

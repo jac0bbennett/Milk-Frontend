@@ -31,63 +31,68 @@ const UploadForm = props => {
             { names: Array.from(files, f => f.name) }
           );
 
-          files.map(async file => {
-            const formData = new FormData();
+          if (uploadData.error) {
+            setMsg(uploadData.error);
+            setIsUploading(false);
+          } else {
+            files.map(async file => {
+              const formData = new FormData();
 
-            for (const [k, v] of Object.entries(
-              uploadData[file.name]["fields"]
-            )) {
-              formData.append(k, v);
-            }
+              for (const [k, v] of Object.entries(
+                uploadData[file.name]["fields"]
+              )) {
+                formData.append(k, v);
+              }
 
-            formData.append("file", file);
+              formData.append("file", file);
 
-            const resp = await postRequest(
-              uploadData[file.name]["url"],
-              formData,
-              true
-            );
-
-            const newFileName = uploadData[file.name]["fields"]["key"].split(
-              "/"
-            )[1];
-
-            let newAsset = {};
-
-            if (resp.error) {
-              let failedFilesCopy = [...failedFiles];
-              failedFilesCopy.push(file.name);
-              setFailedFiles(failedFilesCopy);
-            } else {
-              const completeUpload = await patchRequest(
-                "/api/panel/apps/" +
-                  props.session.state.selApp +
-                  "/assets/" +
-                  newFileName,
-                { status: "complete" }
+              const resp = await postRequest(
+                uploadData[file.name]["url"],
+                formData,
+                true
               );
 
-              if (completeUpload.error) {
-                alert("There was an error completing the upload!");
+              const newFileName = uploadData[file.name]["fields"]["key"].split(
+                "/"
+              )[1];
+
+              let newAsset = {};
+
+              if (resp.error) {
+                let failedFilesCopy = [...failedFiles];
+                failedFilesCopy.push(file.name);
+                setFailedFiles(failedFilesCopy);
               } else {
-                newAsset = completeUpload;
-                if (!props.page.state.modalData.callbackOnLast) {
+                const completeUpload = await patchRequest(
+                  "/api/panel/apps/" +
+                    props.session.state.selApp +
+                    "/assets/" +
+                    newFileName,
+                  { status: "complete" }
+                );
+
+                if (completeUpload.error) {
+                  alert("There was an error completing the upload!");
+                } else {
+                  newAsset = completeUpload;
+                  if (!props.page.state.modalData.callbackOnLast) {
+                    props.page.state.modalData.callback(newAsset);
+                  }
+                }
+              }
+
+              uploadCount++;
+              setMsg(uploadingMsg(uploadCount, files.length));
+
+              if (uploadCount === files.length) {
+                setMsg("Finished uploading " + uploadCount + "!");
+                setIsUploading(false);
+                if (props.page.state.modalData.callbackOnLast) {
                   props.page.state.modalData.callback(newAsset);
                 }
               }
-            }
-
-            uploadCount++;
-            setMsg(uploadingMsg(uploadCount, files.length));
-
-            if (uploadCount === files.length) {
-              setMsg("Finished uploading " + uploadCount + "!");
-              setIsUploading(false);
-              if (props.page.state.modalData.callbackOnLast) {
-                props.page.state.modalData.callback(newAsset);
-              }
-            }
-          });
+            });
+          }
         } else {
           setMsg("Upload is limited to 10 files at a time!");
         }

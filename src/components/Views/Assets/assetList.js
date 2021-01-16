@@ -9,6 +9,7 @@ const AssetList = props => {
   const [isLoaded, setIsLoaded] = useState(0);
   const [assetCount, setAssetCount] = useState(0);
   const [assets, setAssets] = useState([]);
+  const [assetLimit, setAssetLimit] = useState(0);
   const [loadedAll, setLoadedAll] = useState(false);
   const [nextPage, setNextPage] = useState(1);
 
@@ -38,6 +39,7 @@ const AssetList = props => {
           }
           props.loadbar.progressTo(100);
           setAssetCount(resp.data.assetCount);
+          setAssetLimit(resp.data.assetLimit);
           props.session.handleSession(userId, selApp, selAppName);
         }
       }
@@ -101,7 +103,9 @@ const AssetList = props => {
     <div>
       <MiniHeader header="Assets" />
       <span className="pageData" style={{ marginBottom: "15px" }}>
-        <span className="floatright contentstatus">{assetCount} / 200</span>
+        <span className="floatright contentstatus">
+          {assetCount} / {assetLimit}
+        </span>
       </span>
       <FAB
         page={props.page}

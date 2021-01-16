@@ -16,6 +16,7 @@ const TextInput = props => {
         onFocus={props.onFocus}
         onBlur={props.onBlur}
         autoFocus={props.autoFocus}
+        onKeyDown={props.onKeyDown}
       />
       <span className="floating-label">{props.label}</span>
     </div>
