@@ -2,8 +2,7 @@ import React from "react";
 import NavLink from "./navLink";
 
 const Nav = props => {
-  const selApp = props.session.state.selApp;
-  const userId = props.session.state.userId;
+  const { selApp, userId } = props;
 
   const navs = props.navs;
   const noUserNavs = props.noUserNavs;

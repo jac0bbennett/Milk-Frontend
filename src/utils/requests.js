@@ -64,11 +64,18 @@ const deleteRequest = async url => {
 
 const statuses = { LOADING: "loading", ERROR: "error", SUCCESS: "success" };
 
+const requestTypes = {
+  GET: getRequest,
+  POST: postRequest,
+  PATCH: patchRequest
+};
+
 export {
   getRequest,
   postRequest,
   patchRequest,
   deleteRequest,
   baseApiUrl,
-  statuses
+  statuses,
+  requestTypes
 };

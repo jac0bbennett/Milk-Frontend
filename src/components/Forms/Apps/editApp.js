@@ -6,9 +6,11 @@ import SubmitButton from "../../UI/Buttons/submitButton";
 import DeleteButton from "../../UI/Buttons/deleteButton";
 import { Link } from "react-router-dom";
 import usePageStore from "../../../stores/usePageStore";
+import useSessionStore from "../../../stores/useSessionStore";
 
 const EditAppForm = props => {
   const modalData = usePageStore(state => state.modalData);
+  const selApp = useSessionStore(state => state.selApp);
   const [form, setForm] = useState({
     name: modalData.name
   });
@@ -45,8 +47,8 @@ const EditAppForm = props => {
   };
 
   const deleteCallback = () => {
-    if (props.session.state.selApp === modalData.uuid) {
-      props.session.handleSession(undefined, "0");
+    if (selApp === modalData.uuid) {
+      useSessionStore.getState().handleSession(undefined, "0");
     }
   };
 

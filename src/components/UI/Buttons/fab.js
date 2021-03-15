@@ -1,17 +1,21 @@
 import React from "react";
+import usePageStore from "../../../stores/usePageStore";
 
 const FAB = props => {
-  const style = props.page.state.showModal
+  const showModal = usePageStore(state => state.showModal);
+  const style = showModal
     ? {
         transform: "rotate(45deg)"
       }
     : {};
 
   const handleClick = () => {
-    if (props.page.state.showModal) {
-      props.page.handleCloseModal();
+    if (showModal) {
+      usePageStore.getState().handleCloseModal();
     } else {
-      props.page.handleShowModal(props.modalComp, props.modalData, props.reset);
+      usePageStore
+        .getState()
+        .handleShowModal(props.modalComp, props.modalData, props.reset);
     }
   };
 

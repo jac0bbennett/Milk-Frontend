@@ -1,10 +1,17 @@
 import React from "react";
 import SelectButton from "../../UI/Buttons/selectButton";
 import usePageStore from "../../../stores/usePageStore";
+import useSessionStore from "../../../stores/useSessionStore";
 
 const AppItem = props => {
+  const selApp = useSessionStore(state => state.selApp);
+
+  const getClassNames = () => {
+    return selApp === props.app.uuid ? "cmsappitem selappdiv" : "cmsappitem";
+  };
+
   return (
-    <div className={getClassNames(props.app.uuid, props.session.state.selApp)}>
+    <div className={getClassNames()}>
       <div
         style={{
           display: "flex",
@@ -24,9 +31,11 @@ const AppItem = props => {
       >
         <SelectButton
           selectItem={() => {
-            props.session.handleSelectApp(props.app.uuid);
+            useSessionStore
+              .getState()
+              .handleSelectApp(props.app.uuid, props.app.name);
           }}
-          sel={props.session.state.selApp === props.app.uuid}
+          sel={selApp === props.app.uuid}
           style={{ marginBottom: "auto" }}
         />
         <button
@@ -45,10 +54,6 @@ const AppItem = props => {
       </div>
     </div>
   );
-};
-
-const getClassNames = (uuid, selApp) => {
-  return selApp === uuid ? "cmsappitem selappdiv" : "cmsappitem";
 };
 
 export default AppItem;

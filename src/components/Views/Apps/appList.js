@@ -11,7 +11,7 @@ const AppList = props => {
   const [appLimit, setAppLimit] = useState(0);
   const [apps, setApps] = useState([]);
 
-  const [respData, respMeta, respStatus] = useViewApiCall("/api/panel/apps");
+  const [respData, respStatus] = useViewApiCall("/api/panel/apps");
 
   useEffect(() => {
     usePageStore.getState().handlePageChange("Your Apps", "apps");
@@ -21,8 +21,7 @@ const AppList = props => {
       setAppLimit(respData.appLimit);
       setIsLoaded(true);
     }
-    props.session.handleSession(respMeta.userId, respMeta.selApp, undefined);
-  }, [props.session, respData, respMeta, respStatus]);
+  }, [respData, respStatus]);
 
   const NoAppMsg = () => {
     return (

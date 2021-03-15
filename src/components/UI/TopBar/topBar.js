@@ -1,9 +1,20 @@
 import React from "react";
 import Nav from "./nav";
 import { Truncate } from "../../../utils/text";
+import useSessionStore from "../../../stores/useSessionStore";
+import usePageStore from "../../../stores/usePageStore";
+import shallow from "zustand/shallow";
 
 const TopBar = props => {
-  const selApp = props.session.state.selApp;
+  const { selApp, selAppName, userId } = useSessionStore(
+    state => ({
+      selApp: state.selApp,
+      selAppName: state.selAppName,
+      userId: state.userId
+    }),
+    shallow
+  );
+  const pageId = usePageStore(state => state.pageId);
   const navs = [
     { to: "/panel/apps", label: "apps", navId: "apps", appDep: false },
     {
@@ -37,7 +48,7 @@ const TopBar = props => {
     { to: "/panel/signup", label: "Sign Up", navId: "signUp", appDep: false }
   ];
 
-  const shouldShowAppName = pageId => {
+  const shouldShowAppName = () => {
     const navEl = navs.find(i => i.navId === pageId);
     return navEl ? navEl.appDep : true;
   };
@@ -46,15 +57,14 @@ const TopBar = props => {
     <div id="top">
       <div id="top-branding">MILK</div>
       <div id="pagetitle">
-        {shouldShowAppName(props.page.state.pageId)
-          ? Truncate(props.session.state.selAppName, 30)
-          : ""}
+        {shouldShowAppName() ? Truncate(selAppName, 30) : ""}
       </div>
       <Nav
         navs={navs}
         noUserNavs={noUserNavs}
-        pageId={props.page.state.pageId}
-        session={props.session}
+        pageId={pageId}
+        selApp={selApp}
+        userId={userId}
       />
     </div>
   );
