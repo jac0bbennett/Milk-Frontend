@@ -5,15 +5,19 @@ import FormMsg from "../../UI/Misc/formMsg";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import DeleteButton from "../../UI/Buttons/deleteButton";
 import { Link } from "react-router-dom";
+import usePageStore from "../../../stores/usePageStore";
 
 const EditAppForm = props => {
-  const [form, setForm] = useState({ name: props.page.state.modalData.name });
+  const modalData = usePageStore(state => state.modalData);
+  const [form, setForm] = useState({
+    name: modalData.name
+  });
   const [msg, setMsg] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    setForm({ name: props.page.state.modalData.name });
-  }, [props.page.state.modalData.name, props.page.state.showModal]);
+    setForm({ name: modalData.name });
+  }, [modalData.name]);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -23,10 +27,9 @@ const EditAppForm = props => {
 
     const appname = form.name;
 
-    const req = await patchRequest(
-      "/api/panel/apps/" + props.page.state.modalData.uuid,
-      { appname }
-    );
+    const req = await patchRequest("/api/panel/apps/" + modalData.uuid, {
+      appname
+    });
 
     if (req.error) {
       const reqMsg = req.error;
@@ -35,22 +38,22 @@ const EditAppForm = props => {
     } else {
       setMsg("");
       props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.handleSetRefresh();
+      usePageStore.getState().handleCloseModal();
+      usePageStore.getState().handleSetRefresh();
     }
     setSaving(false);
   };
 
   const deleteCallback = () => {
-    if (props.session.state.selApp === props.page.state.modalData.uuid) {
+    if (props.session.state.selApp === modalData.uuid) {
       props.session.handleSession(undefined, "0");
     }
   };
 
   const handleDelete = async event => {
-    const url = "/api/panel/apps/" + props.page.state.modalData.uuid;
+    const url = "/api/panel/apps/" + modalData.uuid;
 
-    props.page.handleShowModal("confirmdeleteform", {
+    usePageStore.getState().handleShowModal("confirmdeleteform", {
       deleteUrl: url,
       callback: deleteCallback,
       extraText:
@@ -68,8 +71,8 @@ const EditAppForm = props => {
   return (
     <form onSubmit={handleSubmit} autoComplete="off">
       <Link
-        to={"/panel/apps/" + props.page.state.modalData.uuid + "/apikeys"}
-        onClick={props.page.handleCloseModal}
+        to={"/panel/apps/" + modalData.uuid + "/apikeys"}
+        onClick={usePageStore.getState().handleCloseModal}
         className="floatright"
       >
         API Keys

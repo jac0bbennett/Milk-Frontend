@@ -62,4 +62,13 @@ const deleteRequest = async url => {
   }
 };
 
-export { getRequest, postRequest, patchRequest, deleteRequest, baseApiUrl };
+const statuses = { LOADING: "loading", ERROR: "error", SUCCESS: "success" };
+
+export {
+  getRequest,
+  postRequest,
+  patchRequest,
+  deleteRequest,
+  baseApiUrl,
+  statuses
+};

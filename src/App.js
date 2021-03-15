@@ -23,6 +23,7 @@ import { Provider, Subscribe } from "unstated";
 import SessionContainer from "./containers/SessionContainer";
 import LoadbarContainer from "./containers/LoadbarContainer";
 import PageContainer from "./containers/PageContainer";
+import usePageStore from "./stores/usePageStore";
 // import UNSTATED from "unstated-debug";
 
 // UNSTATED.logStateChanges = true;
@@ -33,6 +34,8 @@ const loadbarCont = new LoadbarContainer();
 sessionCont.bindLoadbar(loadbarCont);
 
 const App = () => {
+  const showModal = usePageStore(state => state.showModal);
+
   useEffect(() => {
     sessionCont.handleGetDefaultTheme();
   }, []);
@@ -42,15 +45,9 @@ const App = () => {
       <Subscribe to={[SessionContainer, LoadbarContainer, PageContainer]}>
         {(session, loadbar, page) => (
           <React.Fragment>
-            <div id="overlay" className={page.state.showModal ? "is-show" : ""}>
-              <Cloak isShow={page.state.showModal} page={page} />
-              <Modal
-                isShow={page.state.showModal}
-                inner={page.state.modalComp}
-                loadbar={loadbar}
-                page={page}
-                session={session}
-              />
+            <div id="overlay" className={showModal ? "is-show" : ""}>
+              <Cloak />
+              <Modal loadbar={loadbar} session={session} />
             </div>
             <LoadingBar
               id="loadingbar"

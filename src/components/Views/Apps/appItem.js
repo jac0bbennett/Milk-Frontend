@@ -1,5 +1,6 @@
 import React from "react";
 import SelectButton from "../../UI/Buttons/selectButton";
+import usePageStore from "../../../stores/usePageStore";
 
 const AppItem = props => {
   return (
@@ -36,7 +37,7 @@ const AppItem = props => {
             marginTop: "auto"
           }}
           onClick={() => {
-            props.page.handleShowModal("editappform", props.app);
+            usePageStore.getState().handleShowModal("editappform", props.app);
           }}
         >
           <i className="material-icons">more_horiz</i>

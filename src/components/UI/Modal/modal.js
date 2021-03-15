@@ -16,9 +16,12 @@ import { ResetPasswordForm } from "../../Forms/resetPassword";
 import UploadAssetForm from "../../Forms/Assets/upload";
 import EditAssetForm from "../../Forms/Assets/editAsset";
 import SelectAssetForm from "../../Forms/Assets/selectAsset";
+import shallow from "zustand/shallow";
+import usePageStore from "../../../stores/usePageStore";
 
 const Content = props => {
-  switch (props.page.state.modalComp) {
+  const modalComp = usePageStore(state => state.modalComp);
+  switch (modalComp) {
     case "newappform":
       return <NewAppForm {...props} />;
     case "editappform":
@@ -59,19 +62,22 @@ const Content = props => {
 };
 
 const Modal = props => {
+  const { isShow, handleCloseModal } = usePageStore(
+    state => ({
+      isShow: state.showModal,
+      handleCloseModal: state.handleCloseModal
+    }),
+    shallow
+  );
   const showStyle = {
     opacity: 100,
     top: "50px"
   };
-  const style = props.isShow ? showStyle : {};
+  const style = isShow ? showStyle : {};
 
   return (
     <div id="modal" style={style}>
-      <i
-        onClick={props.page.handleCloseModal}
-        id="hidformexit"
-        className="material-icons"
-      >
+      <i onClick={handleCloseModal} id="hidformexit" className="material-icons">
         clear
       </i>
       <br />
