@@ -1,42 +1,28 @@
 import React, { useState, useEffect } from "react";
 import FAB from "../../UI/Buttons/fab";
-import { getRequest } from "../../../utils/requests";
+import { statuses } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
+import usePageStore from "../../../stores/usePageStore";
+import useViewApiCall from "../../../utils/useViewApiCall";
 
 const AppApiKeys = props => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [keyCount, setKeyCount] = useState(0);
   const [keys, setKeys] = useState([]);
 
+  const [respData, respStatus] = useViewApiCall(
+    "/api/panel/apps/" + props.match.params.appuuid + "/apikeys"
+  );
+
   useEffect(() => {
-    props.page.handlePageChange("API Keys", "apikeys");
+    usePageStore.getState().handlePageChange("API Keys", "apikeys");
 
-    const req = async () => {
-      const resp = await getRequest(
-        "/api/panel/apps/" + props.match.params.appuuid + "/apikeys"
-      );
-      if (resp.error) {
-        props.loadbar.setToError(true);
-      } else {
-        const userId = resp.meta.userId;
-        const selApp = resp.meta.appUUID;
-        const selAppName = resp.meta.appName;
-        setKeys(resp.data.keys);
-        setKeyCount(resp.data.keyCount);
-        setIsLoaded(true);
-        props.session.handleSession(userId, selApp, selAppName);
-        props.loadbar.progressTo(100);
-      }
-    };
-
-    req();
-  }, [
-    props.page,
-    props.session,
-    props.loadbar,
-    props.match.params.appuuid,
-    props.page.state.refreshView
-  ]);
+    if (respStatus === statuses.SUCCESS) {
+      setKeys(respData.keys);
+      setKeyCount(respData.keyCount);
+      setIsLoaded(true);
+    }
+  }, [props.match.params.appuuid, respData, respStatus]);
 
   const NoAppMsg = () => {
     return (
@@ -54,7 +40,9 @@ const AppApiKeys = props => {
         <br />
         <button
           style={{ fontSize: "9pt" }}
-          onClick={() => props.page.handleShowModal("newapikeyform")}
+          onClick={() =>
+            usePageStore.getState().handleShowModal("newapikeyform")
+          }
           className="raisedbut"
         >
           <span className="icolab">Create One</span>
@@ -72,7 +60,7 @@ const AppApiKeys = props => {
       <span className="pageData" style={{ marginBottom: "15px" }}>
         <span className="floatright contentstatus">{keyCount} / 10</span>
       </span>
-      <FAB page={props.page} modalComp="newapikeyform">
+      <FAB modalComp="newapikeyform">
         <i className="material-icons">add</i>
       </FAB>
       <br />
@@ -97,7 +85,9 @@ const AppApiKeys = props => {
                   padding: "5px"
                 }}
                 onClick={() =>
-                  props.page.handleShowModal("editapikeyform", { key: key })
+                  usePageStore
+                    .getState()
+                    .handleShowModal("editapikeyform", { key: key })
                 }
               >
                 <i

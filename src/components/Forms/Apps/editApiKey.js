@@ -4,46 +4,51 @@ import FormMsg from "../../UI/Misc/formMsg";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import DeleteButton from "../../UI/Buttons/deleteButton";
 import { patchRequest } from "../../../utils/requests";
+import usePageStore from "../../../stores/usePageStore";
+import useSessionStore from "../../../stores/useSessionStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
 
-const EditApiKeyForm = props => {
+const EditApiKeyForm = () => {
+  const modalData = usePageStore(state => state.modalData);
+  const selApp = useSessionStore(state => state.selApp);
   const [form, setForm] = useState({
-    name: props.page.state.modalData.key.name,
-    key: props.page.state.modalData.key.key
+    name: modalData.key.name,
+    key: modalData.key.key
   });
   const [msg, setMsg] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setForm({
-      name: props.page.state.modalData.key.name,
-      key: props.page.state.modalData.key.key
+      name: modalData.key.name,
+      key: modalData.key.key
     });
     setMsg("");
-  }, [props.page.state.modalData.key, props.page.state.showModal]);
+  }, [modalData.key]);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setSaving(true);
 
     const keyname = form.name;
     const apikey = form.key;
 
     const req = await patchRequest(
-      "/api/panel/apps/" + props.session.state.selApp + "/apikeys/" + apikey,
+      "/api/panel/apps/" + selApp + "/apikeys/" + apikey,
       { keyname }
     );
 
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.handleSetRefresh();
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
+      usePageStore.getState().handleSetRefresh();
     }
     setSaving(false);
   };
@@ -51,12 +56,11 @@ const EditApiKeyForm = props => {
   const handleDelete = async event => {
     event.preventDefault();
 
-    const apikey = props.page.state.modalData.key.key;
+    const apikey = modalData.key.key;
 
-    const url =
-      "/api/panel/apps/" + props.session.state.selApp + "/apikeys/" + apikey;
+    const url = "/api/panel/apps/" + selApp + "/apikeys/" + apikey;
 
-    props.page.handleShowModal("confirmdeleteform", {
+    usePageStore.getState().handleShowModal("confirmdeleteform", {
       deleteUrl: url,
       extraText: "You will no longer be able to access content with this token!"
     });

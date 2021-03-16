@@ -7,6 +7,7 @@ import DeleteButton from "../../UI/Buttons/deleteButton";
 import { Link } from "react-router-dom";
 import usePageStore from "../../../stores/usePageStore";
 import useSessionStore from "../../../stores/useSessionStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
 
 const EditAppForm = props => {
   const modalData = usePageStore(state => state.modalData);
@@ -36,10 +37,10 @@ const EditAppForm = props => {
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
-      props.loadbar.progressTo(100);
+      useLoadbarStore.getState().progressTo(100);
       usePageStore.getState().handleCloseModal();
       usePageStore.getState().handleSetRefresh();
     }
