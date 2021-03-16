@@ -40,7 +40,7 @@ const SignUpForm = props => {
         value={props.form.password}
       />
       <Recaptcha
-        sitekey="6LeWBXwaAAAAAHdk_jirfG2fiqjGLTKu0RTcsFtT"
+        sitekey="6LcQX4EaAAAAAKWqJq8G2XUMwH956gao9m5w3-mt"
         verifyCallback={verifyCaptcha}
       />
       <br />
