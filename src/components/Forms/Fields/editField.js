@@ -6,19 +6,24 @@ import DeleteButton from "../../UI/Buttons/deleteButton";
 import { patchRequest } from "../../../utils/requests";
 import ShortTextOptions from "./shortTextOptions";
 import DropDownInput from "../../UI/Inputs/dropInput";
+import usePageStore from "../../../stores/usePageStore";
+import useSessionStore from "../../../stores/useSessionStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
 
-const EditFieldForm = props => {
+const EditFieldForm = () => {
+  const persistentModalData = usePageStore(state => state.persistentModalData);
+  const selApp = useSessionStore(state => state.selApp);
   const [form, setForm] = useState({
-    name: props.page.state.persistentModalData.field.name,
-    slug: props.page.state.persistentModalData.field.slug,
-    fieldType: props.page.state.persistentModalData.field.fieldType,
-    options: props.page.state.persistentModalData.field.options || {}
+    name: persistentModalData.field.name,
+    slug: persistentModalData.field.slug,
+    fieldType: persistentModalData.field.fieldType,
+    options: persistentModalData.field.options || {}
   });
   const [msg, setMsg] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const field = { ...props.page.state.persistentModalData.field };
+    const field = { ...persistentModalData.field };
     setForm({
       name: field.name,
       slug: field.slug,
@@ -26,15 +31,15 @@ const EditFieldForm = props => {
       options: { ...field.options } || {}
     });
     setMsg("");
-  }, [props.page.state.persistentModalData.field, props.page.state.showModal]);
+  }, [persistentModalData.field]);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setSaving(true);
 
-    const fieldid = props.page.state.persistentModalData.field.id;
+    const fieldid = persistentModalData.field.id;
     const fieldname = form.name;
     const fieldslug = form.slug;
     const fieldtype = form.fieldType;
@@ -42,9 +47,9 @@ const EditFieldForm = props => {
 
     const req = await patchRequest(
       "/api/panel/apps/" +
-        props.session.state.selApp +
+        selApp +
         "/types/" +
-        props.page.state.persistentModalData.typeSlug +
+        persistentModalData.typeSlug +
         "/fields/" +
         fieldid,
       { fieldname, fieldslug, fieldtype, fieldoptions }
@@ -53,12 +58,12 @@ const EditFieldForm = props => {
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.handleSetRefresh();
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
+      usePageStore.getState().handleSetRefresh();
     }
     setSaving(false);
   };
@@ -66,17 +71,17 @@ const EditFieldForm = props => {
   const handleDelete = async event => {
     event.preventDefault();
 
-    const fieldid = props.page.state.persistentModalData.field.id;
+    const fieldid = persistentModalData.field.id;
 
     const url =
       "/api/panel/apps/" +
-      props.session.state.selApp +
+      selApp +
       "/types/" +
-      props.page.state.persistentModalData.typeSlug +
+      persistentModalData.typeSlug +
       "/fields/" +
       fieldid;
 
-    props.page.handleShowModal("confirmdeleteform", {
+    usePageStore.getState().handleShowModal("confirmdeleteform", {
       deleteUrl: url,
       extraText:
         "Deleting this field will delete any content stored in it and could break your app/website!"
@@ -142,7 +147,9 @@ const EditFieldForm = props => {
           <button
             className="flatbut"
             onClick={() => {
-              props.page.handleShowModal("editfieldoptionvaluesform");
+              usePageStore
+                .getState()
+                .handleShowModal("editfieldoptionvaluesform");
             }}
           >
             Edit Values

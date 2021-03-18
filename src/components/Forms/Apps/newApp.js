@@ -6,7 +6,7 @@ import SubmitButton from "../../UI/Buttons/submitButton";
 import usePageStore from "../../../stores/usePageStore";
 import useLoadbarStore from "../../../stores/useLoadbarStore";
 
-const NewAppForm = props => {
+const NewAppForm = () => {
   const [form, setForm] = useState({ name: "" });
   const [msg, setMsg] = useState("");
   const [creating, setCreating] = useState(false);

@@ -4,36 +4,42 @@ import { postRequest } from "../../../utils/requests";
 import FormMsg from "../../UI/Misc/formMsg";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import { generateSlug } from "../../../utils/text";
-const NewTypeForm = props => {
+import usePageStore from "../../../stores/usePageStore";
+import useSessionStore from "../../../stores/useSessionStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
+
+const NewTypeForm = () => {
   const [form, setForm] = useState({ name: "", slug: "" });
   const [msg, setMsg] = useState("");
   const [changedSlug, setChangedSlug] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const selApp = useSessionStore(state => state.selApp);
+
   const handleSubmit = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setSubmitting(true);
 
     const typename = form.name;
     const typeslug = form.slug;
 
-    const req = await postRequest(
-      "/api/panel/apps/" + props.session.state.selApp + "/types",
-      { typename, typeslug }
-    );
+    const req = await postRequest("/api/panel/apps/" + selApp + "/types", {
+      typename,
+      typeslug
+    });
 
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
       setForm({ name: "", slug: "" });
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.handleSetRefresh();
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
+      usePageStore.getState().handleSetRefresh();
       setChangedSlug(false);
     }
     setSubmitting(false);

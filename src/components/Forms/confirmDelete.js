@@ -28,7 +28,9 @@ const ConfirmDeleteForm = () => {
       setMsg("");
       useLoadbarStore.getState().progressTo(100);
       usePageStore.getState().handleCloseModal();
-      usePageStore.getState().handleSetRefresh();
+      if (!modalData.noRefresh) {
+        usePageStore.getState().handleSetRefresh();
+      }
 
       if (modalData.callback) {
         modalData.callback();

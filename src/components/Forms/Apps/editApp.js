@@ -26,7 +26,7 @@ const EditAppForm = props => {
     event.preventDefault();
     setSaving(true);
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
 
     const appname = form.name;
 
