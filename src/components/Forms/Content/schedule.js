@@ -4,16 +4,22 @@ import { postRequest } from "../../../utils/requests";
 import FormMsg from "../../UI/Misc/formMsg";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import "react-datepicker/dist/react-datepicker.css";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
+import usePageStore from "../../../stores/usePageStore";
+import useSessionStore from "../../../stores/useSessionStore";
 
 const ScheduleForm = props => {
   const [datetime, setDatetime] = useState(new Date());
   const [msg, setMsg] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const selApp = useSessionStore(state => state.selApp);
+  const modalData = usePageStore(state => state.modalData);
+
   const handleSubmit = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setSubmitting(true);
 
     let schedTime = null;
@@ -22,28 +28,25 @@ const ScheduleForm = props => {
       schedTime = new Date(datetime).toUTCString();
     } catch (err) {
       setMsg("Invalid Datetime!");
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
       return false;
     }
 
     const req = await postRequest(
-      "/api/panel/apps/" +
-        props.session.state.selApp +
-        "/content/" +
-        props.page.state.modalData.uuid,
+      "/api/panel/apps/" + selApp + "/content/" + modalData.uuid,
       { action: "schedule", schedTime: schedTime }
     );
 
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
       setDatetime(new Date());
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.state.modalData.callback(req.data);
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
+      modalData.callback(req.data);
     }
     setSubmitting(false);
   };

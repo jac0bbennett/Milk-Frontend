@@ -18,7 +18,7 @@ const useApiCall = (endpoint, disableLoadbar = false) => {
         const resp = await getRequest(endpoint);
         if (resp.error) {
           setStatus(statuses.ERROR);
-          if (!disableLoadbar) useLoadbarStore.getState().setToError(true);
+          useLoadbarStore.getState().setToError(true);
         } else {
           if (!disableLoadbar) useLoadbarStore.getState().progressTo(100);
           if (resp.meta) {

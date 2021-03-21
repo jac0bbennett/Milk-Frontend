@@ -18,7 +18,7 @@ const useSessionStore = create((set, get) => ({
   handleSignIn: userId => {
     set({ userId });
     get().handleGetDefaultTheme();
-    history.pushState("/panel/apps");
+    history.push("/panel/apps");
   },
   handleSignOut: async () => {
     useLoadbarStore.getState().progressTo(15);

@@ -3,11 +3,8 @@ import shallow from "zustand/shallow";
 import usePageStore from "../../../stores/usePageStore";
 
 const Cloak = () => {
-  const { isShow, handleCloseModal } = usePageStore(
-    state => ({
-      isShow: state.showModal,
-      handleCloseModal: state.handleCloseModal
-    }),
+  const [isShow, handleCloseModal] = usePageStore(
+    state => [state.showModal, state.handleCloseModal],
     shallow
   );
   const showStyle = {

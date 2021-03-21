@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { getRequest, postRequest } from "../../../utils/requests";
+import { getRequest, postRequest, statuses } from "../../../utils/requests";
 import history from "../../../utils/history";
 import ShortTextField from "./Fields/shortTextField";
 import LongTextField from "./Fields/longTextField";
@@ -11,6 +11,9 @@ import ListField from "./Fields/listField";
 import DropMenu from "../../UI/Misc/dropMenu";
 import Moment from "react-moment";
 import moment from "moment";
+import usePageStore from "../../../stores/usePageStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
+import useViewApiCall from "../../../utils/useViewApiCall";
 
 const EditContent = props => {
   const [contentData, setContentData] = useState({});
@@ -27,78 +30,51 @@ const EditContent = props => {
   const [isDraftDiscarded, setIsDraftDiscarded] = useState(false);
   const [publishDisabled, setPublishDisabled] = useState(false);
 
-  const handleUpdateTitle = useCallback(
-    (newTitle = "") => {
-      setPageTitle(newTitle);
-
-      props.page.handlePageChange(newTitle || "Untitled", "content");
-    },
-    [props.page]
+  const [contentResp, contentRespStatus] = useViewApiCall(
+    "/api/panel/apps/" +
+      props.match.params.appuuid +
+      "/content/" +
+      props.match.params.contentuuid,
+    true
   );
+
+  const handleUpdateTitle = useCallback((newTitle = "") => {
+    setPageTitle(newTitle);
+
+    usePageStore.getState().handlePageChange(newTitle || "Untitled", "content");
+  }, []);
 
   const getType = useCallback(
     async typeslug => {
       const resp = await getRequest(
-        "/api/panel/apps/" + props.session.state.selApp + "/types/" + typeslug
+        "/api/panel/apps/" + props.match.params.appuuid + "/types/" + typeslug
       );
       if (resp.error) {
-        props.loadbar.setToError(true);
+        useLoadbarStore.getState().setToError(true);
       } else {
         const respFields = resp.data.fields;
         setFields(respFields);
         setTypeLoaded(true);
       }
     },
-    [props.loadbar, props.session]
+    [props.match.params.appuuid]
   );
 
-  const getContent = useCallback(async () => {
-    const resp = await getRequest(
-      "/api/panel/apps/" +
-        props.match.params.appuuid +
-        "/content/" +
-        props.match.params.contentuuid
-    );
-    if (resp.error) {
-      props.loadbar.setToError(true);
-    } else {
-      const userId = resp.meta.userId;
-      const selApp = resp.meta.appUUID;
-      const selAppName = resp.meta.appName;
-      setContentData(resp.data);
-      setContentLoaded(true);
-      props.session.handleSession(userId, selApp, selAppName);
-      handleUpdateTitle();
-      getType(resp.data.typeSlug);
-    }
-  }, [
-    props.loadbar,
-    props.session,
-    getType,
-    props.match.params.appuuid,
-    props.match.params.contentuuid,
-    handleUpdateTitle
-  ]);
-
   useEffect(() => {
-    props.loadbar.progressTo(15);
-    props.page.handlePageChange("", "content");
-    props.session.handleSession(undefined, props.match.params.appuuid);
-    getContent();
-  }, [
-    props.loadbar,
-    props.page,
-    props.session,
-    props.match.params.contentuuid,
-    props.match.params.appuuid,
-    getContent,
-    props.page.state.refreshView,
-    handleUpdateTitle
-  ]);
+    usePageStore.getState().handlePageChange("", "content");
+    useLoadbarStore.getState().progressTo(15);
+    if (contentRespStatus === statuses.SUCCESS) {
+      setContentData(contentResp);
+      setContentLoaded(true);
+      handleUpdateTitle();
+
+      getType(contentResp.typeSlug);
+    }
+  }, [contentResp, contentRespStatus, handleUpdateTitle, getType]);
 
   useEffect(() => {
     if (contentLoaded && typeLoaded) {
-      props.loadbar.progressTo(100);
+      useLoadbarStore.getState().progressTo(100);
       setIsLoaded(true);
 
       const getTitleShortText = fields.filter((v, i) => {
@@ -115,12 +91,11 @@ const EditContent = props => {
 
       handleUpdateTitle(newTitle);
     } else if (contentLoaded || typeLoaded) {
-      props.loadbar.progressTo(60);
+      useLoadbarStore.getState().progressTo(60);
     }
   }, [
     contentLoaded,
     typeLoaded,
-    props.loadbar,
     contentData.fields,
     handleUpdateTitle,
     fields
@@ -128,12 +103,12 @@ const EditContent = props => {
 
   useEffect(() => {
     if (
-      props.page.state.showModal === false &&
-      props.page.state.modalComp === "confirmdiscarddraftform"
+      usePageStore.getState().showModal === false &&
+      usePageStore.getState().modalComp === "confirmdiscarddraftform"
     ) {
       setIsPublishing(false);
     }
-  }, [props.page.state.showModal, props.page.state.modalComp]);
+  }, []);
 
   useEffect(() => {
     const editedAt = new Date(contentData.editedAt);
@@ -165,14 +140,14 @@ const EditContent = props => {
     event.preventDefault();
 
     if (!isDrafting && !isPublishing && !publishDisabled) {
-      props.loadbar.progressTo(15);
+      useLoadbarStore.getState().progressTo(15);
       setMsg("publishing...");
 
       setIsPublishing(true);
 
       const req = await postRequest(
         "/api/panel/apps/" +
-          props.session.state.selApp +
+          props.match.params.appuuid +
           "/content/" +
           props.match.params.contentuuid,
         { action: "publish" }
@@ -182,12 +157,12 @@ const EditContent = props => {
         const reqMsg = req.error;
         setMsg(reqMsg);
         setIsPublishing(false);
-        props.loadbar.setToError(true);
+        useLoadbarStore.getState().setToError(true);
       } else {
         setMsg("");
         setContentData(req.data);
         setIsPublishing(false);
-        props.loadbar.progressTo(100);
+        useLoadbarStore.getState().progressTo(100);
       }
     }
   };
@@ -197,17 +172,17 @@ const EditContent = props => {
   };
 
   const deleteCallback = () => {
-    history.push("/panel/apps/" + props.session.state.selApp + "/content");
+    history.push("/panel/apps/" + props.match.params.appuuid + "/content");
   };
 
-  const handleDelete = async event => {
+  const handleDelete = async () => {
     const url =
       "/api/panel/apps/" +
       props.session.state.selApp +
       "/content/" +
       props.match.params.contentuuid;
 
-    props.page.handleShowModal("confirmdeleteform", {
+    usePageStore.getState().handleShowModal("confirmdeleteform", {
       deleteUrl: url,
       callback: deleteCallback,
       extraText: "All content stored here will be permanently deleted!"
@@ -227,11 +202,11 @@ const EditContent = props => {
   const handleDiscardDraft = () => {
     const url =
       "/api/panel/apps/" +
-      props.session.state.selApp +
+      props.match.params.appuuid +
       "/content/" +
       props.match.params.contentuuid;
 
-    props.page.handleShowModal("confirmactionform", {
+    usePageStore.getState().handleShowModal("confirmactionform", {
       discardUrl: url,
       action: "discardDraft",
       callback: discardCallback,
@@ -250,11 +225,11 @@ const EditContent = props => {
   const handleUnpublish = () => {
     const url =
       "/api/panel/apps/" +
-      props.session.state.selApp +
+      props.match.params.appuuid +
       "/content/" +
       props.match.params.contentuuid;
 
-    props.page.handleShowModal("confirmactionform", {
+    usePageStore.getState().handleShowModal("confirmactionform", {
       discardUrl: url,
       action: "unpublish",
       callback: unpublishCallback,
@@ -267,11 +242,11 @@ const EditContent = props => {
   const handleUnschedule = () => {
     const url =
       "/api/panel/apps/" +
-      props.session.state.selApp +
+      props.match.params.appuuid +
       "/content/" +
       props.match.params.contentuuid;
 
-    props.page.handleShowModal("confirmactionform", {
+    usePageStore.getState().handleShowModal("confirmactionform", {
       discardUrl: url,
       action: "unpublish",
       callback: unpublishCallback,
@@ -454,10 +429,12 @@ const EditContent = props => {
                   {contentStatus === "draft" ? (
                     <li
                       onClick={() => {
-                        props.page.handleShowModal("scheduleform", {
-                          uuid: props.match.params.contentuuid,
-                          callback: scheduleCallback
-                        });
+                        usePageStore
+                          .getState()
+                          .handleShowModal("scheduleform", {
+                            uuid: props.match.params.contentuuid,
+                            callback: scheduleCallback
+                          });
                       }}
                     >
                       Schedule

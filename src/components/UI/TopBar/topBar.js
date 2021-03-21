@@ -5,13 +5,9 @@ import useSessionStore from "../../../stores/useSessionStore";
 import usePageStore from "../../../stores/usePageStore";
 import shallow from "zustand/shallow";
 
-const TopBar = props => {
-  const { selApp, selAppName, userId } = useSessionStore(
-    state => ({
-      selApp: state.selApp,
-      selAppName: state.selAppName,
-      userId: state.userId
-    }),
+const TopBar = () => {
+  const [selApp, selAppName, userId] = useSessionStore(
+    state => [state.selApp, state.selAppName, state.userId],
     shallow
   );
   const pageId = usePageStore(state => state.pageId);

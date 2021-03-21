@@ -202,7 +202,9 @@ const ContentList = props => {
           <button
             style={{ fontSize: "9pt" }}
             onClick={() =>
-              props.page.handleShowModal("newcontentform", { types: types })
+              usePageStore
+                .getState()
+                .handleShowModal("newcontentform", { types: types })
             }
             className="raisedbut"
           >
@@ -300,11 +302,7 @@ const ContentList = props => {
         ) : null}
       </div>
       {typesLoaded ? (
-        <FAB
-          page={props.page}
-          modalComp="newcontentform"
-          modalData={{ types: types }}
-        >
+        <FAB modalComp="newcontentform" modalData={{ types: types }}>
           <i className="material-icons">add</i>
         </FAB>
       ) : null}
@@ -333,7 +331,7 @@ const ContentList = props => {
               content={content}
               url={
                 "/panel/apps/" +
-                props.session.state.selApp +
+                props.match.params.appuuid +
                 "/content/" +
                 content.uuid
               }

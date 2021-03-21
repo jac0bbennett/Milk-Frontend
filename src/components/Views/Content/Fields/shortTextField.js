@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import TextInput from "../../../UI/Inputs/txtInput";
 import { patchRequest } from "../../../../utils/requests";
 import FieldMsg from "./fieldMsg";
+import useSessionStore from "../../../../stores/useSessionStore";
 
 const ShortTextField = props => {
   const [content, setContent] = useState(props.value);
@@ -10,6 +11,8 @@ const ShortTextField = props => {
   const [changeCount, setChangeCount] = useState(0);
   const [saved, setSaved] = useState(false);
   const [msg, setMsg] = useState("");
+
+  const selApp = useSessionStore(state => state.selApp);
 
   const charLimit = 500;
 
@@ -55,10 +58,7 @@ const ShortTextField = props => {
       const fieldcontentid = props.dataId;
 
       const req = await patchRequest(
-        "/api/panel/apps/" +
-          props.session.state.selApp +
-          "/content/" +
-          props.contentUuid,
+        "/api/panel/apps/" + selApp + "/content/" + props.contentUuid,
         { [fieldcontentid]: newVal }
       );
 
@@ -81,13 +81,13 @@ const ShortTextField = props => {
     },
     [
       props.dataId,
-      props.session.state.selApp,
       props.contentUuid,
       props.fieldOptions,
       drafting,
       disablePublish,
       updateEditedTime,
-      updateTitle
+      updateTitle,
+      selApp
     ]
   );
 
