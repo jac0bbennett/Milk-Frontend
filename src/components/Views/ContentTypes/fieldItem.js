@@ -1,6 +1,7 @@
 import React from "react";
 import { SortableElement } from "react-sortable-hoc";
 import DragHandle from "../../UI/Misc/dragHandle";
+import usePageStore from "../../../stores/usePageStore";
 
 const decodeFieldType = fieldtype => {
   switch (fieldtype) {
@@ -73,7 +74,7 @@ const FieldItem = SortableElement(props => (
       <button
         className="flatbut darkflatbutton"
         onClick={() => {
-          props.page.handleShowModal(
+          usePageStore.getState().handleShowModal(
             "editfieldform",
             {},
             {

@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import FAB from "../../UI/Buttons/fab";
-import { getRequest } from "../../../utils/requests";
+import { statuses } from "../../../utils/requests";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
 import ContentItem from "./contentItem";
 import BottomScrollListener from "react-bottom-scroll-listener";
 import DropDownInput from "../../UI/Inputs/dropInput";
 import TextInput from "../../UI/Inputs/txtInput";
 import history from "../../../utils/history";
+import usePageStore from "../../../stores/usePageStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
+import useViewApiCall from "../../../utils/useViewApiCall";
 
 const ContentList = props => {
   const [contents, setContents] = useState([]);
@@ -25,113 +28,100 @@ const ContentList = props => {
   const [sortOrder, setSortOrder] = useState("dateDescending");
   const searchBox = useRef(null);
 
-  const getContents = useCallback(async () => {
-    if (!loadedAll) {
-      const params = new URLSearchParams(props.location.search);
-      const getFilter = () => {
-        const paramSearch = params.get("search");
-        const paramTypeFilter = params.get("contentType");
-        const paramSortOrder = params.get("sort");
+  const [reqUrl, setReqUrl] = useState();
 
-        let filter = {};
+  const [contentResp, contentRespStatus] = useViewApiCall(reqUrl, true);
+  const [typeResp, typeRespStatus] = useViewApiCall(
+    "/api/panel/apps/" + props.match.params.appuuid + "/types",
+    true
+  );
 
-        if (paramSearch) {
-          setSearch(paramSearch);
-          setShowSearch(true);
-          filter.search = paramSearch.replace(/\s+/g, " ").trim();
-        } else {
-          setSearch("");
-          setShowSearch(false);
-        }
+  const getContentUrl = useCallback(() => {
+    const params = new URLSearchParams(props.location.search);
+    const getFilter = () => {
+      const paramSearch = params.get("search");
+      const paramTypeFilter = params.get("contentType");
+      const paramSortOrder = params.get("sort");
 
-        if (paramSortOrder) {
-          setSortOrder(paramSortOrder);
-          filter.sortOrder = paramSortOrder;
-        } else {
-          setSortOrder("dateDescending");
-        }
+      let filter = {};
 
-        if (paramTypeFilter) {
-          setTypeFilter(paramTypeFilter);
-          filter.contentType = paramTypeFilter;
-        } else {
-          setTypeFilter("");
-        }
-
-        return filter;
-      };
-
-      const resp = await getRequest(
-        "/api/panel/apps/" +
-          props.match.params.appuuid +
-          "/content?page=" +
-          nextPage +
-          "&q=" +
-          escape(JSON.stringify(getFilter()))
-      );
-      if (resp.error) {
-        props.loadbar.setToError(true);
+      if (paramSearch) {
+        setSearch(paramSearch);
+        setShowSearch(true);
+        filter.search = paramSearch.replace(/\s+/g, " ").trim();
       } else {
-        const userId = resp.meta.userId;
-        const selApp = resp.meta.appUUID;
-        const selAppName = resp.meta.appName;
-        const respContents = resp.data.contents;
-        if (nextPage > 1) {
-          setContents(c => c.concat(respContents));
-        } else {
-          setContents(respContents);
-        }
-        setContentsLoaded(true);
-        if (nextPage > 1 && resp.data.contents.length === 0) {
-          setLoadedAll(true);
-        }
-        setContentsCount(resp.data.contentCount);
-        setContentLimit(resp.data.contentLimit);
-        props.session.handleSession(userId, selApp, selAppName);
+        setSearch("");
+        setShowSearch(false);
       }
-      setCurParams(params);
-    }
-  }, [
-    props.loadbar,
-    props.session,
-    nextPage,
-    props.match.params.appuuid,
-    props.location.search,
-    loadedAll
-  ]);
 
-  const getTypes = useCallback(async () => {
-    const resp = await getRequest(
-      "/api/panel/apps/" + props.match.params.appuuid + "/types"
+      if (paramSortOrder) {
+        setSortOrder(paramSortOrder);
+        filter.sortOrder = paramSortOrder;
+      } else {
+        setSortOrder("dateDescending");
+      }
+
+      if (paramTypeFilter) {
+        setTypeFilter(paramTypeFilter);
+        filter.contentType = paramTypeFilter;
+      } else {
+        setTypeFilter("");
+      }
+
+      return filter;
+    };
+
+    setReqUrl(
+      "/api/panel/apps/" +
+        props.match.params.appuuid +
+        "/content?page=" +
+        nextPage +
+        "&q=" +
+        escape(JSON.stringify(getFilter()))
     );
-    if (resp.error) {
-      props.loadbar.setToError(true);
-      alert("Could not load some data!");
-    } else {
-      setTypes(resp.data.types);
+    setCurParams(params);
+  }, [nextPage, props.location.search, props.match.params.appuuid]);
+
+  useEffect(() => {
+    if (!loadedAll) {
+      useLoadbarStore.getState().progressTo(15);
+      getContentUrl();
+    }
+  }, [loadedAll, getContentUrl]);
+
+  useEffect(() => {
+    usePageStore.getState().handlePageChange("Content", "contents");
+    setContentsLoaded(false);
+    if (contentRespStatus === statuses.SUCCESS) {
+      if (contentResp.page > 1) {
+        setContents(c => c.concat(contentResp.contents));
+      } else {
+        setContents(contentResp.contents);
+      }
+      setContentsLoaded(true);
+      if (contentResp.page > 1 && contentResp.contents.length === 0) {
+        setLoadedAll(true);
+      }
+      setContentsCount(contentResp.contentCount);
+      setContentLimit(contentResp.contentLimit);
+    }
+  }, [contentResp, contentRespStatus]);
+
+  useEffect(() => {
+    if (typeRespStatus === statuses.SUCCESS) {
+      setTypes(typeResp.types);
       setTypesLoaded(true);
     }
-  }, [props.match.params.appuuid, props.loadbar]);
-
-  useEffect(() => {
-    props.page.handlePageChange("Content", "contents");
-    setContentsLoaded(false);
-    props.loadbar.progressTo(15);
-    getContents();
-  }, [loadedAll, props.loadbar, props.page, getContents, getTypes]);
-
-  useEffect(() => {
-    getTypes();
-  }, [getTypes]);
+  }, [typeResp, typeRespStatus]);
 
   useEffect(() => {
     if (contentsLoaded && typesLoaded) {
-      props.loadbar.progressTo(100);
+      useLoadbarStore.getState().progressTo(100);
       setIsLoaded(true);
     } else if (contentsLoaded || typesLoaded) {
-      props.loadbar.progressTo(60);
+      useLoadbarStore.getState().progressTo(60);
     }
-  }, [contentsLoaded, typesLoaded, props.loadbar]);
+  }, [contentsLoaded, typesLoaded]);
 
   useEffect(() => {
     if (isLoaded && showSearch) {
@@ -141,6 +131,9 @@ const ContentList = props => {
 
   const updateUrlParam = (param, value) => {
     let params = new URLSearchParams(props.location.search);
+
+    setLoadedAll(false);
+    setNextPage(1);
 
     if (value) {
       params.set(param, value);
@@ -209,7 +202,9 @@ const ContentList = props => {
           <button
             style={{ fontSize: "9pt" }}
             onClick={() =>
-              props.page.handleShowModal("newcontentform", { types: types })
+              usePageStore
+                .getState()
+                .handleShowModal("newcontentform", { types: types })
             }
             className="raisedbut"
           >
@@ -307,11 +302,7 @@ const ContentList = props => {
         ) : null}
       </div>
       {typesLoaded ? (
-        <FAB
-          page={props.page}
-          modalComp="newcontentform"
-          modalData={{ types: types }}
-        >
+        <FAB modalComp="newcontentform" modalData={{ types: types }}>
           <i className="material-icons">add</i>
         </FAB>
       ) : null}
@@ -340,7 +331,7 @@ const ContentList = props => {
               content={content}
               url={
                 "/panel/apps/" +
-                props.session.state.selApp +
+                props.match.params.appuuid +
                 "/content/" +
                 content.uuid
               }

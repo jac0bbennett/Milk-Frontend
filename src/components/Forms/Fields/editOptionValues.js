@@ -5,8 +5,11 @@ import { patchRequest } from "../../../utils/requests";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import FieldOptionValues from "./fieldOptionValues";
 import arrayMove from "array-move";
+import usePageStore from "../../../stores/usePageStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
+import useSessionStore from "../../../stores/useSessionStore";
 
-const EditFieldOptionValuesForm = props => {
+const EditFieldOptionValuesForm = () => {
   const [form, setForm] = useState({
     name: "",
     slug: "",
@@ -17,8 +20,11 @@ const EditFieldOptionValuesForm = props => {
   const [valuesMsg, setValuesMsg] = useState("");
   const [saving, setSaving] = useState(false);
 
+  const persistentModalData = usePageStore(state => state.persistentModalData);
+  const selApp = useSessionStore(state => state.selApp);
+
   useEffect(() => {
-    const field = { ...props.page.state.persistentModalData.field };
+    const field = { ...persistentModalData.field };
     setForm({
       name: field.name,
       slug: field.slug,
@@ -26,22 +32,22 @@ const EditFieldOptionValuesForm = props => {
       newValue: ""
     });
     setMsg("");
-  }, [props.page.state.persistentModalData.field]);
+  }, [persistentModalData.field]);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setSaving(true);
 
-    const fieldid = props.page.state.persistentModalData.field.id;
+    const fieldid = persistentModalData.field.id;
     const fieldoptions = JSON.stringify(form.options);
 
     const req = await patchRequest(
       "/api/panel/apps/" +
-        props.session.state.selApp +
+        selApp +
         "/types/" +
-        props.page.state.persistentModalData.typeSlug +
+        persistentModalData.typeSlug +
         "/fields/" +
         fieldid,
       { fieldoptions }
@@ -50,12 +56,12 @@ const EditFieldOptionValuesForm = props => {
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.handleSetRefresh();
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
+      usePageStore.getState().handleSetRefresh();
     }
     setSaving(false);
   };
@@ -123,7 +129,7 @@ const EditFieldOptionValuesForm = props => {
       <button
         className="flatbut modalBack"
         onClick={() => {
-          props.page.handleShowModal("editfieldform");
+          usePageStore.getState().handleShowModal("editfieldform");
         }}
       >
         <i className="material-icons">keyboard_arrow_left</i>
@@ -146,7 +152,6 @@ const EditFieldOptionValuesForm = props => {
       {form.options.values && form.options.values.length > 0 ? (
         <FieldOptionValues
           values={form.options.values}
-          page={props.page}
           fieldSlug={form.slug}
           deleteValue={handleDeleteValue}
           useDragHandle={true}
@@ -162,7 +167,7 @@ const EditFieldOptionValuesForm = props => {
       <button
         className="flatbut"
         onClick={() => {
-          props.page.handleCloseModal();
+          usePageStore.getState().handleCloseModal();
         }}
       >
         Cancel

@@ -2,6 +2,7 @@ import React from "react";
 import TextInput from "../UI/Inputs/txtInput";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
+import usePageStore from "../../stores/usePageStore";
 
 const SignInForm = props => {
   return (
@@ -29,7 +30,9 @@ const SignInForm = props => {
       <span
         className="bluetext"
         style={{ cursor: "pointer", fontSize: "13px", float: "right" }}
-        onClick={() => props.page.handleShowModal("resetpasswordform")}
+        onClick={() =>
+          usePageStore.getState().handleShowModal("resetpasswordform")
+        }
       >
         Reset Password?
       </span>

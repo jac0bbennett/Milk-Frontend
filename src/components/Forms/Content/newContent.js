@@ -5,37 +5,40 @@ import FormMsg from "../../UI/Misc/formMsg";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import { Link } from "react-router-dom";
 import history from "../../../utils/history";
+import useSessionStore from "../../../stores/useSessionStore";
+import usePageStore from "../../../stores/usePageStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
 
 const NewContentForm = props => {
   const [form, setForm] = useState({ type: "" });
   const [msg, setMsg] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const selApp = useSessionStore(state => state.selApp);
+  const modalData = usePageStore(state => state.modalData);
+
   const handleSubmit = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setSubmitting(true);
 
     const typeslug = form.type;
 
-    const req = await postRequest(
-      "/api/panel/apps/" + props.session.state.selApp + "/content",
-      { typeslug }
-    );
+    const req = await postRequest("/api/panel/apps/" + selApp + "/content", {
+      typeslug
+    });
 
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
       setForm({ type: "" });
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      history.push(
-        "/panel/apps/" + props.session.state.selApp + "/content/" + req.uuid
-      );
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
+      history.push("/panel/apps/" + selApp + "/content/" + req.uuid);
     }
     setSubmitting(false);
   };
@@ -50,7 +53,7 @@ const NewContentForm = props => {
   return (
     <form onSubmit={handleSubmit} autoComplete="off">
       <h2>New Content</h2>
-      {props.page.state.modalData.types.length > 0 ? (
+      {modalData.types.length > 0 ? (
         <div>
           <DropDownInput
             name="type"
@@ -59,7 +62,7 @@ const NewContentForm = props => {
             value={form.type}
             required={true}
           >
-            {props.page.state.modalData.types.map(type => (
+            {modalData.types.map(type => (
               <option key={type.id} value={type.slug}>
                 {type.slug}
               </option>
@@ -75,9 +78,7 @@ const NewContentForm = props => {
       ) : (
         <span className="softtext">
           Create a{" "}
-          <Link to={"/panel/apps/" + props.session.state.selApp + "/types"}>
-            content type
-          </Link>{" "}
+          <Link to={"/panel/apps/" + selApp + "/types"}>content type</Link>{" "}
           first!
         </span>
       )}

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import FAB from "../../UI/Buttons/fab";
 import TypeItem from "./typeItem";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
-import { getRequest } from "../../../utils/requests";
+import { statuses } from "../../../utils/requests";
+import usePageStore from "../../../stores/usePageStore";
+import useViewApiCall from "../../../utils/useViewApiCall";
 
 const ContentTypeList = props => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -10,36 +12,19 @@ const ContentTypeList = props => {
   const [typeLimit, setTypeLimit] = useState(0);
   const [types, setTypes] = useState([]);
 
-  useEffect(() => {
-    props.page.handlePageChange("Content Types", "types");
-    const req = async () => {
-      const resp = await getRequest(
-        "/api/panel/apps/" + props.match.params.appuuid + "/types"
-      );
+  const [respData, respStatus] = useViewApiCall(
+    "/api/panel/apps/" + props.match.params.appuuid + "/types"
+  );
 
-      if (resp.error) {
-        props.loadbar.setToError(true);
-      } else {
-        const userId = resp.meta.userId;
-        const selApp = resp.meta.appUUID;
-        const selAppName = resp.meta.appName;
-        setTypes(resp.data.types);
-        setTypeCount(resp.data.typeCount);
-        setTypeLimit(resp.data.typeLimit);
-        setIsLoaded(true);
-        props.session.handleSession(userId, selApp, selAppName);
-        props.loadbar.progressTo(100);
-      }
-    };
-    props.loadbar.progressTo(15);
-    req();
-  }, [
-    props.page.state.refreshView,
-    props.match.params.appuuid,
-    props.loadbar,
-    props.session,
-    props.page
-  ]);
+  useEffect(() => {
+    usePageStore.getState().handlePageChange("Content Types", "types");
+    if (respStatus === statuses.SUCCESS) {
+      setTypes(respData.types);
+      setTypeCount(respData.typeCount);
+      setTypeLimit(respData.typeLimit);
+      setIsLoaded(true);
+    }
+  }, [respData, respStatus, props.match.params.appuuid]);
 
   const NoAppMsg = () => {
     return (
@@ -57,7 +42,7 @@ const ContentTypeList = props => {
         <br />
         <button
           style={{ fontSize: "9pt" }}
-          onClick={() => props.page.handleShowModal("newtypeform")}
+          onClick={() => usePageStore.getState().handleShowModal("newtypeform")}
           className="raisedbut"
         >
           <span className="icolab">Create One</span>
@@ -79,7 +64,7 @@ const ContentTypeList = props => {
           </span>
         </span>
       ) : null}
-      <FAB page={props.page} modalComp="newtypeform">
+      <FAB modalComp="newtypeform">
         <i className="material-icons">add</i>
       </FAB>
       {types.length > 0 ? (
@@ -89,10 +74,9 @@ const ContentTypeList = props => {
             type={type}
             session={props.session}
             loadbar={props.loadbar}
-            page={props.page}
             url={
               "/panel/apps/" +
-              props.session.state.selApp +
+              props.match.params.appuuid +
               "/types/" +
               type.slug
             }

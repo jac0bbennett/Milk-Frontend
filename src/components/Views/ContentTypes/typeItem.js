@@ -2,28 +2,30 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { postRequest } from "../../../utils/requests";
 import history from "../../../utils/history";
+import usePageStore from "../../../stores/usePageStore";
+import useSessionStore from "../../../stores/useSessionStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
 
 const TypeItem = props => {
-  const handleCreate = async event => {
-    props.loadbar.progressTo(15);
+  const selApp = useSessionStore(state => state.selApp);
+
+  const handleCreate = async () => {
+    useLoadbarStore.getState().progressTo(15);
 
     const typeslug = props.type.slug;
 
-    const req = await postRequest(
-      "/api/panel/apps/" + props.session.state.selApp + "/content",
-      { typeslug }
-    );
+    const req = await postRequest("/api/panel/apps/" + selApp + "/content", {
+      typeslug
+    });
 
     if (req.error) {
       const reqMsg = req.error;
       alert(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      history.push(
-        "/panel/apps/" + props.session.state.selApp + "/content/" + req.uuid
-      );
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
+      history.push("/panel/apps/" + selApp + "/content/" + req.uuid);
     }
   };
 

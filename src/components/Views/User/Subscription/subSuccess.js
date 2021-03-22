@@ -1,36 +1,40 @@
-import React, { useState, useEffect } from "react";
-import { getRequest } from "../../../../utils/requests";
+import React, { useState, useEffect, useCallback } from "react";
+import { statuses } from "../../../../utils/requests";
+import usePageStore from "../../../../stores/usePageStore";
+import useViewApiCall from "../../../../utils/useViewApiCall";
 
 const SubSuccess = props => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [msg, setMsg] = useState("");
+  const [subUrl, setSubUrl] = useState();
+
+  const [respData, respStatus] = useViewApiCall(subUrl);
+
+  const getSubUrl = useCallback(() => {
+    const params = new URLSearchParams(props.location.search);
+    setSubUrl(
+      "/api/panel/subscription/success?session_id=" + params.get("session_id")
+    );
+  }, [props.location.search]);
 
   useEffect(() => {
-    props.page.handlePageChange("Subscription Success!", "subscriptionSuccess");
-    const params = new URLSearchParams(props.location.search);
-    const req = async () => {
-      const resp = await getRequest(
-        "/api/panel/subscription/success?session_id=" + params.get("session_id")
-      );
+    if (!isLoaded) {
+      getSubUrl();
+    }
+  }, [isLoaded, getSubUrl]);
 
-      if (resp.error) {
-        props.loadbar.setToError(true);
-        setIsLoaded(true);
-        setSuccessful(false);
-        setMsg(resp.error);
-      } else {
-        const userId = resp.meta.userId;
-        const selApp = resp.meta.appUUID;
-        setIsLoaded(true);
-        setSuccessful(true);
-        props.session.handleSession(userId, selApp);
-        props.loadbar.progressTo(100);
-      }
-    };
-    props.loadbar.progressTo(15);
-    req();
-  }, [props.loadbar, props.location.search, props.page, props.session]);
+  useEffect(() => {
+    usePageStore
+      .getState()
+      .handlePageChange("Subscription Success!", "subscriptionSuccess");
+    if (respStatus === statuses.SUCCESS) {
+      setIsLoaded(true);
+      setSuccessful(true);
+    } else if (respStatus === statuses.ERROR) {
+      setMsg(respData);
+    }
+  }, [respData, respStatus]);
 
   return (
     <React.Fragment>

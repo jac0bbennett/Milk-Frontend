@@ -5,6 +5,9 @@ import { postRequest } from "../../../utils/requests";
 import FormMsg from "../../UI/Misc/formMsg";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import { generateSlug } from "../../../utils/text";
+import usePageStore from "../../../stores/usePageStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
+import useSessionStore from "../../../stores/useSessionStore";
 
 const NewFieldForm = props => {
   const [form, setForm] = useState({ name: "", slug: "", fieldtype: "" });
@@ -12,10 +15,14 @@ const NewFieldForm = props => {
   const [changedSlug, setChangedSlug] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const selApp = useSessionStore(state => state.selApp);
+
+  const modalData = usePageStore(state => state.modalData);
+
   const handleSubmit = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setSubmitting(true);
 
     const fieldname = form.name;
@@ -23,24 +30,20 @@ const NewFieldForm = props => {
     const fieldtype = form.fieldtype;
 
     const req = await postRequest(
-      "/api/panel/apps/" +
-        props.session.state.selApp +
-        "/types/" +
-        props.page.state.modalData.slug +
-        "/fields",
+      "/api/panel/apps/" + selApp + "/types/" + modalData.slug + "/fields",
       { fieldname, fieldslug, fieldtype }
     );
 
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
       setForm({ name: "", slug: "", fieldtype: "" });
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.handleSetRefresh();
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
+      usePageStore.getState().handleSetRefresh();
       setChangedSlug(false);
     }
     setSubmitting(false);

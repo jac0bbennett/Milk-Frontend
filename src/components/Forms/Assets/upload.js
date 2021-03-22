@@ -2,12 +2,17 @@ import React, { useState, useCallback } from "react";
 import { postRequest, patchRequest } from "../../../utils/requests";
 import FormMsg from "../../UI/Misc/formMsg";
 import { useDropzone } from "react-dropzone";
+import usePageStore from "../../../stores/usePageStore";
+import useSessionStore from "../../../stores/useSessionStore";
 
 const UploadForm = props => {
   const [msg, setMsg] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [failedFiles, setFailedFiles] = useState([]);
   const [rejectedFiles, setRejectedFiles] = useState([]);
+
+  const selApp = useSessionStore(state => state.selApp);
+  const modalData = usePageStore(state => state.modalData);
 
   const uploadingMsg = (done, count) => {
     return "Uploading " + done + " / " + count;
@@ -25,9 +30,7 @@ const UploadForm = props => {
           setMsg(uploadingMsg(uploadCount, files.length));
 
           const uploadData = await postRequest(
-            "/api/panel/apps/" +
-              props.session.state.selApp +
-              "/assets/genupload",
+            "/api/panel/apps/" + selApp + "/assets/genupload",
             { names: Array.from(files, f => f.name) }
           );
 
@@ -64,10 +67,7 @@ const UploadForm = props => {
                 setFailedFiles(failedFilesCopy);
               } else {
                 const completeUpload = await patchRequest(
-                  "/api/panel/apps/" +
-                    props.session.state.selApp +
-                    "/assets/" +
-                    newFileName,
+                  "/api/panel/apps/" + selApp + "/assets/" + newFileName,
                   { status: "complete" }
                 );
 
@@ -75,8 +75,8 @@ const UploadForm = props => {
                   alert("There was an error completing the upload!");
                 } else {
                   newAsset = completeUpload;
-                  if (!props.page.state.modalData.callbackOnLast) {
-                    props.page.state.modalData.callback(newAsset);
+                  if (!modalData.callbackOnLast) {
+                    modalData.callback(newAsset);
                   }
                 }
               }
@@ -87,8 +87,8 @@ const UploadForm = props => {
               if (uploadCount === files.length) {
                 setMsg("Finished uploading " + uploadCount + "!");
                 setIsUploading(false);
-                if (props.page.state.modalData.callbackOnLast) {
-                  props.page.state.modalData.callback(newAsset);
+                if (modalData.callbackOnLast) {
+                  modalData.callback(newAsset);
                 }
               }
             });
@@ -98,7 +98,7 @@ const UploadForm = props => {
         }
       }
     },
-    [props.session.state.selApp, failedFiles, props.page]
+    [selApp, failedFiles, modalData]
   );
 
   const rejectFiles = files => {
@@ -188,7 +188,7 @@ const UploadForm = props => {
       {!isUploading ? (
         <button
           className="raisedbut floatright"
-          onClick={() => props.page.handleCloseModal()}
+          onClick={() => usePageStore.getState().handleCloseModal()}
         >
           Done
         </button>

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { patchRequest } from "../../../../utils/requests";
 import FieldMsg from "./fieldMsg";
 import ReactMarkdown from "react-markdown/with-html";
+import useSessionStore from "../../../../stores/useSessionStore";
+import usePageStore from "../../../../stores/usePageStore";
 
 const LongTextField = props => {
   const [content, setContent] = useState(props.value);
@@ -13,6 +15,8 @@ const LongTextField = props => {
   const [isFocused, setIsFocused] = useState(false);
   const [view, setView] = useState("edit");
   const input = useRef(null);
+
+  const selApp = useSessionStore(state => state.selApp);
 
   const charLimit = 50000;
 
@@ -26,10 +30,7 @@ const LongTextField = props => {
     const fieldcontentid = props.dataId;
 
     const req = await patchRequest(
-      "/api/panel/apps/" +
-        props.session.state.selApp +
-        "/content/" +
-        props.contentUuid,
+      "/api/panel/apps/" + selApp + "/content/" + props.contentUuid,
       { [fieldcontentid]: newVal }
     );
 
@@ -145,13 +146,13 @@ const LongTextField = props => {
     input.current.selectionStart = input.current.selectionEnd = caret;
     const addedText = "![" + (asset.description || "") + "](" + asset.url + ")";
     document.execCommand("insertText", false, addedText);
-    props.page.handleUpdatePersistentModalData({});
+    usePageStore.getState().handleUpdatePersistentModalData({});
   };
 
   const selectAsset = event => {
     event.preventDefault();
     if (!props.disabled) {
-      props.page.handleShowModal("selectassetform", undefined, {
+      usePageStore.getState().handleShowModal("selectassetform", undefined, {
         callback: selectAssetCallback,
         callbackData: input.current.selectionStart
       });

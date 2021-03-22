@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import TextInput from "../../UI/Inputs/txtInput";
-import { getRequest, patchRequest, postRequest } from "../../../utils/requests";
+import {
+  getRequest,
+  patchRequest,
+  postRequest,
+  statuses
+} from "../../../utils/requests";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import { loadStripe } from "@stripe/stripe-js";
 import FormMsg from "../../UI/Misc/formMsg";
 import Moment from "react-moment";
+import usePageStore from "../../../stores/usePageStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
+import useViewApiCall from "../../../utils/useViewApiCall";
 
 const stripeKey =
   !process.env.NODE_ENV || process.env.NODE_ENV === "development"
@@ -33,27 +41,17 @@ const UserSettings = props => {
 
   const [theme, setTheme] = useState(localStorage.getItem("theme"));
 
-  useEffect(() => {
-    props.page.handlePageChange("Account", "account");
-    const req = async () => {
-      const resp = await getRequest("/api/panel/account");
+  const [respData, respStatus] = useViewApiCall("/api/panel/account");
 
-      if (resp.error) {
-        props.loadbar.setToError(true);
-      } else {
-        const userId = resp.meta.userId;
-        const selApp = resp.meta.appUUID;
-        setName(resp.data.user.name);
-        setEmail(resp.data.user.email);
-        setSub(resp.data.user.subscription);
-        setIsLoaded(true);
-        props.session.handleSession(userId, selApp);
-        props.loadbar.progressTo(100);
-      }
-    };
-    props.loadbar.progressTo(15);
-    req();
-  }, [props.page.state.refreshView, props.loadbar, props.session, props.page]);
+  useEffect(() => {
+    usePageStore.getState().handlePageChange("Account", "account");
+    if (respStatus === statuses.SUCCESS) {
+      setName(respData.user.name);
+      setEmail(respData.user.email);
+      setSub(respData.user.subscription);
+      setIsLoaded(true);
+    }
+  }, [respData, respStatus]);
 
   const handleChange = event => {
     const newValue = event.target.value;
@@ -86,10 +84,10 @@ const UserSettings = props => {
     });
 
     if (resp.error) {
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
       setSettingsMsg(resp.error);
     } else {
-      props.loadbar.progressTo(100);
+      useLoadbarStore.getState().progressTo(100);
       setSettingsMsg("Saved!");
     }
 
@@ -108,10 +106,10 @@ const UserSettings = props => {
     });
 
     if (resp.error) {
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
       setChangePassMsg(resp.error);
     } else {
-      props.loadbar.progressTo(100);
+      useLoadbarStore.getState().progressTo(100);
       setChangePassMsg("Updated!");
       setCurPass("");
       setNewPass("");
@@ -138,7 +136,7 @@ const UserSettings = props => {
     });
 
     if (resp.error) {
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
       setSubbing(false);
       setSubMsg(resp.error);
     } else {
@@ -155,7 +153,7 @@ const UserSettings = props => {
     const resp = await getRequest("/api/billing/new-customer-portal");
 
     if (resp.error) {
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
       setSubMsg(resp.error);
       setSubbing(false);
     } else {

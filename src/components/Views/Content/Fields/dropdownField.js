@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import DropDownInput from "../../../UI/Inputs/dropInput";
 import { patchRequest } from "../../../../utils/requests";
 import FieldMsg from "./fieldMsg";
+import useSessionStore from "../../../../stores/useSessionStore";
 
 const DropdownField = props => {
   const [content, setContent] = useState(props.value);
   const [saved, setSaved] = useState(false);
   const [msg, setMsg] = useState("");
+
+  const selApp = useSessionStore(state => state.selApp);
 
   useEffect(() => {
     if (saved) {
@@ -18,10 +21,7 @@ const DropdownField = props => {
     const fieldcontentid = props.dataId;
 
     const req = await patchRequest(
-      "/api/panel/apps/" +
-        props.session.state.selApp +
-        "/content/" +
-        props.contentUuid,
+      "/api/panel/apps/" + selApp + "/content/" + props.contentUuid,
       { [fieldcontentid]: newVal }
     );
 

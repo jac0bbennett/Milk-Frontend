@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { postRequest } from "../../../utils/requests";
 import history from "../../../utils/history";
+import usePageStore from "../../../stores/usePageStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
 
 const ConfirmEmail = props => {
   const [msg, setMsg] = useState("Confirming...");
 
   useEffect(() => {
-    props.page.handlePageChange("Confirming Email", "confirmEmail");
-    props.loadbar.progressTo(30);
+    usePageStore
+      .getState()
+      .handlePageChange("Confirming Email", "confirmEmail");
+    useLoadbarStore.getState().progressTo(30);
 
     const req = async () => {
       const resp = await postRequest("/api/verify", {
         confirmCode: props.match.params.confirmcode
       });
       if (resp.error) {
-        props.loadbar.setToError(true);
+        useLoadbarStore.getState().setToError(true);
         setMsg("Failed to confirm email!");
       } else {
-        props.loadbar.progressTo(100);
-        props.page.handleShowModal("msgalert", {
+        useLoadbarStore.getState().progressTo(100);
+        usePageStore.getState().handleShowModal("msgalert", {
           title: "Email Confirmed!",
           content: "Your account is all setup! Go ahead and Sign In."
         });
@@ -27,7 +31,7 @@ const ConfirmEmail = props => {
     };
 
     req();
-  }, [props.page, props.loadbar, props.match.params.confirmcode]);
+  }, [props.match.params.confirmcode]);
 
   return <h2>{msg}</h2>;
 };

@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
+import usePageStore from "../../../stores/usePageStore";
+import useSessionStore from "../../../stores/useSessionStore";
 
-const SignOut = props => {
+const SignOut = () => {
   useEffect(() => {
-    props.page.handlePageChange("Signing Out", "signOut");
-    props.session.handleSignOut();
-  }, [props.page, props.session]);
+    usePageStore.getState().handlePageChange("Signing Out", "signOut");
+    useSessionStore.getState().handleSignOut();
+  }, []);
 
   return <h2>Signing Out...</h2>;
 };

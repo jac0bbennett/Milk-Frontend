@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import AssetItem from "./assetItem";
 import FAB from "../../UI/Buttons/fab";
-import { getRequest } from "../../../utils/requests";
+import { statuses } from "../../../utils/requests";
 import BottomScrollListener from "react-bottom-scroll-listener";
 import { MiniHeader } from "../../UI/Misc/miniHeader";
+import usePageStore from "../../../stores/usePageStore";
+import useViewApiCall from "../../../utils/useViewApiCall";
 
 const AssetList = props => {
   const [isLoaded, setIsLoaded] = useState(0);
@@ -13,54 +15,36 @@ const AssetList = props => {
   const [loadedAll, setLoadedAll] = useState(false);
   const [nextPage, setNextPage] = useState(1);
 
-  useEffect(() => {
-    props.page.handlePageChange("Your Assets", "assets");
-    props.loadbar.progressTo(15);
-    const getAssets = async n => {
-      if (!loadedAll) {
-        const resp = await getRequest(
-          "/api/panel/apps/" + props.match.params.appuuid + "/assets?page=" + n
-        );
-        if (resp.error) {
-          props.loadbar.setToError(true);
-        } else {
-          const userId = resp.meta.userId;
-          const selApp = resp.meta.appUUID;
-          const selAppName = resp.meta.appName;
-          const respAssets = resp.data.assets;
-          if (n > 1) {
-            setAssets(c => c.concat(respAssets));
-          } else {
-            setAssets(respAssets);
-          }
-          setIsLoaded(true);
-          if (resp.data.assets.length < 20) {
-            setLoadedAll(true);
-          }
-          props.loadbar.progressTo(100);
-          setAssetCount(resp.data.assetCount);
-          setAssetLimit(resp.data.assetLimit);
-          props.session.handleSession(userId, selApp, selAppName);
-        }
-      }
-    };
-    getAssets(nextPage);
-  }, [
-    props.page,
-    props.loadbar,
-    props.session,
-    nextPage,
-    props.match.params.appuuid,
-    loadedAll
-  ]);
+  const modalData = usePageStore(state => state.modalData);
+
+  const [respData, respStatus] = useViewApiCall(
+    "/api/panel/apps/" + props.match.params.appuuid + "/assets?page=" + nextPage
+  );
 
   useEffect(() => {
-    if ("removedAsset" in props.page.state.modalData) {
-      const removedId = props.page.state.modalData.removedAsset;
+    usePageStore.getState().handlePageChange("Your Assets", "assets");
+    if (respStatus === statuses.SUCCESS) {
+      if (respData.page > 1) {
+        setAssets(c => c.concat(respData.assets));
+      } else {
+        setAssets(respData.assets);
+      }
+      setAssetCount(respData.assetCount);
+      setAssetLimit(respData.assetLimit);
+      setIsLoaded(true);
+      if (respData.assets.length < 20) {
+        setLoadedAll(true);
+      }
+    }
+  }, [respData, respStatus]);
+
+  useEffect(() => {
+    if ("removedAsset" in modalData) {
+      const removedId = modalData.removedAsset;
       setAssets(c => c.filter(a => a.id !== removedId));
       setAssetCount(c => c - 1);
     }
-  }, [props.page.state.modalData]);
+  }, [modalData]);
 
   const uploadCallback = a => {
     setAssets(c => [a, ...c]);
@@ -84,7 +68,7 @@ const AssetList = props => {
         <button
           style={{ fontSize: "9pt" }}
           onClick={() =>
-            props.page.handleShowModal("uploadassetform", {
+            usePageStore.getState().handleShowModal("uploadassetform", {
               callback: uploadCallback
             })
           }
@@ -107,11 +91,7 @@ const AssetList = props => {
           {assetCount} / {assetLimit}
         </span>
       </span>
-      <FAB
-        page={props.page}
-        modalComp="uploadassetform"
-        modalData={{ callback: uploadCallback }}
-      >
+      <FAB modalComp="uploadassetform" modalData={{ callback: uploadCallback }}>
         <i className="material-icons">add</i>
       </FAB>
       <div className="assetlist">
@@ -122,7 +102,6 @@ const AssetList = props => {
                 key={asset.url}
                 asset={asset}
                 session={props.session}
-                page={props.page}
               />
             ))}
             <center>

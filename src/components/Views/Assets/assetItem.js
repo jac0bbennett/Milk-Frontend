@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Truncate } from "../../../utils/text";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import usePageStore from "../../../stores/usePageStore";
 
 const AssetItem = props => {
   const [asset, setAsset] = useState(props.asset);
@@ -62,7 +63,7 @@ const AssetItem = props => {
             marginLeft: "5px"
           }}
           onClick={() =>
-            props.page.handleShowModal("editassetform", {
+            usePageStore.getState().handleShowModal("editassetform", {
               asset: asset,
               callback: a => {
                 setAsset(a);

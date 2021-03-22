@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { postRequest } from "../../../utils/requests";
 import SignUpForm from "../../Forms/signUp.js";
 import history from "../../../utils/history";
+import usePageStore from "../../../stores/usePageStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
 
-const SignUp = props => {
+const SignUp = () => {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -13,13 +15,13 @@ const SignUp = props => {
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
-    props.loadbar.progressTo(15);
-    props.page.handlePageChange("Sign Up", "signUp");
-    props.loadbar.progressTo(100);
-  }, [props.loadbar, props.page]);
+    useLoadbarStore.getState().progressTo(15);
+    usePageStore.getState().handlePageChange("Sign Up", "signUp");
+    useLoadbarStore.getState().progressTo(100);
+  }, []);
 
   const handleSignUp = async () => {
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setMsg("submitting...");
 
     const formName = form.name;
@@ -36,10 +38,10 @@ const SignUp = props => {
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
-      props.loadbar.progressTo(100);
-      props.page.handleShowModal("msgalert", {
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleShowModal("msgalert", {
         title: "Email Confirmation Sent",
         content:
           "An email has been sent to " +

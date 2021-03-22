@@ -32,7 +32,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.4",
     "react-sortable-hoc": "^1.11.0",
-    "s-ago": "^2.2.0"
+    "s-ago": "^2.2.0",
+    "zustand": "^3.3.3"
   },
   "browserslist": {
     "production": [

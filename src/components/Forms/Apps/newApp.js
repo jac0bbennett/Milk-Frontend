@@ -3,8 +3,10 @@ import TextInput from "../../UI/Inputs/txtInput";
 import { postRequest } from "../../../utils/requests";
 import FormMsg from "../../UI/Misc/formMsg";
 import SubmitButton from "../../UI/Buttons/submitButton";
+import usePageStore from "../../../stores/usePageStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
 
-const NewAppForm = props => {
+const NewAppForm = () => {
   const [form, setForm] = useState({ name: "" });
   const [msg, setMsg] = useState("");
   const [creating, setCreating] = useState(false);
@@ -14,7 +16,7 @@ const NewAppForm = props => {
 
     setCreating(true);
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
 
     const appname = form.name;
 
@@ -23,13 +25,13 @@ const NewAppForm = props => {
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
       setForm({ name: "" });
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.handleSetRefresh();
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
+      usePageStore.getState().handleSetRefresh();
     }
 
     setCreating(false);

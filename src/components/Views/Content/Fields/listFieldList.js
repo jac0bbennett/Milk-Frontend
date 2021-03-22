@@ -11,7 +11,6 @@ const ListFieldList = SortableContainer(props => {
           index={index}
           i={index}
           value={value}
-          page={props.page}
           fieldSlug={props.fieldSlug}
           deleteValue={props.deleteValue}
         />

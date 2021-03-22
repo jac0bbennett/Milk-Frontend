@@ -1,34 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { deleteRequest } from "../../utils/requests";
 import DeleteButton from "../UI/Buttons/deleteButton";
+import usePageStore from "../../stores/usePageStore";
+import useLoadbarStore from "../../stores/useLoadbarStore";
 
-const ConfirmDeleteForm = props => {
+const ConfirmDeleteForm = () => {
   const [msg, setMsg] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const modalData = usePageStore(state => state.modalData);
 
   useEffect(() => {
     setMsg("");
-  }, [props.page.state.modalData]);
+  }, [modalData]);
 
   const handleDelete = async () => {
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setIsDeleting(true);
 
-    const req = await deleteRequest(props.page.state.modalData.deleteUrl);
+    const req = await deleteRequest(modalData.deleteUrl);
 
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
       setIsDeleting(false);
     } else {
       setMsg("");
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.handleSetRefresh();
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
+      if (!modalData.noRefresh) {
+        usePageStore.getState().handleSetRefresh();
+      }
 
-      if (props.page.state.modalData.callback) {
-        props.page.state.modalData.callback();
+      if (modalData.callback) {
+        modalData.callback();
       }
 
       setIsDeleting(false);
@@ -39,11 +44,14 @@ const ConfirmDeleteForm = props => {
     <div className="smallmodal">
       <h3>Are you sure you want to delete this?</h3>
       <div className="softtext" style={{ width: "100%" }}>
-        {props.page.state.modalData.extraText}
+        {modalData.extraText}
       </div>
       <br />
       <br />
-      <button onClick={props.page.handleCloseModal} className="flatbut">
+      <button
+        onClick={usePageStore.getState().handleCloseModal}
+        className="flatbut"
+      >
         Cancel
       </button>
       <DeleteButton

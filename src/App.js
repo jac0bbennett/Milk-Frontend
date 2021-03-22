@@ -23,6 +23,8 @@ import { Provider, Subscribe } from "unstated";
 import SessionContainer from "./containers/SessionContainer";
 import LoadbarContainer from "./containers/LoadbarContainer";
 import PageContainer from "./containers/PageContainer";
+import usePageStore from "./stores/usePageStore";
+import useLoadbarStore from "./stores/useLoadbarStore";
 // import UNSTATED from "unstated-debug";
 
 // UNSTATED.logStateChanges = true;
@@ -33,6 +35,19 @@ const loadbarCont = new LoadbarContainer();
 sessionCont.bindLoadbar(loadbarCont);
 
 const App = () => {
+  const showModal = usePageStore(state => state.showModal);
+  const {
+    loadbarProgress,
+    loadbarOnErrorDone,
+    loadbarOnProgressDone,
+    loadbarError
+  } = useLoadbarStore(state => ({
+    loadbarProgress: state.progress,
+    loadbarOnErrorDone: state.errorDone,
+    loadbarOnProgressDone: state.progressDone,
+    loadbarError: state.error
+  }));
+
   useEffect(() => {
     sessionCont.handleGetDefaultTheme();
   }, []);
@@ -42,37 +57,24 @@ const App = () => {
       <Subscribe to={[SessionContainer, LoadbarContainer, PageContainer]}>
         {(session, loadbar, page) => (
           <React.Fragment>
-            <div id="overlay" className={page.state.showModal ? "is-show" : ""}>
-              <Cloak isShow={page.state.showModal} page={page} />
-              <Modal
-                isShow={page.state.showModal}
-                inner={page.state.modalComp}
-                loadbar={loadbar}
-                page={page}
-                session={session}
-              />
+            <div id="overlay" className={showModal ? "is-show" : ""}>
+              <Cloak />
+              <Modal />
             </div>
             <LoadingBar
               id="loadingbar"
-              progress={loadbar.state.progress}
-              onErrorDone={loadbar.errorDone}
-              onProgressDone={loadbar.progressDone}
-              error={loadbar.state.error}
+              progress={loadbarProgress}
+              onErrorDone={loadbarOnErrorDone}
+              onProgressDone={loadbarOnProgressDone}
+              error={loadbarError}
             />
-            <TopBar session={session} page={page} />
+            <TopBar />
             <div id="wrapper">
               <Switch>
                 <Route
                   exact
                   path="/panel/apps"
-                  render={props => (
-                    <AppList
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
+                  render={props => <AppList {...props} />}
                 />
                 <Route
                   exact

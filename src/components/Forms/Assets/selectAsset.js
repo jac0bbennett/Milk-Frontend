@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { getRequest } from "../../../utils/requests";
 import SelectAssetItem from "./selectAssetItem";
+import useSessionStore from "../../../stores/useSessionStore";
+import usePageStore from "../../../stores/usePageStore";
 
 const SelectAssetForm = props => {
   const [isLoaded, setIsLoaded] = useState(0);
@@ -9,11 +11,14 @@ const SelectAssetForm = props => {
   const [nextPage, setNextPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
 
+  const selApp = useSessionStore(state => state.selApp);
+  const persistentModalData = usePageStore(state => state.persistentModalData);
+
   useEffect(() => {
     const getAssets = async n => {
       if (!loadedAll) {
         const resp = await getRequest(
-          "/api/panel/apps/" + props.session.state.selApp + "/assets?page=" + n
+          "/api/panel/apps/" + selApp + "/assets?page=" + n
         );
         if (resp.error) {
           // props.loadbar.setToError(true);
@@ -36,14 +41,14 @@ const SelectAssetForm = props => {
     };
 
     getAssets(nextPage || 1);
-  }, [nextPage, loadedAll, props.session.state.selApp]);
+  }, [nextPage, loadedAll, selApp]);
 
   const selectImage = asset => {
-    const callbackData = props.page.state.persistentModalData.callbackData
-      ? props.page.state.persistentModalData.callbackData
+    const callbackData = persistentModalData.callbackData
+      ? persistentModalData.callbackData
       : null;
-    props.page.state.persistentModalData.callback(asset, callbackData);
-    props.page.handleCloseModal();
+    persistentModalData.callback(asset, callbackData);
+    usePageStore.getState().handleCloseModal();
   };
 
   const refresh = n => {
@@ -77,9 +82,10 @@ const SelectAssetForm = props => {
             title="Upload"
             style={{ cursor: "pointer", marginRight: "15px" }}
             onClick={() =>
-              props.page.handleShowModal("uploadassetform", {
+              usePageStore.getState().handleShowModal("uploadassetform", {
                 callbackOnLast: true,
-                callback: () => props.page.handleShowModal("selectassetform")
+                callback: () =>
+                  usePageStore.getState().handleShowModal("selectassetform")
               })
             }
           >
@@ -111,7 +117,6 @@ const SelectAssetForm = props => {
                 key={asset.url}
                 asset={asset}
                 session={props.session}
-                page={props.page}
                 selectImage={selectImage}
               />
             ))}

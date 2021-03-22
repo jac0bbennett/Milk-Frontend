@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import AppItem from "./appItem";
 import FAB from "../../UI/Buttons/fab";
-import { getRequest } from "../../../utils/requests";
+import { statuses } from "../../../utils/requests";
+import usePageStore from "../../../stores/usePageStore";
+import useViewApiCall from "../../../utils/useViewApiCall";
 
 const AppList = props => {
   const [isLoaded, setIsLoaded] = useState(0);
@@ -9,27 +11,17 @@ const AppList = props => {
   const [appLimit, setAppLimit] = useState(0);
   const [apps, setApps] = useState([]);
 
-  useEffect(() => {
-    props.page.handlePageChange("Your Apps", "apps");
-    props.loadbar.progressTo(15);
-    const req = async () => {
-      const resp = await getRequest("/api/panel/apps");
-      if (resp.error) {
-        props.loadbar.setToError(true);
-      } else {
-        const userId = resp.meta.userId;
-        const selApp = resp.meta.appUUID;
-        setApps(resp.data.apps);
-        setAppCount(resp.data.appCount);
-        setAppLimit(resp.data.appLimit);
-        setIsLoaded(true);
-        props.session.handleSession(userId, selApp, undefined);
-        props.loadbar.progressTo(100);
-      }
-    };
+  const [respData, respStatus] = useViewApiCall("/api/panel/apps");
 
-    req();
-  }, [props.page, props.session, props.loadbar, props.page.state.refreshView]);
+  useEffect(() => {
+    usePageStore.getState().handlePageChange("Your Apps", "apps");
+    if (respStatus === statuses.SUCCESS) {
+      setApps(respData.apps);
+      setAppCount(respData.appCount);
+      setAppLimit(respData.appLimit);
+      setIsLoaded(true);
+    }
+  }, [respData, respStatus]);
 
   const NoAppMsg = () => {
     return (
@@ -47,7 +39,7 @@ const AppList = props => {
         <br />
         <button
           style={{ fontSize: "9pt" }}
-          onClick={() => props.page.handleShowModal("newappform")}
+          onClick={() => usePageStore.getState().handleShowModal("newappform")}
           className="raisedbut"
         >
           <span className="icolab">Create One</span>
@@ -66,18 +58,13 @@ const AppList = props => {
           {appCount} / {appLimit}
         </span>
       </span>
-      <FAB page={props.page} modalComp="newappform">
+      <FAB modalComp="newappform">
         <i className="material-icons">add</i>
       </FAB>
       <br />
       {apps.length > 0 ? (
         apps.map(app => (
-          <AppItem
-            key={app.uuid}
-            app={app}
-            session={props.session}
-            page={props.page}
-          />
+          <AppItem key={app.uuid} app={app} session={props.session} />
         ))
       ) : isLoaded ? (
         <NoAppMsg />

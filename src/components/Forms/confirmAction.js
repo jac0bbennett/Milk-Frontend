@@ -1,45 +1,49 @@
 import React, { useState } from "react";
 import { postRequest } from "../../utils/requests";
 import DeleteButton from "../UI/Buttons/deleteButton";
+import usePageStore from "../../stores/usePageStore";
+import useLoadbarStore from "../../stores/useLoadbarStore";
 
-const ConfirmActionForm = props => {
+const ConfirmActionForm = () => {
   const [msg, setMsg] = useState("");
   const [isActing, setIsActing] = useState(false);
 
+  const modalData = usePageStore(state => state.modalData);
+
   const handleAction = async () => {
-    props.loadbar.progressTo(15);
-    setMsg(props.page.state.modalData.msgText || "submitting...");
+    useLoadbarStore.getState().progressTo(15);
+    setMsg(modalData.msgText || "submitting...");
 
     setIsActing(true);
 
-    const req = await postRequest(props.page.state.modalData.discardUrl, {
-      action: props.page.state.modalData.action
+    const req = await postRequest(modalData.discardUrl, {
+      action: modalData.action
     });
 
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
       setIsActing(false);
     } else {
       setMsg("");
-      props.page.state.modalData.callback(req.data);
+      modalData.callback(req.data);
       setIsActing(false);
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
     }
   };
 
   const handleCancel = () => {
-    props.page.state.modalData.callback(null);
-    props.page.handleCloseModal();
+    modalData.callback(null);
+    usePageStore.getState().handleCloseModal();
   };
 
   return (
     <div className="smallmodal">
-      <h3>{props.page.state.modalData.titleText}</h3>
+      <h3>{modalData.titleText}</h3>
       <div className="softtext" style={{ width: "100%" }}>
-        {props.page.state.modalData.extraText}
+        {modalData.extraText}
       </div>
       <br />
       <br />

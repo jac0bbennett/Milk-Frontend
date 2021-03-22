@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TextInput from "../../UI/Inputs/txtInput";
-import { getRequest, patchRequest } from "../../../utils/requests";
+import { patchRequest, statuses } from "../../../utils/requests";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import FormMsg from "../../UI/Misc/formMsg";
 import FAB from "../../UI/Buttons/fab";
@@ -9,6 +9,9 @@ import history from "../../../utils/history";
 import DropMenu from "../../UI/Misc/dropMenu";
 import Moment from "react-moment";
 import arrayMove from "array-move";
+import usePageStore from "../../../stores/usePageStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
+import useViewApiCall from "../../../utils/useViewApiCall";
 
 const EditContentType = props => {
   const [msg, setMsg] = useState("");
@@ -16,39 +19,21 @@ const EditContentType = props => {
   const [typeData, setTypeData] = useState({});
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    props.page.handlePageChange("", "type");
-    const req = async () => {
-      const resp = await getRequest(
-        "/api/panel/apps/" +
-          props.match.params.appuuid +
-          "/types/" +
-          props.match.params.typeslug
-      );
+  const [respData, respStatus] = useViewApiCall(
+    "/api/panel/apps/" +
+      props.match.params.appuuid +
+      "/types/" +
+      props.match.params.typeslug
+  );
 
-      if (resp.error) {
-        props.loadbar.setToError(true);
-      } else {
-        const userId = resp.meta.userId;
-        const selApp = resp.meta.appUUID;
-        const appName = resp.meta.appName;
-        setTypeData(resp.data);
-        setIsLoaded(true);
-        props.session.handleSession(userId, selApp, appName);
-        props.loadbar.progressTo(100);
-        props.page.handlePageChange(resp.data.name, "type");
-      }
-    };
-    props.loadbar.progressTo(15);
-    req();
-  }, [
-    props.page.state.refreshView,
-    props.match.params.appuuid,
-    props.match.params.typeslug,
-    props.loadbar,
-    props.session,
-    props.page
-  ]);
+  useEffect(() => {
+    usePageStore.getState().handlePageChange("", "type");
+    if (respStatus === statuses.SUCCESS) {
+      setTypeData(respData);
+      setIsLoaded(true);
+      usePageStore.getState().handlePageChange(respData.name, "type");
+    }
+  }, [props.match.params.appuuid, respData, respStatus]);
 
   const handleChange = event => {
     setMsg("");
@@ -61,14 +46,14 @@ const EditContentType = props => {
   const handleSubmit = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setSaving(true);
 
     const typename = typeData.name;
 
     const req = await patchRequest(
       "/api/panel/apps/" +
-        props.session.state.selApp +
+        props.match.params.appuuid +
         "/types/" +
         typeData.slug,
       { name: typename }
@@ -77,30 +62,31 @@ const EditContentType = props => {
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("Saved!");
-      props.loadbar.progressTo(100);
-      props.page.handleSetRefresh();
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleSetRefresh();
     }
     setSaving(false);
   };
 
   const deleteCallback = () => {
-    history.push("/panel/apps/" + props.session.state.selApp + "/types");
+    history.push("/panel/apps/" + props.match.params.appuuid + "/types");
   };
 
-  const handleDelete = async event => {
+  const handleDelete = async () => {
     const url =
       "/api/panel/apps/" +
-      props.session.state.selApp +
+      props.match.params.appuuid +
       "/types/" +
       typeData.slug;
 
-    props.page.handleShowModal("confirmdeleteform", {
+    usePageStore.getState().handleShowModal("confirmdeleteform", {
       deleteUrl: url,
       callback: deleteCallback,
-      extraText: "This type cannot be resurrected!"
+      extraText: "This type cannot be resurrected!",
+      noRefresh: true
     });
   };
 
@@ -115,7 +101,7 @@ const EditContentType = props => {
 
     const req = await patchRequest(
       "/api/panel/apps/" +
-        props.session.state.selApp +
+        props.match.params.appuuid +
         "/types/" +
         typeData.slug +
         "/reorderfields",
@@ -129,11 +115,7 @@ const EditContentType = props => {
 
   return (
     <React.Fragment>
-      <FAB
-        page={props.page}
-        modalComp="newfieldform"
-        modalData={{ slug: typeData.slug }}
-      >
+      <FAB modalComp="newfieldform" modalData={{ slug: typeData.slug }}>
         <i className="material-icons">add</i>
       </FAB>
       {isLoaded ? (
@@ -181,7 +163,6 @@ const EditContentType = props => {
           <h3>Fields</h3>
           {typeData.fields.length > 0 ? (
             <FieldList
-              page={props.page}
               fields={typeData.fields}
               onSortEnd={onSortEnd}
               useDragHandle={true}

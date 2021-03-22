@@ -4,6 +4,7 @@ import { patchRequest } from "../../../../utils/requests";
 import FieldMsg from "./fieldMsg";
 import ListFieldList from "./listFieldList";
 import arrayMove from "array-move";
+import useSessionStore from "../../../../stores/useSessionStore";
 
 const ListField = props => {
   const [list, setList] = useState(props.value || []);
@@ -11,6 +12,8 @@ const ListField = props => {
   const [charCount, setCharCount] = useState(0);
   const [saved, setSaved] = useState(false);
   const [msg, setMsg] = useState("");
+
+  const selApp = useSessionStore(state => state.selApp);
 
   const unallowedValue = useCallback(
     (allowedValues = props.fieldOptions.values) => {
@@ -51,10 +54,7 @@ const ListField = props => {
     props.drafting(true);
 
     const req = await patchRequest(
-      "/api/panel/apps/" +
-        props.session.state.selApp +
-        "/content/" +
-        props.contentUuid,
+      "/api/panel/apps/" + selApp + "/content/" + props.contentUuid,
       { [fieldcontentid]: newValue }
     );
 
@@ -184,7 +184,6 @@ const ListField = props => {
         {list && list.length > 0 ? (
           <ListFieldList
             values={list}
-            page={props.page}
             fieldSlug={props.slug}
             deleteValue={handleDeleteValue}
             useDragHandle={true}

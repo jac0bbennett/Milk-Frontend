@@ -4,36 +4,41 @@ import { postRequest } from "../../../utils/requests";
 import FormMsg from "../../UI/Misc/formMsg";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import DropDownInput from "../../UI/Inputs/dropInput";
+import usePageStore from "../../../stores/usePageStore";
+import useSessionStore from "../../../stores/useSessionStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
 
-const NewApiKeyForm = props => {
+const NewApiKeyForm = () => {
   const [form, setForm] = useState({ name: "", access: "" });
   const [msg, setMsg] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const selApp = useSessionStore(state => state.selApp);
+
   const handleSubmit = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setSubmitting(true);
 
     const keyname = form.name;
     const keyaccess = form.access;
 
-    const req = await postRequest(
-      "/api/panel/apps/" + props.session.state.selApp + "/apikeys",
-      { keyname, keyaccess }
-    );
+    const req = await postRequest("/api/panel/apps/" + selApp + "/apikeys", {
+      keyname,
+      keyaccess
+    });
 
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
       setForm({ name: "", access: "" });
-      props.loadbar.progressTo(100);
-      props.page.handleCloseModal();
-      props.page.handleSetRefresh();
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleCloseModal();
+      usePageStore.getState().handleSetRefresh();
     }
     setSubmitting(false);
   };
