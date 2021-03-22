@@ -4,7 +4,7 @@ import DeleteButton from "../UI/Buttons/deleteButton";
 import usePageStore from "../../stores/usePageStore";
 import useLoadbarStore from "../../stores/useLoadbarStore";
 
-const ConfirmActionForm = props => {
+const ConfirmActionForm = () => {
   const [msg, setMsg] = useState("");
   const [isActing, setIsActing] = useState(false);
 

@@ -78,11 +78,7 @@ const Modal = props => {
         clear
       </i>
       <br />
-      <Content
-        loadbar={props.loadbar}
-        session={props.session}
-        page={props.page}
-      />
+      <Content />
     </div>
   );
 };

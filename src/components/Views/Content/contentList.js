@@ -87,7 +87,7 @@ const ContentList = props => {
       useLoadbarStore.getState().progressTo(15);
       getContentUrl();
     }
-  }, [props.location.search, nextPage, loadedAll, getContentUrl]);
+  }, [loadedAll, getContentUrl]);
 
   useEffect(() => {
     usePageStore.getState().handlePageChange("Content", "contents");

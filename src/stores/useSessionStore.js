@@ -28,7 +28,6 @@ const useSessionStore = create((set, get) => ({
       console.log(resp.error);
       useLoadbarStore.getState().setToError(true);
     } else {
-      console.log("signout");
       useLoadbarStore.getState().progressTo(100);
     }
     get().handleSession(0, "0");

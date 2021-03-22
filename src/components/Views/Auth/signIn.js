@@ -56,11 +56,11 @@ const SignIn = () => {
       }
       setMsg(reqMsg);
       useLoadbarStore.getState().setToError(true);
+      setSubmitting(false);
     } else {
       useLoadbarStore.getState().progressTo(100);
       useSessionStore.getState().handleSignIn(req.userId);
     }
-    setSubmitting(false);
   };
 
   const handleChange = event => {

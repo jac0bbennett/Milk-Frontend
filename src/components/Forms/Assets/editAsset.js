@@ -6,9 +6,14 @@ import FormMsg from "../../UI/Misc/formMsg";
 import SubmitButton from "../../UI/Buttons/submitButton";
 import DeleteButton from "../../UI/Buttons/deleteButton";
 import Moment from "react-moment";
+import usePageStore from "../../../stores/usePageStore";
+import useSessionStore from "../../../stores/useSessionStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
 
 const EditAssetForm = props => {
-  const id = props.page.state.modalData.asset.id;
+  const modalData = usePageStore(state => state.modalData);
+  const selApp = useSessionStore(state => state.selApp);
+  const id = modalData.asset.id;
   const [form, setForm] = useState({
     name: "",
     description: ""
@@ -18,63 +23,52 @@ const EditAssetForm = props => {
 
   useEffect(() => {
     setForm({
-      name: props.page.state.modalData.asset.name,
-      description: props.page.state.modalData.asset.description || ""
+      name: modalData.asset.name,
+      description: modalData.asset.description || ""
     });
-  }, [
-    props.page.state.modalData.asset.name,
-    props.page.state.modalData.asset.description,
-    props.page.state.showModal
-  ]);
+  }, [modalData.asset.name, modalData.asset.description]);
 
   const handleSubmit = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setSaving(true);
 
     const name = form.name;
     const description = form.description;
 
     const req = await patchRequest(
-      "/api/panel/apps/" +
-        props.session.state.selApp +
-        "/assets/" +
-        props.page.state.modalData.asset.slug,
+      "/api/panel/apps/" + selApp + "/assets/" + modalData.asset.slug,
       { name, description }
     );
 
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
-      props.loadbar.progressTo(100);
+      useLoadbarStore.getState().progressTo(100);
       const newAsset = {
         name: req.name,
         url: req.url,
         description: req.description
       };
-      props.page.state.modalData.callback(newAsset);
-      props.page.handleCloseModal();
+      modalData.callback(newAsset);
+      usePageStore.getState().handleCloseModal();
     }
     setSaving(false);
   };
 
   const handleDelete = async event => {
-    const url =
-      "/api/panel/apps/" +
-      props.session.state.selApp +
-      "/assets/" +
-      props.page.state.modalData.asset.slug;
+    const url = "/api/panel/apps/" + selApp + "/assets/" + modalData.asset.slug;
 
-    props.page.handleShowModal("confirmdeleteform", {
+    usePageStore.getState().handleShowModal("confirmdeleteform", {
       deleteUrl: url,
       extraText:
         "This asset will be permanently deleted and unusable in contents!",
       callback: () =>
-        props.page.handleUpdateModalData({
+        usePageStore.getState().handleUpdateModalData({
           removedAsset: id
         })
     });
@@ -90,7 +84,7 @@ const EditAssetForm = props => {
   return (
     <form onSubmit={handleSubmit} autoComplete="off">
       <a
-        href={props.page.state.modalData.asset.url}
+        href={modalData.asset.url}
         target="_blank"
         rel="noopener noreferrer"
         className="floatright"
@@ -105,24 +99,20 @@ const EditAssetForm = props => {
           marginBottom: "15px"
         }}
       >
-        <a
-          href={props.page.state.modalData.asset.url}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href={modalData.asset.url} target="_blank" rel="noopener noreferrer">
           <img
-            src={props.page.state.modalData.asset.url}
+            src={modalData.asset.url}
             style={{ maxWidth: "300px", maxHeight: "300px" }}
-            alt={props.page.state.modalData.asset.description}
+            alt={modalData.asset.description}
           />
         </a>
       </div>
       <span
         className="softtext floatright"
         style={{ fontSize: "11pt" }}
-        title={new Date(props.page.state.modalData.asset.createdAt)}
+        title={new Date(modalData.asset.createdAt)}
       >
-        <Moment fromNow>{props.page.state.modalData.asset.createdAt}</Moment>
+        <Moment fromNow>{modalData.asset.createdAt}</Moment>
       </span>
       <br />
       <TextInput

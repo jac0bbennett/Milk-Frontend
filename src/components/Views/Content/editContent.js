@@ -333,9 +333,7 @@ const EditContent = props => {
       drafting: handleDrafting,
       contentStatus: contentStatus,
       isDraftDiscarded: isDraftDiscarded,
-      disablePublish: setPublishDisabled,
-      session: props.session,
-      page: props.page
+      disablePublish: setPublishDisabled
     };
 
     switch (field.fieldType) {

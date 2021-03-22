@@ -58,18 +58,13 @@ const AppList = props => {
           {appCount} / {appLimit}
         </span>
       </span>
-      <FAB page={props.page} modalComp="newappform">
+      <FAB modalComp="newappform">
         <i className="material-icons">add</i>
       </FAB>
       <br />
       {apps.length > 0 ? (
         apps.map(app => (
-          <AppItem
-            key={app.uuid}
-            app={app}
-            session={props.session}
-            page={props.page}
-          />
+          <AppItem key={app.uuid} app={app} session={props.session} />
         ))
       ) : isLoaded ? (
         <NoAppMsg />

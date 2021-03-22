@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { postRequest } from "../../../utils/requests";
 import { NewPasswordForm } from "../../Forms/resetPassword.js";
 import history from "../../../utils/history";
+import usePageStore from "../../../stores/usePageStore";
+import useLoadbarStore from "../../../stores/useLoadbarStore";
 
 const ResetPassword = props => {
   const [form, setForm] = useState({ password: "" });
@@ -9,13 +11,13 @@ const ResetPassword = props => {
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
-    props.loadbar.progressTo(15);
-    props.page.handlePageChange("Reset Password", "resetPassword");
-    props.loadbar.progressTo(100);
-  }, [props.loadbar, props.page]);
+    useLoadbarStore.getState().progressTo(15);
+    usePageStore.getState().handlePageChange("Reset Password", "resetPassword");
+    useLoadbarStore.getState().progressTo(100);
+  }, []);
 
   const handleUpdate = async () => {
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setUpdating(true);
 
     const formPass = form.password;
@@ -29,10 +31,10 @@ const ResetPassword = props => {
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
-      props.loadbar.progressTo(100);
-      props.page.handleShowModal("msgalert", {
+      useLoadbarStore.getState().progressTo(100);
+      usePageStore.getState().handleShowModal("msgalert", {
         title: "Password Updated!",
         content: "Now sign in to your account with your new password."
       });
