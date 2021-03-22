@@ -3,8 +3,9 @@ import TextInput from "../UI/Inputs/txtInput";
 import { postRequest } from "../../utils/requests";
 import FormMsg from "../UI/Misc/formMsg";
 import SubmitButton from "../UI/Buttons/submitButton";
+import useLoadbarStore from "../../stores/useLoadbarStore";
 
-const ResetPasswordForm = props => {
+const ResetPasswordForm = () => {
   const [form, setForm] = useState({ email: "" });
   const [msg, setMsg] = useState("");
   const [reset, setReset] = useState(false);
@@ -13,7 +14,7 @@ const ResetPasswordForm = props => {
   const handleSubmit = async event => {
     event.preventDefault();
 
-    props.loadbar.progressTo(15);
+    useLoadbarStore.getState().progressTo(15);
     setResetting(true);
 
     const email = form.email;
@@ -23,11 +24,11 @@ const ResetPasswordForm = props => {
     if (req.error) {
       const reqMsg = req.error;
       setMsg(reqMsg);
-      props.loadbar.setToError(true);
+      useLoadbarStore.getState().setToError(true);
     } else {
       setMsg("");
       setForm({ email: "" });
-      props.loadbar.progressTo(100);
+      useLoadbarStore.getState().progressTo(100);
       setReset(true);
     }
     setResetting(false);

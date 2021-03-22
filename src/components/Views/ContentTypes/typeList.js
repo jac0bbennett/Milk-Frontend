@@ -72,8 +72,6 @@ const ContentTypeList = props => {
           <TypeItem
             key={type.id}
             type={type}
-            session={props.session}
-            loadbar={props.loadbar}
             url={
               "/panel/apps/" +
               props.match.params.appuuid +
