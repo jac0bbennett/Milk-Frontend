@@ -63,9 +63,7 @@ const AppList = props => {
       </FAB>
       <br />
       {apps.length > 0 ? (
-        apps.map(app => (
-          <AppItem key={app.uuid} app={app} session={props.session} />
-        ))
+        apps.map(app => <AppItem key={app.uuid} app={app} />)
       ) : isLoaded ? (
         <NoAppMsg />
       ) : (

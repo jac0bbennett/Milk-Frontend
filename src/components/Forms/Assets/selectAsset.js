@@ -116,7 +116,6 @@ const SelectAssetForm = props => {
               <SelectAssetItem
                 key={asset.url}
                 asset={asset}
-                session={props.session}
                 selectImage={selectImage}
               />
             ))}

@@ -6,7 +6,6 @@
     "axios": "^0.19.2",
     "history": "^4.10.1",
     "react-router": "^5.2.0",
-    "unstated": "^2.1.1",
     "unstated-debug": "^0.4.0"
   },
   "scripts": {

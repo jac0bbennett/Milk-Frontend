@@ -178,14 +178,15 @@ const EditContent = props => {
   const handleDelete = async () => {
     const url =
       "/api/panel/apps/" +
-      props.session.state.selApp +
+      props.match.params.appuuid +
       "/content/" +
       props.match.params.contentuuid;
 
     usePageStore.getState().handleShowModal("confirmdeleteform", {
       deleteUrl: url,
       callback: deleteCallback,
-      extraText: "All content stored here will be permanently deleted!"
+      extraText: "All content stored here will be permanently deleted!",
+      noRefresh: true
     });
   };
 

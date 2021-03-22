@@ -14,6 +14,7 @@ import Moment from "react-moment";
 import usePageStore from "../../../stores/usePageStore";
 import useLoadbarStore from "../../../stores/useLoadbarStore";
 import useViewApiCall from "../../../utils/useViewApiCall";
+import useSessionStore from "../../../stores/useSessionStore";
 
 const stripeKey =
   !process.env.NODE_ENV || process.env.NODE_ENV === "development"
@@ -119,7 +120,7 @@ const UserSettings = props => {
   };
 
   const handleThemeChange = value => {
-    props.session.handleSetTheme(value);
+    useSessionStore.getState().handleSetTheme(value);
     setTheme(value);
   };
 

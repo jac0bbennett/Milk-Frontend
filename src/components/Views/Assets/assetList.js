@@ -98,11 +98,7 @@ const AssetList = props => {
         {assets.length > 0 ? (
           <React.Fragment>
             {assets.map(asset => (
-              <AssetItem
-                key={asset.url}
-                asset={asset}
-                session={props.session}
-              />
+              <AssetItem key={asset.url} asset={asset} />
             ))}
             <center>
               {loadedAll && assetCount >= 20 ? (

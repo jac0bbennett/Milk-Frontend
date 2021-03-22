@@ -19,20 +19,12 @@ import ConfirmEmail from "./components/Views/Auth/confirmEmail";
 import ResetPassword from "./components/Views/Auth/resetPassword";
 import { Modal } from "./components/UI/Modal/modal";
 import Cloak from "./components/UI/Modal/cloak";
-import { Provider, Subscribe } from "unstated";
-import SessionContainer from "./containers/SessionContainer";
-import LoadbarContainer from "./containers/LoadbarContainer";
-import PageContainer from "./containers/PageContainer";
 import usePageStore from "./stores/usePageStore";
 import useLoadbarStore from "./stores/useLoadbarStore";
+import useSessionStore from "./stores/useSessionStore";
 // import UNSTATED from "unstated-debug";
 
 // UNSTATED.logStateChanges = true;
-
-const sessionCont = new SessionContainer();
-const loadbarCont = new LoadbarContainer();
-
-sessionCont.bindLoadbar(loadbarCont);
 
 const App = () => {
   const showModal = usePageStore(state => state.showModal);
@@ -49,207 +41,108 @@ const App = () => {
   }));
 
   useEffect(() => {
-    sessionCont.handleGetDefaultTheme();
+    useSessionStore.getState().handleGetDefaultTheme();
   }, []);
 
   return (
-    <Provider inject={[sessionCont, loadbarCont]}>
-      <Subscribe to={[SessionContainer, LoadbarContainer, PageContainer]}>
-        {(session, loadbar, page) => (
-          <React.Fragment>
-            <div id="overlay" className={showModal ? "is-show" : ""}>
-              <Cloak />
-              <Modal />
-            </div>
-            <LoadingBar
-              id="loadingbar"
-              progress={loadbarProgress}
-              onErrorDone={loadbarOnErrorDone}
-              onProgressDone={loadbarOnProgressDone}
-              error={loadbarError}
-            />
-            <TopBar />
-            <div id="wrapper">
-              <Switch>
-                <Route
-                  exact
-                  path="/panel/apps"
-                  render={props => <AppList {...props} />}
-                />
-                <Route
-                  exact
-                  path="/panel/apps/:appuuid/apikeys"
-                  render={props => (
-                    <AppApiKeys
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path={"/panel/apps/:appuuid/types"}
-                  render={props => (
-                    <ContentTypeList
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path={"/panel/apps/:appuuid/types/:typeslug"}
-                  render={props => (
-                    <EditContentType
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path={"/panel/apps/:appuuid/content"}
-                  render={props => (
-                    <ContentList
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path={"/panel/apps/:appuuid"}
-                  render={props => <AppPage {...props} />}
-                />
-                <Route
-                  exact
-                  path={"/panel/apps/:appuuid/content/:contentuuid"}
-                  render={props => (
-                    <EditContent
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path={"/panel/apps/:appuuid/assets"}
-                  render={props => (
-                    <AssetList
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/panel/signin"
-                  render={props => (
-                    <SignIn
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/panel/signup"
-                  render={props => (
-                    <SignUp
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/panel/signout"
-                  render={props => (
-                    <SignOut
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/verify/:confirmcode"
-                  render={props => (
-                    <ConfirmEmail
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/resetpassword/:token"
-                  render={props => (
-                    <ResetPassword
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/panel/account"
-                  render={props => (
-                    <UserSettings
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/panel/subscription/success"
-                  render={props => (
-                    <SubSuccess
-                      {...props}
-                      loadbar={loadbar}
-                      page={page}
-                      session={session}
-                    />
-                  )}
-                />
-                <Route
-                  path="*"
-                  exact={true}
-                  render={() => (
-                    <React.Fragment>404 Page Not Found!</React.Fragment>
-                  )}
-                />
-              </Switch>
-            </div>
-          </React.Fragment>
-        )}
-      </Subscribe>
-    </Provider>
+    <React.Fragment>
+      <div id="overlay" className={showModal ? "is-show" : ""}>
+        <Cloak />
+        <Modal />
+      </div>
+      <LoadingBar
+        id="loadingbar"
+        progress={loadbarProgress}
+        onErrorDone={loadbarOnErrorDone}
+        onProgressDone={loadbarOnProgressDone}
+        error={loadbarError}
+      />
+      <TopBar />
+      <div id="wrapper">
+        <Switch>
+          <Route
+            exact
+            path="/panel/apps"
+            render={props => <AppList {...props} />}
+          />
+          <Route
+            exact
+            path="/panel/apps/:appuuid/apikeys"
+            render={props => <AppApiKeys {...props} />}
+          />
+          <Route
+            exact
+            path={"/panel/apps/:appuuid/types"}
+            render={props => <ContentTypeList {...props} />}
+          />
+          <Route
+            exact
+            path={"/panel/apps/:appuuid/types/:typeslug"}
+            render={props => <EditContentType {...props} />}
+          />
+          <Route
+            exact
+            path={"/panel/apps/:appuuid/content"}
+            render={props => <ContentList {...props} />}
+          />
+          <Route
+            exact
+            path={"/panel/apps/:appuuid"}
+            render={props => <AppPage {...props} />}
+          />
+          <Route
+            exact
+            path={"/panel/apps/:appuuid/content/:contentuuid"}
+            render={props => <EditContent {...props} />}
+          />
+          <Route
+            exact
+            path={"/panel/apps/:appuuid/assets"}
+            render={props => <AssetList {...props} />}
+          />
+          <Route
+            exact
+            path="/panel/signin"
+            render={props => <SignIn {...props} />}
+          />
+          <Route
+            exact
+            path="/panel/signup"
+            render={props => <SignUp {...props} />}
+          />
+          <Route
+            exact
+            path="/panel/signout"
+            render={props => <SignOut {...props} />}
+          />
+          <Route
+            exact
+            path="/verify/:confirmcode"
+            render={props => <ConfirmEmail {...props} />}
+          />
+          <Route
+            exact
+            path="/resetpassword/:token"
+            render={props => <ResetPassword {...props} />}
+          />
+          <Route
+            exact
+            path="/panel/account"
+            render={props => <UserSettings {...props} />}
+          />
+          <Route
+            exact
+            path="/panel/subscription/success"
+            render={props => <SubSuccess {...props} />}
+          />
+          <Route
+            path="*"
+            exact={true}
+            render={() => <React.Fragment>404 Page Not Found!</React.Fragment>}
+          />
+        </Switch>
+      </div>
+    </React.Fragment>
   );
 };
 
