@@ -22,9 +22,6 @@ import Cloak from "./components/UI/Modal/cloak";
 import usePageStore from "./stores/usePageStore";
 import useLoadbarStore from "./stores/useLoadbarStore";
 import useSessionStore from "./stores/useSessionStore";
-// import UNSTATED from "unstated-debug";
-
-// UNSTATED.logStateChanges = true;
 
 const App = () => {
   const showModal = usePageStore(state => state.showModal);
