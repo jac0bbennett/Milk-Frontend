@@ -99,7 +99,12 @@ const EditAssetForm = props => {
           marginBottom: "15px"
         }}
       >
-        <a href={modalData.asset.url} target="_blank" rel="noopener noreferrer">
+        <a
+          href={modalData.asset.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ borderBottom: "none" }}
+        >
           <img
             src={modalData.asset.url}
             style={{ maxWidth: "300px", maxHeight: "300px" }}

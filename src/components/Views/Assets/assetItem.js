@@ -18,13 +18,28 @@ const AssetItem = props => {
     };
   }, [msgTimeout]);
 
+  const openModal = () => {
+    usePageStore.getState().handleShowModal("editassetform", {
+      asset: asset,
+      callback: a => {
+        setAsset(a);
+      }
+    });
+  };
+
   return (
     <div
       className="secondaryitemcont"
       style={{ alignItems: "center", flexWrap: "wrap" }}
     >
       <div
-        style={{ display: "flex", alignItems: "center", overflowX: "hidden" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          overflowX: "hidden",
+          cursor: "pointer"
+        }}
+        onClick={openModal}
       >
         <div
           className="assetimg"
@@ -62,14 +77,7 @@ const AssetItem = props => {
           style={{
             marginLeft: "5px"
           }}
-          onClick={() =>
-            usePageStore.getState().handleShowModal("editassetform", {
-              asset: asset,
-              callback: a => {
-                setAsset(a);
-              }
-            })
-          }
+          onClick={openModal}
         >
           <i className="material-icons">more_vert</i>
         </button>
