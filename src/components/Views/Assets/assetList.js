@@ -13,18 +13,18 @@ const AssetList = props => {
   const [assets, setAssets] = useState([]);
   const [assetLimit, setAssetLimit] = useState(0);
   const [loadedAll, setLoadedAll] = useState(false);
-  const [nextPage, setNextPage] = useState(1);
+  const [offset, setOffset] = useState(0);
 
   const modalData = usePageStore(state => state.modalData);
 
   const [respData, respStatus] = useViewApiCall(
-    "/api/panel/apps/" + props.match.params.appuuid + "/assets?page=" + nextPage
+    "/api/panel/apps/" + props.match.params.appuuid + "/assets?offset=" + offset
   );
 
   useEffect(() => {
     usePageStore.getState().handlePageChange("Your Assets", "assets");
     if (respStatus === statuses.SUCCESS) {
-      if (respData.page > 1) {
+      if (respData.offset > 1) {
         setAssets(c => c.concat(respData.assets));
       } else {
         setAssets(respData.assets);
@@ -112,7 +112,7 @@ const AssetList = props => {
             {!loadedAll ? (
               <BottomScrollListener
                 offset={500}
-                onBottom={() => setNextPage(nextPage + 1)}
+                onBottom={() => setOffset(assets[assets.length - 1].id)}
               />
             ) : null}
           </React.Fragment>

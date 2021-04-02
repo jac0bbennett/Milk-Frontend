@@ -70,7 +70,8 @@ const EditAssetForm = props => {
       callback: () =>
         usePageStore.getState().handleUpdateModalData({
           removedAsset: id
-        })
+        }),
+      noRefresh: true
     });
   };
 
