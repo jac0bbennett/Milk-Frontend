@@ -5,7 +5,7 @@ import { statuses } from "../../../utils/requests";
 import usePageStore from "../../../stores/usePageStore";
 import useViewApiCall from "../../../utils/useViewApiCall";
 
-const AppList = props => {
+const AppList = () => {
   const [isLoaded, setIsLoaded] = useState(0);
   const [appCount, setAppCount] = useState(0);
   const [appLimit, setAppLimit] = useState(0);

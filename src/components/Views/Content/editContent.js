@@ -141,7 +141,6 @@ const EditContent = props => {
 
     if (!isDrafting && !isPublishing && !publishDisabled) {
       useLoadbarStore.getState().progressTo(15);
-      setMsg("publishing...");
 
       setIsPublishing(true);
 
@@ -208,7 +207,7 @@ const EditContent = props => {
       props.match.params.contentuuid;
 
     usePageStore.getState().handleShowModal("confirmactionform", {
-      discardUrl: url,
+      url: url,
       action: "discardDraft",
       callback: discardCallback,
       titleText: "Are you sure you want to discard this draft?",
@@ -231,7 +230,7 @@ const EditContent = props => {
       props.match.params.contentuuid;
 
     usePageStore.getState().handleShowModal("confirmactionform", {
-      discardUrl: url,
+      url: url,
       action: "unpublish",
       callback: unpublishCallback,
       titleText: "Are you sure you want to unpublish this?",
@@ -248,7 +247,7 @@ const EditContent = props => {
       props.match.params.contentuuid;
 
     usePageStore.getState().handleShowModal("confirmactionform", {
-      discardUrl: url,
+      url: url,
       action: "unpublish",
       callback: unpublishCallback,
       titleText: "Are you sure you want to unschedule this?",
@@ -420,9 +419,11 @@ const EditContent = props => {
                   className="raisedbut"
                   disabled={isPublishing || isDrafting || publishDisabled}
                 >
-                  {contentStatus === "draft" || contentStatus === "scheduled"
-                    ? "Publish"
-                    : "Update"}
+                  {!isPublishing
+                    ? contentStatus === "draft" || contentStatus === "scheduled"
+                      ? "Publish"
+                      : "Update"
+                    : "publishing..."}
                 </button>
                 <DropMenu>
                   {contentStatus === "draft" ? (

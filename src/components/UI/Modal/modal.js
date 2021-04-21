@@ -10,6 +10,7 @@ import NewContentForm from "../../Forms/Content/newContent";
 import ScheduleForm from "../../Forms/Content/schedule";
 import ConfirmDeleteForm from "../../Forms/confirmDelete";
 import ConfirmActionForm from "../../Forms/confirmAction";
+import ConfirmDestroyAccountForm from "../../Forms/confrimDestroyAccount";
 import EditFieldOptionValuesForm from "../../Forms/Fields/editOptionValues";
 import MsgAlert from "../../Forms/msgAlert";
 import { ResetPasswordForm } from "../../Forms/resetPassword";
@@ -44,6 +45,8 @@ const Content = props => {
       return <ConfirmDeleteForm {...props} />;
     case "confirmactionform":
       return <ConfirmActionForm {...props} />;
+    case "confirmdestroyaccountform":
+      return <ConfirmDestroyAccountForm {...props} />;
     case "editfieldoptionvaluesform":
       return <EditFieldOptionValuesForm {...props} />;
     case "msgalert":
@@ -61,7 +64,7 @@ const Content = props => {
   }
 };
 
-const Modal = props => {
+const Modal = () => {
   const [isShow, handleCloseModal] = usePageStore(
     state => [state.showModal, state.handleCloseModal],
     shallow

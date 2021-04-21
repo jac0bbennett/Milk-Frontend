@@ -11,26 +11,27 @@ const ConfirmActionForm = () => {
   const modalData = usePageStore(state => state.modalData);
 
   const handleAction = async () => {
-    useLoadbarStore.getState().progressTo(15);
-    setMsg(modalData.msgText || "submitting...");
+    if (!isActing) {
+      useLoadbarStore.getState().progressTo(15);
 
-    setIsActing(true);
+      setIsActing(true);
 
-    const req = await postRequest(modalData.discardUrl, {
-      action: modalData.action
-    });
+      const req = await postRequest(modalData.url, {
+        action: modalData.action
+      });
 
-    if (req.error) {
-      const reqMsg = req.error;
-      setMsg(reqMsg);
-      useLoadbarStore.getState().setToError(true);
-      setIsActing(false);
-    } else {
-      setMsg("");
-      modalData.callback(req.data);
-      setIsActing(false);
-      useLoadbarStore.getState().progressTo(100);
-      usePageStore.getState().handleCloseModal();
+      if (req.error) {
+        const reqMsg = req.error;
+        setMsg(reqMsg);
+        useLoadbarStore.getState().setToError(true);
+        setIsActing(false);
+      } else {
+        setMsg("");
+        modalData.callback(req.data);
+        setIsActing(false);
+        useLoadbarStore.getState().progressTo(100);
+        usePageStore.getState().handleCloseModal();
+      }
     }
   };
 
@@ -50,11 +51,9 @@ const ConfirmActionForm = () => {
       <button onClick={handleCancel} className="flatbut">
         Cancel
       </button>
-      {!isActing ? (
-        <DeleteButton style={{ float: "right" }} onClick={handleAction}>
-          Confirm
-        </DeleteButton>
-      ) : null}
+      <DeleteButton style={{ float: "right" }} onClick={handleAction}>
+        {!isActing ? "Confirm" : modalData.msgText || "submitting..."}
+      </DeleteButton>
 
       <span className="msg floatright">{msg}</span>
     </div>

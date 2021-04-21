@@ -241,13 +241,6 @@ const UserSettings = props => {
     <React.Fragment>
       {isLoaded ? (
         <div className="gencontainer">
-          <Link
-            to="/panel/signout"
-            className="floatright"
-            style={{ borderBottom: "none" }}
-          >
-            Sign out
-          </Link>
           <h1>
             <i className="material-icons" style={{ fontSize: "24pt" }}>
               account_circle
@@ -256,6 +249,18 @@ const UserSettings = props => {
               {" "}
               Account
             </span>
+            <Link
+              to="/panel/signout"
+              style={{
+                borderBottom: "none",
+                textTransform: "uppercase",
+                fontWeight: "500",
+                fontSize: "16px",
+                marginLeft: "20px"
+              }}
+            >
+              Sign out
+            </Link>
           </h1>
           <div
             style={{
@@ -353,7 +358,10 @@ const UserSettings = props => {
                       ? "radio_button_checked"
                       : "radio_button_unchecked"}
                   </i>
-                  <i className="icolab"> Light</i>
+                  <i className="icolab">
+                    {" "}
+                    <span className="material-icons">light_mode</span>
+                  </i>
                 </div>
                 <div
                   style={{ cursor: "pointer" }}
@@ -364,7 +372,10 @@ const UserSettings = props => {
                       ? "radio_button_checked"
                       : "radio_button_unchecked"}
                   </i>
-                  <i className="icolab"> Dark</i>
+                  <i className="icolab">
+                    {" "}
+                    <span className="material-icons">nights_stay</span>
+                  </i>
                 </div>
               </div>
             </div>
@@ -372,6 +383,19 @@ const UserSettings = props => {
               <h3>Subscription</h3>
               <span>{subMsg}</span>
               {subscriptionOptions()}
+            </div>
+            <div className="settingsection">
+              <h3>Account Management</h3>
+              <button
+                className="flatbut redtext"
+                onClick={() =>
+                  usePageStore
+                    .getState()
+                    .handleShowModal("confirmdestroyaccountform")
+                }
+              >
+                Destroy Account
+              </button>
             </div>
           </div>
         </div>
