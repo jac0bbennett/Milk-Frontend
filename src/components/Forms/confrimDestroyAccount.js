@@ -12,8 +12,6 @@ const ConfirmDestroyAccountForm = () => {
   const [deleteConf, setDeleteConf] = useState("");
   const [isActing, setIsActing] = useState(false);
 
-  const modalData = usePageStore(state => state.modalData);
-
   const handleAction = async () => {
     useLoadbarStore.getState().progressTo(15);
     setMsg("");
