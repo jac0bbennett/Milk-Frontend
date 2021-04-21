@@ -39,7 +39,6 @@ const ConfirmDestroyAccountForm = () => {
   };
 
   const handleCancel = () => {
-    modalData.callback(null);
     usePageStore.getState().handleCloseModal();
   };
 
