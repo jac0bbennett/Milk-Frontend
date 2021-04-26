@@ -171,11 +171,13 @@ const ListField = props => {
             disabled={props.disabled}
             wide={true}
           />
-          <datalist id="validOptions">
-            {props.fieldOptions.values.map(v => (
-              <option value={v} />
-            ))}
-          </datalist>
+          {props.fieldOptions.values && props.fieldOptions.values.length > 0 ? (
+            <datalist id="validOptions">
+              {props.fieldOptions.values.map(v => (
+                <option value={v} />
+              ))}
+            </datalist>
+          ) : null}
 
           <span
             title="Characters"
