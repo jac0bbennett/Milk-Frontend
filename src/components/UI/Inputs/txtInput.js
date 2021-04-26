@@ -10,6 +10,7 @@ const TextInput = props => {
         type={props.type}
         value={props.value}
         autoComplete={props.autoComplete}
+        list={props.list}
         required={props.required}
         disabled={props.disabled}
         ref={props.setRef}

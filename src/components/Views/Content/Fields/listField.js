@@ -161,7 +161,8 @@ const ListField = props => {
           <TextInput
             dataId={props.dataId}
             name={props.slug}
-            type="text"
+            type="list"
+            list="validOptions"
             label="New Value"
             value={content}
             onChange={handleChange}
@@ -170,6 +171,11 @@ const ListField = props => {
             disabled={props.disabled}
             wide={true}
           />
+          <datalist id="validOptions">
+            {props.fieldOptions.values.map(v => (
+              <option value={v} />
+            ))}
+          </datalist>
 
           <span
             title="Characters"
